@@ -9,10 +9,7 @@
   box-sizing: border-box;
 }
 
-*::before,
-*::after {
-  display: none !important;
-}
+/* Allow pseudo-elements for design */
 
 html,
 body {

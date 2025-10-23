@@ -22,12 +22,14 @@ export default function ArticleCard({ article, index }: ArticleCardProps) {
 
   return (
     <article
-      className="group relative bg-gradient-to-br from-gray-900/50 to-gray-900/30 backdrop-blur-sm border border-gray-800/50 rounded-2xl p-6 hover:border-gray-700 hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300"
+      className="group relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 border border-gray-700/50 rounded-2xl p-6 hover:border-blue-500/30 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-300"
       style={{
         animation: `fadeIn 0.4s ease-out ${index * 0.05}s both`,
       }}
     >
-      <div className="flex items-start justify-between gap-3 mb-4">
+      {/* Subtle gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="relative flex items-start justify-between gap-3 mb-4">
         <span
           className={`text-xs px-3 py-1.5 rounded-full border font-semibold tracking-wide ${colorClass}`}
         >
@@ -38,18 +40,18 @@ export default function ArticleCard({ article, index }: ArticleCardProps) {
         </time>
       </div>
 
-      <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 leading-snug group-hover:text-blue-400 transition-colors">
+      <h3 className="relative text-xl font-bold text-white mb-3 line-clamp-2 leading-snug group-hover:text-blue-400 transition-colors">
         {article.title}
       </h3>
 
       {article.description && (
         <p
-          className="text-sm text-gray-400 line-clamp-3 mb-3"
+          className="relative text-sm text-gray-400 line-clamp-3 mb-4"
           dangerouslySetInnerHTML={{ __html: article.description }}
         />
       )}
 
-      <div className="flex items-center justify-between">
+      <div className="relative flex items-center justify-between pt-3 border-t border-gray-800/50">
         <span className="text-xs text-gray-500">{article.source_name}</span>
         <a
           href={article.url}
