@@ -2,6 +2,10 @@ import { Header } from "@/components/layout/header";
 import { FeedItem } from "@/components/feed/feed-item";
 import { EmptyState } from "@/components/feed/empty-state";
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 interface Article {
   id: string;
   title: string;
