@@ -22,23 +22,23 @@ export default function ArticleCard({ article, index }: ArticleCardProps) {
 
   return (
     <article
-      className="group relative bg-gray-900/50 border border-gray-800 rounded-xl p-5 hover:bg-gray-900 hover:border-gray-700 transition-all duration-300"
+      className="group relative bg-gradient-to-br from-gray-900/50 to-gray-900/30 backdrop-blur-sm border border-gray-800/50 rounded-2xl p-6 hover:border-gray-700 hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300"
       style={{
         animation: `fadeIn 0.4s ease-out ${index * 0.05}s both`,
       }}
     >
-      <div className="flex items-start justify-between gap-3 mb-3">
+      <div className="flex items-start justify-between gap-3 mb-4">
         <span
-          className={`text-xs px-2.5 py-1 rounded-full border font-medium ${colorClass}`}
+          className={`text-xs px-3 py-1.5 rounded-full border font-semibold tracking-wide ${colorClass}`}
         >
           {article.category}
         </span>
-        <time className="text-xs text-gray-500">
+        <time className="text-xs text-gray-500 font-medium">
           {formatDistanceToNow(new Date(article.pub_date), { addSuffix: true })}
         </time>
       </div>
 
-      <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2 group-hover:text-blue-400 transition-colors">
+      <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 leading-snug group-hover:text-blue-400 transition-colors">
         {article.title}
       </h3>
 

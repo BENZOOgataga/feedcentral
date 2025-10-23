@@ -21,7 +21,7 @@ export default function CategoryFilter({ value, onChange }: CategoryFilterProps)
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="bg-gray-900 border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all min-w-[200px]"
+      className="bg-gray-900/50 border border-gray-800/50 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/50 focus:bg-gray-900 transition-all min-w-[200px] backdrop-blur-sm cursor-pointer"
     >
       <option value="">All Categories</option>
       {categories.map((cat) => (

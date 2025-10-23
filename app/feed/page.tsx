@@ -45,22 +45,26 @@ export default function FeedPage() {
   return (
     <div className="min-h-screen bg-gray-950">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-gray-950/80 backdrop-blur-xl border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between mb-4">
+      <header className="sticky top-0 z-40 bg-gray-950/95 backdrop-blur-2xl border-b border-gray-800/50 shadow-2xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-white">FeedCentral</h1>
-              <p className="text-sm text-gray-400">{total} articles indexed</p>
+              <h1 className="text-3xl font-bold text-white tracking-tight bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                FeedCentral
+              </h1>
+              <p className="text-sm text-gray-500 mt-1">
+                {total.toLocaleString()} articles • Live feed
+              </p>
             </div>
             <a
               href="/admin/login"
-              className="text-sm text-gray-400 hover:text-white transition-colors"
+              className="px-4 py-2 text-sm text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-lg transition-all"
             >
               Admin
             </a>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <SearchBar value={search} onChange={setSearch} />
             </div>
