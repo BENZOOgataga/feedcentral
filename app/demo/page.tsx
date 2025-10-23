@@ -127,7 +127,7 @@ const cardVariants = {
     y: 0,
     transition: {
       duration: 0.3,
-      ease: [0.16, 1, 0.3, 1]
+      ease: [0.16, 1, 0.3, 1] as [number, number, number, number]
     }
   }
 };
@@ -151,7 +151,7 @@ export default function DemoPage() {
       <motion.header
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
         className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl"
       >
         <div className="content-container">
