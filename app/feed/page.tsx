@@ -215,47 +215,60 @@ export default function FeedPage() {
         ) : (
           <>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))", gap: "1.5rem" }}>
-              {articles.map((article, index) => (
-                <article
-                  key={article.id}
-                  className="card-glow fade-in"
-                  style={{
-                    background: "var(--bg-secondary)",
-                    border: "1px solid var(--border-primary)",
-                    borderRadius: "1rem",
-                    padding: "1.5rem",
-                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                    animationDelay: `${index * 50}ms`,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-4px)";
-                    e.currentTarget.style.borderColor = "var(--border-secondary)";
-                    e.currentTarget.style.boxShadow = "0 20px 40px rgba(0, 0, 0, 0.3)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.borderColor = "var(--border-primary)";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem", position: "relative" }}>
-                    <span
-                      style={{
-                        fontSize: "0.75rem",
-                        fontWeight: 600,
-                        padding: "0.375rem 0.75rem",
-                        borderRadius: "9999px",
-                        background: `${categoryColors[article.category] || "#6b7280"}20`,
-                        color: categoryColors[article.category] || "#9ca3af",
-                        border: `1px solid ${categoryColors[article.category] || "#6b7280"}40`,
-                      }}
-                    >
-                      {article.category}
-                    </span>
-                    <time style={{ fontSize: "0.75rem", color: "var(--text-tertiary)" }}>
-                      {formatDistanceToNow(new Date(article.pub_date), { addSuffix: true })}
-                    </time>
-                  </div>
+              {articles.map((article, index) => {
+                const categoryColor = categoryColors[article.category] || "#6b7280";
+                return (
+                  <article
+                    key={article.id}
+                    className="card-elevated fade-in"
+                    style={{
+                      padding: "1.5rem",
+                      animationDelay: `${index * 50}ms`,
+                      cursor: "pointer"
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = categoryColor;
+                      e.currentTarget.style.boxShadow = `0 8px 24px rgba(0, 0, 0, 0.5), 0 16px 48px rgba(0, 0, 0, 0.3)`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = "var(--border-elevated)";
+                      e.currentTarget.style.boxShadow = "0 4px 16px rgba(0, 0, 0, 0.4), 0 8px 32px rgba(0, 0, 0, 0.2)";
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+                      <div style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "0.5rem"
+                      }}>
+                        <div style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "32px",
+                          height: "32px",
+                          borderRadius: "8px",
+                          background: categoryColor,
+                          fontSize: "0.875rem",
+                          fontWeight: 700,
+                          color: "white",
+                          boxShadow: `0 2px 8px ${categoryColor}40`,
+                          flexShrink: 0
+                        }}>
+                          {article.category.charAt(0)}
+                        </div>
+                        <span style={{
+                          fontSize: "0.75rem",
+                          fontWeight: 600,
+                          color: "var(--text-secondary)"
+                        }}>
+                          {article.category}
+                        </span>
+                      </div>
+                      <time style={{ fontSize: "0.75rem", color: "var(--text-tertiary)", fontWeight: 500 }}>
+                        {formatDistanceToNow(new Date(article.pub_date), { addSuffix: true })}
+                      </time>
+                    </div>
 
                   <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", marginBottom: "0.75rem", lineHeight: 1.3, position: "relative" }}>
                     <a
@@ -298,7 +311,8 @@ export default function FeedPage() {
                     </a>
                   </div>
                 </article>
-              ))}
+                );
+              })}
             </div>
 
             {/* Pagination */}
@@ -309,17 +323,31 @@ export default function FeedPage() {
                   disabled={page === 1}
                   style={{
                     padding: "0.75rem 1.5rem",
-                    background: "var(--bg-secondary)",
-                    border: "1px solid var(--border-primary)",
-                    borderRadius: "0.5rem",
+                    background: page === 1 ? "var(--bg-tertiary)" : "var(--bg-elevated)",
+                    border: "1px solid var(--border-elevated)",
+                    borderRadius: "50px",
                     color: "var(--text-primary)",
                     cursor: page === 1 ? "not-allowed" : "pointer",
                     opacity: page === 1 ? 0.5 : 1,
+                    fontWeight: 600,
+                    fontSize: "0.875rem",
+                    transition: "all 0.2s",
+                    boxShadow: page === 1 ? "none" : "0 4px 12px rgba(0, 0, 0, 0.3)"
+                  }}
+                  onMouseEnter={(e) => {
+                    if (page !== 1) {
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                      e.currentTarget.style.boxShadow = "0 6px 16px rgba(0, 0, 0, 0.4)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = page === 1 ? "none" : "0 4px 12px rgba(0, 0, 0, 0.3)";
                   }}
                 >
                   Previous
                 </button>
-                <span style={{ color: "var(--text-tertiary)" }}>
+                <span style={{ color: "var(--text-secondary)", fontWeight: 600, fontSize: "0.875rem" }}>
                   Page {page} of {totalPages}
                 </span>
                 <button
@@ -327,12 +355,26 @@ export default function FeedPage() {
                   disabled={page === totalPages}
                   style={{
                     padding: "0.75rem 1.5rem",
-                    background: "var(--bg-secondary)",
-                    border: "1px solid var(--border-primary)",
-                    borderRadius: "0.5rem",
-                    color: "var(--text-primary)",
+                    background: page === totalPages ? "var(--bg-tertiary)" : "linear-gradient(135deg, var(--accent-blue), var(--accent-purple))",
+                    border: "1px solid " + (page === totalPages ? "var(--border-elevated)" : "transparent"),
+                    borderRadius: "50px",
+                    color: "white",
                     cursor: page === totalPages ? "not-allowed" : "pointer",
                     opacity: page === totalPages ? 0.5 : 1,
+                    fontWeight: 600,
+                    fontSize: "0.875rem",
+                    transition: "all 0.2s",
+                    boxShadow: page === totalPages ? "none" : "0 4px 12px rgba(91, 141, 239, 0.3)"
+                  }}
+                  onMouseEnter={(e) => {
+                    if (page !== totalPages) {
+                      e.currentTarget.style.transform = "translateY(-2px)";
+                      e.currentTarget.style.boxShadow = "0 6px 16px rgba(91, 141, 239, 0.4)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = page === totalPages ? "none" : "0 4px 12px rgba(91, 141, 239, 0.3)";
                   }}
                 >
                   Next

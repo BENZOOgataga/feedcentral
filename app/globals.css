@@ -4,17 +4,35 @@
 
 @layer base {
   :root {
-    --bg-primary: #0a0e1a;
-    --bg-secondary: #111827;
-    --bg-tertiary: #1f2937;
-    --border-primary: #374151;
-    --border-secondary: #4b5563;
-    --text-primary: #f9fafb;
-    --text-secondary: #d1d5db;
-    --text-tertiary: #9ca3af;
-    --accent-blue: #3b82f6;
-    --accent-purple: #a855f7;
-    --accent-cyan: #06b6d4;
+    /* Adobe CC inspired dark gradients */
+    --bg-primary: linear-gradient(135deg, #1a1d2e 0%, #2d1b3d 100%);
+    --bg-secondary: #252837;
+    --bg-tertiary: #2d3142;
+    --bg-elevated: #323646;
+    --bg-card: rgba(37, 40, 55, 0.8);
+    
+    /* Borders with more depth */
+    --border-primary: rgba(255, 255, 255, 0.06);
+    --border-secondary: rgba(255, 255, 255, 0.1);
+    --border-elevated: rgba(255, 255, 255, 0.15);
+    
+    /* Refined text colors */
+    --text-primary: #ffffff;
+    --text-secondary: #e0e6ed;
+    --text-tertiary: #a0a8b8;
+    
+    /* Vibrant Adobe-style accent colors */
+    --accent-blue: #5b8def;
+    --accent-purple: #b87ff5;
+    --accent-pink: #f54ca4;
+    --accent-orange: #ff6b4a;
+    --accent-cyan: #4ecdc4;
+    --accent-green: #5eead4;
+    
+    /* Status colors */
+    --status-success: #10b981;
+    --status-warning: #f59e0b;
+    --status-error: #ef4444;
   }
 
   * {
@@ -29,7 +47,8 @@
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
-    background: var(--bg-primary);
+    background: linear-gradient(135deg, #1a1d2e 0%, #2d1b3d 50%, #1f2937 100%);
+    background-attachment: fixed;
     color: var(--text-primary);
     line-height: 1.6;
     overflow-x: hidden;
@@ -64,20 +83,49 @@
     mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, black 40%, transparent 100%);
   }
 
-  /* Glass effect */
+  /* Glass effect - Adobe CC style */
   .glass {
-    background: rgba(17, 24, 39, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(75, 85, 99, 0.3);
+    background: rgba(37, 40, 55, 0.7);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--border-secondary);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Elevated card with more depth */
+  .card-elevated {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-elevated);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 
+                0 8px 32px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .card-elevated:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 
+                0 16px 48px rgba(0, 0, 0, 0.3);
   }
 
-  /* Gradient text */
+  /* Gradient text - Adobe CC vibrant style */
   .gradient-text {
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 50%, var(--accent-pink) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+  
+  /* Vibrant hero gradient */
+  .gradient-hero {
+    background: linear-gradient(135deg, 
+      #b87ff5 0%, 
+      #f54ca4 25%, 
+      #ff6b4a 50%, 
+      #ffb84d 75%, 
+      #ffd666 100%);
+    position: relative;
+    overflow: hidden;
   }
 
   /* Card glow effect */
@@ -116,6 +164,16 @@
     100% { background-position: 200% 0; }
   }
 
+  /* Float animation for 3D elements */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-20px) rotate(5deg);
+    }
+  }
+  
   /* Fade in animation */
   @keyframes fadeInUp {
     from {
