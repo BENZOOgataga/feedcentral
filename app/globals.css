@@ -4,6 +4,13 @@
 
 :root {
   color-scheme: dark;
+  --background: 3 7 18;
+  --foreground: 249 250 251;
+}
+
+body {
+  color: rgb(var(--foreground));
+  background: rgb(var(--background));
 }
 
 /* Smooth transitions */
