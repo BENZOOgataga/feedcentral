@@ -25,9 +25,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative flex min-h-screen">
+          <div className="relative flex min-h-screen bg-gradient-to-br from-[#0B0F1A] via-[#0D1117] to-[#0B0F1A]">
             <Sidebar />
-            <main className="flex-1 pl-64">
+            <main className="flex-1 pl-[280px]">
               {children}
             </main>
           </div>

@@ -32,48 +32,48 @@ export function FeedItem({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: 0.4,
-        delay: index * 0.05,
+        duration: 0.5,
+        delay: index * 0.04,
         ease: [0.16, 1, 0.3, 1],
       }}
     >
-      <Card className="group cursor-pointer">
-        <CardContent className="p-6">
-          {/* Header */}
-          <div className="flex items-start justify-between gap-4 mb-3">
-            <Badge variant="secondary">{category}</Badge>
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Clock className="h-3 w-3" />
-              {formatRelativeTime(pubDate)}
-            </div>
+      <article className="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] rounded-xl p-5 transition-all duration-300 hover:border-white/[0.12] hover:shadow-2xl hover:-translate-y-1 cursor-pointer">
+        {/* Header */}
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold tracking-wide uppercase bg-primary/10 text-primary border border-primary/20">
+            {category}
+          </span>
+          <div className="flex items-center gap-1.5 text-[11px] text-white/40 font-medium">
+            <Clock className="h-3 w-3" />
+            {formatRelativeTime(pubDate)}
           </div>
+        </div>
 
-          {/* Content */}
-          <Link href={url} target="_blank" rel="noopener noreferrer">
-            <h3 className="text-base font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2">
-              {title}
-            </h3>
+        {/* Content */}
+        <Link href={url} target="_blank" rel="noopener noreferrer" className="block mb-3">
+          <h3 className="text-[15px] font-semibold leading-snug mb-2 group-hover:text-primary transition-colors line-clamp-2 tracking-tight">
+            {title}
+          </h3>
+        </Link>
+
+        <p className="text-[13px] text-white/60 leading-relaxed line-clamp-3 mb-4">
+          {description}
+        </p>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-4 border-t border-white/[0.06]">
+          <span className="text-[11px] text-white/40 font-medium tracking-wide">{source}</span>
+          <Link
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-[12px] font-medium text-primary hover:text-primary/80 transition-colors group/link"
+          >
+            Read more
+            <ExternalLink className="h-3 w-3 group-hover/link:translate-x-0.5 transition-transform" />
           </Link>
-
-          <p className="text-sm text-muted-foreground line-clamp-3 mb-4">
-            {description}
-          </p>
-
-          {/* Footer */}
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">{source}</span>
-            <Link
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 text-primary hover:underline"
-            >
-              Read more
-              <ExternalLink className="h-3 w-3" />
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </article>
     </motion.div>
   );
 }

@@ -42,12 +42,12 @@ export default async function DashboardPage() {
     <div className="flex flex-col min-h-screen">
       <Header 
         title="All Feeds" 
-        description="Your curated RSS articles from trusted sources"
+        description="Latest articles from your curated sources"
       />
 
-      <div className="p-6">
+      <div className="p-8">
         {articles.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 animate-in">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
             {articles.map((article, index) => (
               <FeedItem
                 key={article.id}

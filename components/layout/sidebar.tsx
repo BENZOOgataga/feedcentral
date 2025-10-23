@@ -45,16 +45,18 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 glass border-r border-border/50">
-      <div className="flex h-full flex-col p-4">
+    <aside className="fixed left-0 top-0 z-50 h-screen w-[280px] glass border-r">
+      <div className="flex h-full flex-col px-6 py-8">
         {/* Logo */}
-        <div className="mb-8 px-2">
-          <h1 className="text-xl font-bold gradient-text">FeedCentral</h1>
-          <p className="text-xs text-muted-foreground mt-1">RSS Aggregator</p>
+        <div className="mb-12">
+          <h1 className="text-2xl font-semibold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+            FeedCentral
+          </h1>
+          <p className="text-xs text-muted-foreground mt-1.5 font-medium">Professional RSS Aggregator</p>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 space-y-1">
+        <nav className="flex-1 space-y-2">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
@@ -64,35 +66,38 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-smooth",
+                  "group relative flex items-center gap-3.5 rounded-xl px-4 py-3 text-[13px] font-medium transition-all duration-200",
                   isActive
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                    ? "bg-white/[0.08] text-white shadow-sm"
+                    : "text-white/60 hover:bg-white/[0.04] hover:text-white/90"
                 )}
               >
-                {/* Active indicator */}
+                {/* Active indicator - Vercel style */}
                 {isActive && (
                   <motion.div
-                    layoutId="sidebar-indicator"
-                    className="absolute left-0 h-8 w-1 rounded-r-full bg-primary"
+                    layoutId="sidebar-active"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-[3px] rounded-r-full bg-primary"
                     transition={{
                       type: "spring",
-                      stiffness: 380,
-                      damping: 30,
+                      stiffness: 400,
+                      damping: 35,
                     }}
                   />
                 )}
                 
-                <Icon className="h-4 w-4" />
-                {item.title}
+                <Icon className={cn(
+                  "h-[18px] w-[18px] transition-transform duration-200",
+                  "group-hover:scale-110"
+                )} />
+                <span className="tracking-wide">{item.title}</span>
               </Link>
             );
           })}
         </nav>
 
         {/* Footer */}
-        <div className="mt-auto pt-4 border-t border-border/50">
-          <p className="text-xs text-muted-foreground px-3">
+        <div className="mt-auto pt-6 border-t border-white/[0.06]">
+          <p className="text-[11px] text-white/40 font-medium tracking-wide">
             © 2025 BENZOO
           </p>
         </div>

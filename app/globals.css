@@ -4,15 +4,15 @@
 
 @layer base {
   :root {
-    /* Light mode (secondary) */
-    --background: 0 0% 98%;
-    --foreground: 240 10% 12%;
+    /* Light mode */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 12%;
+    --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 12%;
-    --primary: 262 80% 60%;
-    --primary-foreground: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 263 70% 60%;
+    --primary-foreground: 0 0% 98%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
     --muted: 240 4.8% 95.9%;
@@ -23,31 +23,31 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 262 80% 60%;
-    --radius: 0.75rem;
+    --ring: 263 70% 60%;
+    --radius: 0.5rem;
   }
 
   .dark {
-    /* Dark mode (primary) - Apple × Adobe × Vercel inspired */
-    --background: 222 15% 5%;
-    --foreground: 220 10% 92%;
-    --card: 222 12% 8%;
-    --card-foreground: 220 10% 92%;
-    --popover: 222 15% 6%;
-    --popover-foreground: 220 10% 92%;
-    --primary: 262 80% 65%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220 12% 15%;
-    --secondary-foreground: 220 10% 92%;
-    --muted: 220 10% 20%;
-    --muted-foreground: 220 10% 63%;
-    --accent: 262 80% 65%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 72% 65%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 220 10% 15%;
-    --input: 220 10% 15%;
-    --ring: 262 80% 65%;
+    /* Dark mode - Premium Apple × Adobe × Vercel */
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+    --card: 224 71% 4%;
+    --card-foreground: 213 31% 91%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 213 31% 91%;
+    --primary: 263 70% 60%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 215 28% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+    --accent: 216 34% 17%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+    --ring: 263 70% 60%;
   }
 }
 
@@ -85,17 +85,25 @@
 }
 
 @layer components {
-  /* Glass morphism - Adobe CC inspired */
+  /* Glass morphism - Adobe CC Desktop tier */
   .glass {
-    background-color: hsl(var(--card) / 0.4);
-    backdrop-filter: blur(24px);
-    border: 1px solid hsl(var(--border) / 0.5);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 0.02) inset,
+      0 8px 32px rgba(0, 0, 0, 0.4);
   }
 
   .glass-strong {
-    background-color: hsl(var(--card) / 0.6);
-    backdrop-filter: blur(40px);
-    border: 1px solid hsl(var(--border));
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(32px) saturate(200%);
+    -webkit-backdrop-filter: blur(32px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 
+      0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+      0 12px 48px rgba(0, 0, 0, 0.5);
   }
 
   /* Elevated shadows - Vercel inspired */
