@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Aggressive reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+*::before,
+*::after {
+  display: none !important;
+}
+
+html,
+body {
+  overflow-x: hidden;
+  background: #030712 !important;
+  margin: 0;
+  padding: 0;
+}
+
 :root {
   color-scheme: dark;
   --background: 3 7 18;
