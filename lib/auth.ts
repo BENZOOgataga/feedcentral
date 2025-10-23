@@ -11,6 +11,7 @@ const TOKEN_EXPIRY = "7d";
 export interface JWTPayload {
   userId: string;
   username: string;
+  [key: string]: unknown;
 }
 
 export async function hashPassword(password: string): Promise<string> {
