@@ -69,9 +69,31 @@ export default function FeedPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", position: "relative" }}>
+    <div style={{ minHeight: "100vh", position: "relative", overflow: "hidden" }}>
       {/* Background grid */}
-      <div className="bg-grid" style={{ position: "fixed", inset: 0, opacity: 0.4, pointerEvents: "none" }} />
+      <div className="bg-grid" style={{ position: "fixed", inset: 0, opacity: 0.3, pointerEvents: "none" }} />
+      
+      {/* Gradient orbs */}
+      <div style={{
+        position: "fixed",
+        top: "-20%",
+        right: "-10%",
+        width: "50%",
+        height: "50%",
+        background: "radial-gradient(circle, rgba(59, 130, 246, 0.15), transparent 70%)",
+        filter: "blur(60px)",
+        pointerEvents: "none"
+      }} />
+      <div style={{
+        position: "fixed",
+        bottom: "-20%",
+        left: "-10%",
+        width: "50%",
+        height: "50%",
+        background: "radial-gradient(circle, rgba(168, 85, 247, 0.15), transparent 70%)",
+        filter: "blur(60px)",
+        pointerEvents: "none"
+      }} />
 
       {/* Header */}
       <header
@@ -79,40 +101,47 @@ export default function FeedPage() {
         style={{
           position: "sticky",
           top: 0,
-          zIndex: 40,
+          zIndex: 50,
           borderBottom: "1px solid var(--border-primary)",
         }}
       >
-        <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "1.5rem 1rem" }}>
+        <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "1rem 1.5rem" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
-            <div>
-              <h1 className="gradient-text" style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "0.25rem" }}>
+            <a href="/" style={{ textDecoration: "none" }}>
+              <div className="gradient-text" style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
                 FeedCentral
-              </h1>
-              <p style={{ fontSize: "0.875rem", color: "var(--text-tertiary)" }}>
-                {total.toLocaleString()} articles • Live feed
-              </p>
-            </div>
-            <a
-              href="/admin/login"
-              style={{
-                padding: "0.5rem 1rem",
-                fontSize: "0.875rem",
-                color: "var(--text-secondary)",
+              </div>
+            </a>
+            <nav style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
+              <div style={{ fontSize: "0.875rem", color: "var(--text-tertiary)" }}>
+                {total.toLocaleString()} articles
+              </div>
+              <a href="/" style={{ color: "var(--text-secondary)", textDecoration: "none", transition: "color 0.2s" }}
+                 onMouseEnter={(e) => e.currentTarget.style.color = "var(--text-primary)"}
+                 onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-secondary)"}>
+                Home
+              </a>
+              <a href="/admin/login" style={{
+                padding: "0.625rem 1.25rem",
+                background: "linear-gradient(135deg, var(--accent-blue), var(--accent-purple))",
+                color: "white",
                 borderRadius: "0.5rem",
-                transition: "all 0.2s",
+                textDecoration: "none",
+                fontWeight: 500,
+                fontSize: "0.875rem",
+                transition: "transform 0.2s, box-shadow 0.2s"
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "var(--bg-tertiary)";
-                e.currentTarget.style.color = "var(--text-primary)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 10px 30px rgba(59, 130, 246, 0.3)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = "var(--text-secondary)";
-              }}
-            >
-              Admin
-            </a>
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "none";
+              }}>
+                Admin
+              </a>
+            </nav>
           </div>
 
           <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
