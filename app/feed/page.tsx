@@ -1,19 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import SearchBar from "@/components/SearchBar";
-import CategoryFilter from "@/components/CategoryFilter";
-import ArticleCard from "@/components/ArticleCard";
 import { Article, PaginatedResponse } from "@/types";
+import { formatDistanceToNow } from "date-fns";
 
 export default function FeedPage() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [localSearch, setLocalSearch] = useState("");
   const [category, setCategory] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setSearch(localSearch), 400);
+    return () => clearTimeout(timer);
+  }, [localSearch]);
 
   useEffect(() => {
     fetchArticles();
@@ -42,95 +46,265 @@ export default function FeedPage() {
     }
   }
 
+  const categories = [
+    "Technology",
+    "Cybersecurity",
+    "World News",
+    "Business and Finance",
+    "Science",
+    "Programming",
+    "Infrastructure and DevOps",
+    "AI and Machine Learning",
+  ];
+
+  const categoryColors: Record<string, string> = {
+    Technology: "#3b82f6",
+    Cybersecurity: "#ef4444",
+    "World News": "#a855f7",
+    "Business and Finance": "#10b981",
+    Science: "#06b6d4",
+    Programming: "#f59e0b",
+    "Infrastructure and DevOps": "#f97316",
+    "AI and Machine Learning": "#ec4899",
+  };
+
   return (
-    <div className="min-h-screen bg-gray-950 relative">
-      {/* Background grid pattern */}
-      <div className="fixed inset-0 bg-[linear-gradient(to_right,#1f2937_1px,transparent_1px),linear-gradient(to_bottom,#1f2937_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] opacity-20" />
+    <div style={{ minHeight: "100vh", position: "relative" }}>
+      {/* Background grid */}
+      <div className="bg-grid" style={{ position: "fixed", inset: 0, opacity: 0.4, pointerEvents: "none" }} />
+
       {/* Header */}
-      <header className="relative sticky top-0 z-40 bg-gray-950/95 backdrop-blur-2xl border-b border-gray-800/50 shadow-2xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between mb-6">
+      <header
+        className="glass"
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 40,
+          borderBottom: "1px solid var(--border-primary)",
+        }}
+      >
+        <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "1.5rem 1rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
             <div>
-              <h1 className="text-3xl font-bold text-white tracking-tight bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <h1 className="gradient-text" style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "0.25rem" }}>
                 FeedCentral
               </h1>
-              <p className="text-sm text-gray-500 mt-1">
+              <p style={{ fontSize: "0.875rem", color: "var(--text-tertiary)" }}>
                 {total.toLocaleString()} articles • Live feed
               </p>
             </div>
             <a
               href="/admin/login"
-              className="px-4 py-2 text-sm text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-lg transition-all"
+              style={{
+                padding: "0.5rem 1rem",
+                fontSize: "0.875rem",
+                color: "var(--text-secondary)",
+                borderRadius: "0.5rem",
+                transition: "all 0.2s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "var(--bg-tertiary)";
+                e.currentTarget.style.color = "var(--text-primary)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.color = "var(--text-secondary)";
+              }}
             >
               Admin
             </a>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <SearchBar value={search} onChange={setSearch} />
-            </div>
-            <CategoryFilter value={category} onChange={setCategory} />
+          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+            {/* Search */}
+            <input
+              type="text"
+              value={localSearch}
+              onChange={(e) => setLocalSearch(e.target.value)}
+              placeholder="Search articles..."
+              style={{
+                flex: 1,
+                minWidth: "250px",
+                padding: "0.75rem 1rem",
+                background: "var(--bg-secondary)",
+                border: "1px solid var(--border-primary)",
+                borderRadius: "0.75rem",
+                color: "var(--text-primary)",
+                fontSize: "0.875rem",
+                outline: "none",
+                transition: "all 0.2s",
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = "var(--accent-blue)";
+                e.currentTarget.style.boxShadow = "0 0 0 3px rgba(59, 130, 246, 0.1)";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = "var(--border-primary)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            />
+
+            {/* Category filter */}
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              style={{
+                padding: "0.75rem 1rem",
+                background: "var(--bg-secondary)",
+                border: "1px solid var(--border-primary)",
+                borderRadius: "0.75rem",
+                color: "var(--text-primary)",
+                fontSize: "0.875rem",
+                outline: "none",
+                minWidth: "200px",
+                cursor: "pointer",
+              }}
+            >
+              <option value="">All Categories</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </header>
 
-      {/* Content */}
-      <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main content */}
+      <main style={{ maxWidth: "1280px", margin: "0 auto", padding: "2rem 1rem", position: "relative" }}>
         {loading ? (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))", gap: "1.5rem" }}>
             {[...Array(6)].map((_, i) => (
-              <div
-                key={i}
-                className="h-64 bg-gray-900/50 rounded-xl animate-pulse"
-              />
+              <div key={i} className="skeleton" style={{ height: "300px", borderRadius: "1rem" }} />
             ))}
           </div>
         ) : articles.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-gray-400 text-lg">No articles found</p>
-            {(search || category) && (
-              <button
-                onClick={() => {
-                  setSearch("");
-                  setCategory("");
-                  setPage(1);
-                }}
-                className="mt-4 text-blue-400 hover:text-blue-300"
-              >
-                Clear filters
-              </button>
-            )}
+          <div style={{ textAlign: "center", padding: "4rem 0" }}>
+            <p style={{ fontSize: "1.125rem", color: "var(--text-tertiary)" }}>No articles found</p>
           </div>
         ) : (
           <>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))", gap: "1.5rem" }}>
               {articles.map((article, index) => (
-                <ArticleCard
+                <article
                   key={article.id}
-                  article={article}
-                  index={index}
-                />
+                  className="card-glow fade-in"
+                  style={{
+                    background: "var(--bg-secondary)",
+                    border: "1px solid var(--border-primary)",
+                    borderRadius: "1rem",
+                    padding: "1.5rem",
+                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    animationDelay: `${index * 50}ms`,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-4px)";
+                    e.currentTarget.style.borderColor = "var(--border-secondary)";
+                    e.currentTarget.style.boxShadow = "0 20px 40px rgba(0, 0, 0, 0.3)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.borderColor = "var(--border-primary)";
+                    e.currentTarget.style.boxShadow = "none";
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem", position: "relative" }}>
+                    <span
+                      style={{
+                        fontSize: "0.75rem",
+                        fontWeight: 600,
+                        padding: "0.375rem 0.75rem",
+                        borderRadius: "9999px",
+                        background: `${categoryColors[article.category] || "#6b7280"}20`,
+                        color: categoryColors[article.category] || "#9ca3af",
+                        border: `1px solid ${categoryColors[article.category] || "#6b7280"}40`,
+                      }}
+                    >
+                      {article.category}
+                    </span>
+                    <time style={{ fontSize: "0.75rem", color: "var(--text-tertiary)" }}>
+                      {formatDistanceToNow(new Date(article.pub_date), { addSuffix: true })}
+                    </time>
+                  </div>
+
+                  <h3 style={{ fontSize: "1.25rem", fontWeight: "bold", marginBottom: "0.75rem", lineHeight: 1.3, position: "relative" }}>
+                    <a
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "var(--text-primary)", textDecoration: "none", transition: "color 0.2s" }}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent-blue)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-primary)")}
+                    >
+                      {article.title}
+                    </a>
+                  </h3>
+
+                  {article.description && (
+                    <div
+                      style={{
+                        fontSize: "0.875rem",
+                        color: "var(--text-secondary)",
+                        marginBottom: "1rem",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                        position: "relative",
+                      }}
+                      dangerouslySetInnerHTML={{ __html: article.description }}
+                    />
+                  )}
+
+                  <div style={{ display: "flex", justifyContent: "space-between", paddingTop: "1rem", borderTop: "1px solid var(--border-primary)", position: "relative" }}>
+                    <span style={{ fontSize: "0.75rem", color: "var(--text-tertiary)" }}>{article.source_name}</span>
+                    <a
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ fontSize: "0.875rem", color: "var(--accent-blue)", textDecoration: "none", fontWeight: 500 }}
+                    >
+                      Read more →
+                    </a>
+                  </div>
+                </article>
               ))}
             </div>
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex justify-center items-center gap-4 mt-12">
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem", marginTop: "3rem" }}>
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="px-4 py-2 rounded-lg bg-gray-900 text-gray-300 hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  style={{
+                    padding: "0.75rem 1.5rem",
+                    background: "var(--bg-secondary)",
+                    border: "1px solid var(--border-primary)",
+                    borderRadius: "0.5rem",
+                    color: "var(--text-primary)",
+                    cursor: page === 1 ? "not-allowed" : "pointer",
+                    opacity: page === 1 ? 0.5 : 1,
+                  }}
                 >
                   Previous
                 </button>
-                <span className="text-gray-400">
+                <span style={{ color: "var(--text-tertiary)" }}>
                   Page {page} of {totalPages}
                 </span>
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="px-4 py-2 rounded-lg bg-gray-900 text-gray-300 hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  style={{
+                    padding: "0.75rem 1.5rem",
+                    background: "var(--bg-secondary)",
+                    border: "1px solid var(--border-primary)",
+                    borderRadius: "0.5rem",
+                    color: "var(--text-primary)",
+                    cursor: page === totalPages ? "not-allowed" : "pointer",
+                    opacity: page === totalPages ? 0.5 : 1,
+                  }}
                 >
                   Next
                 </button>
