@@ -32,7 +32,10 @@ export function SideNav() {
     <nav className="fixed left-0 top-16 bottom-0 z-40 hidden md:flex w-16 lg:w-20 flex-col items-center border-r border-border/40 bg-background/95 backdrop-blur py-6 gap-2">
       <TooltipProvider delayDuration={0}>
         {navItems.map((item, index) => {
-          const isActive = pathname === item.href || pathname?.startsWith(`${item.href}/`);
+          // Special handling for /app to avoid matching /app/bookmarks, /app/settings, etc.
+          const isActive = item.href === '/app' 
+            ? (pathname === '/app' || pathname?.startsWith('/app/') && !pathname?.match(/\/(bookmarks|dashboard|settings)/))
+            : pathname === item.href || pathname?.startsWith(`${item.href}/`);
           const Icon = item.icon;
 
           return (
