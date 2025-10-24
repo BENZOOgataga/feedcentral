@@ -38,14 +38,11 @@ export function TopNav({ onSearchClick }: TopNavProps) {
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-colors group-hover:text-foreground" />
             <Input
               type="text"
-              placeholder="Search articles... (Cmd+K)"
+              placeholder="Search articles..."
               onClick={onSearchClick}
               readOnly
-              className="w-full pl-10 pr-20 h-9 bg-muted/50 border-border-glass cursor-pointer transition-all duration-200 hover:bg-muted focus:ring-2 focus:ring-primary/20"
+              className="w-full pl-10 h-9 bg-muted/50 border-border-glass cursor-pointer transition-all duration-200 hover:bg-muted focus:ring-2 focus:ring-primary/20"
             />
-            <kbd className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 hidden h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
-              <span className="text-xs">⌘</span>K
-            </kbd>
           </div>
         </div>
 
