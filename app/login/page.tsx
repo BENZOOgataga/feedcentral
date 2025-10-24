@@ -91,10 +91,6 @@ export default function LoginPage() {
           >
             {loading ? 'Signing in...' : 'Sign in'}
           </Button>
-
-          <div className="text-center text-sm text-neutral-400">
-            Default: admin@feedcentral.local / admin123
-          </div>
         </form>
       </div>
     </div>
