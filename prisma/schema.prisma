@@ -29,6 +29,8 @@ model User {
   lastLoginAt   DateTime?
   updatedAt     DateTime  @updatedAt
 
+  bookmarks     Bookmark[]
+
   @@map("users")
 }
 
@@ -98,12 +100,33 @@ model Article {
 
   source       Source    @relation(fields: [sourceId], references: [id], onDelete: Cascade)
   category     Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  bookmarks    Bookmark[]
 
   @@index([sourceId])
   @@index([categoryId])
   @@index([publishedAt(sort: Desc)])
   @@index([url])
   @@map("articles")
+}
+
+// ============================================
+// User Bookmarks
+// ============================================
+
+model Bookmark {
+  id          String   @id @default(cuid())
+  userId      String
+  articleId   String
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article     Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, articleId])
+  @@index([userId])
+  @@index([articleId])
+  @@index([createdAt(sort: Desc)])
+  @@map("bookmarks")
 }
 
 // ============================================
