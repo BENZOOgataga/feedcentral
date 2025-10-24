@@ -4,6 +4,14 @@ const nextConfig = {
   outputFileTracingIncludes: {
     '/api/**': ['./node_modules/.prisma/client/**/*'],
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
+  },
   turbopack: {},
 };
 
