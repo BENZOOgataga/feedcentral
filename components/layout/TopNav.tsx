@@ -42,7 +42,7 @@ export function TopNav({ onSearchClick }: TopNavProps) {
               onClick={onSearchClick}
               readOnly
               style={{ willChange: 'transform, opacity, background-color, border-color, box-shadow' }}
-              className="w-full pl-10 h-9 bg-muted/50 border-border-glass cursor-pointer transition-all duration-300 ease-in-out hover:bg-muted hover:border-border hover:shadow-sm focus:ring-2 focus:ring-primary/20"
+              className="w-full pl-11 h-9 bg-muted/50 border-border-glass cursor-pointer transition-all duration-300 ease-in-out hover:bg-muted hover:border-border hover:shadow-sm focus:ring-2 focus:ring-primary/20"
             />
           </div>
         </div>
