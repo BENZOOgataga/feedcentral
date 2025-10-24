@@ -14,16 +14,16 @@
 
 /**
  * Get database URL with fallback priority:
- * 1. PRISMA_DATABASE_URL (Vercel Postgres with connection pooling)
+ * 1. POSTGRES_PRISMA_URL (Vercel Postgres with connection pooling - recommended for Prisma)
  * 2. POSTGRES_URL (Vercel Postgres direct connection)
  * 3. DATABASE_URL (local development or custom setup)
  */
 export function getDatabaseUrl(): string {
   const isVercel = process.env.VERCEL === '1';
   
-  // Try Vercel Postgres pooled connection first (optimized for serverless)
-  if (process.env.PRISMA_DATABASE_URL) {
-    return process.env.PRISMA_DATABASE_URL;
+  // Try Vercel Postgres pooled connection first (optimized for serverless + Prisma)
+  if (process.env.POSTGRES_PRISMA_URL) {
+    return process.env.POSTGRES_PRISMA_URL;
   }
   
   // Try Vercel Postgres direct connection
@@ -41,7 +41,7 @@ export function getDatabaseUrl(): string {
     throw new Error(
       'Missing database connection string in Vercel environment.\n\n' +
       'Expected one of:\n' +
-      '  - PRISMA_DATABASE_URL (Vercel Postgres with pooling)\n' +
+      '  - POSTGRES_PRISMA_URL (Vercel Postgres with pooling - recommended)\n' +
       '  - POSTGRES_URL (Vercel Postgres direct connection)\n' +
       '  - DATABASE_URL (custom connection string)\n\n' +
       'Steps to fix:\n' +
