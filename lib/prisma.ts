@@ -14,12 +14,19 @@ const globalForPrisma = globalThis as unknown as {
 function createPrismaClient() {
   // Use Neon adapter for Vercel (serverless-friendly, no binary engines)
   if (process.env.VERCEL) {
-    // Use POSTGRES_URL for direct connection (not pooled)
-    const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+    // Vercel Postgres provides POSTGRES_PRISMA_URL for pooled connections
+    // Use POSTGRES_PRISMA_URL (pooled) for better serverless performance
+    const connectionString = 
+      process.env.POSTGRES_PRISMA_URL || 
+      process.env.POSTGRES_URL || 
+      process.env.DATABASE_URL;
     
     if (!connectionString) {
-      throw new Error('No database connection string found. Set POSTGRES_URL or DATABASE_URL.');
+      console.error('Available env vars:', Object.keys(process.env).filter(k => k.includes('POSTGRES') || k.includes('DATABASE')));
+      throw new Error('No database connection string found. Set POSTGRES_PRISMA_URL, POSTGRES_URL, or DATABASE_URL.');
     }
+    
+    console.log('Using connection string length:', connectionString.length);
     
     // Configure for serverless
     neonConfig.fetchConnectionCache = true;
