@@ -134,7 +134,7 @@ export function CommandSearch({ isOpen, onClose }: CommandSearchProps) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 autoFocus
-                className="flex-1 border-0 bg-transparent p-0 text-base placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="flex-1 border-0 bg-transparent px-2 py-0 text-base placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
               />
               <kbd className="hidden h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium sm:flex">
                 ESC
