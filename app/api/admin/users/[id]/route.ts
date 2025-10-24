@@ -10,9 +10,12 @@ import * as bcrypt from 'bcryptjs';
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Await params (Next.js 15+ requirement)
+    const { id } = await params;
+
     // Verify admin authentication
     const token = request.cookies.get('auth_token')?.value;
     
@@ -50,7 +53,7 @@ export async function PUT(
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existingUser) {
@@ -88,7 +91,7 @@ export async function PUT(
 
     // Update user
     const updatedUser = await prisma.user.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
       select: {
         id: true,
@@ -124,9 +127,12 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Await params (Next.js 15+ requirement)
+    const { id } = await params;
+
     // Verify admin authentication
     const token = request.cookies.get('auth_token')?.value;
     
@@ -151,7 +157,7 @@ export async function DELETE(
     }
 
     // Prevent self-deletion
-    if (decoded.userId === params.id) {
+    if (decoded.userId === id) {
       return NextResponse.json(
         { success: false, error: 'Cannot delete your own account' },
         { status: 400 }
@@ -160,7 +166,7 @@ export async function DELETE(
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existingUser) {
@@ -172,7 +178,7 @@ export async function DELETE(
 
     // Delete user
     await prisma.user.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({
