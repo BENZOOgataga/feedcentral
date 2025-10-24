@@ -110,19 +110,26 @@ export function CommandSearch({ isOpen, onClose }: CommandSearchProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
           className="absolute inset-0 bg-background/80 backdrop-blur-md"
           onClick={onClose}
+          style={{ willChange: 'opacity' }}
         />
 
         {/* Command palette */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: -20 }}
+          initial={{ opacity: 0, scale: 0.96, y: -10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: -20 }}
-          transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          exit={{ opacity: 0, scale: 0.96, y: -10 }}
+          transition={{ 
+            duration: 0.15, 
+            ease: [0.25, 0.1, 0.25, 1],
+            type: "spring",
+            stiffness: 500,
+            damping: 35
+          }}
           className="relative z-10 mx-4"
-          style={{ width: '100%', maxWidth: '42rem' }}
+          style={{ width: '100%', maxWidth: '42rem', willChange: 'transform, opacity' }}
         >
           <div className="overflow-hidden rounded-xl border border-border bg-card shadow-2xl">
             {/* Search input */}
