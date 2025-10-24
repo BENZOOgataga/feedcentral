@@ -92,9 +92,17 @@ export async function GET(request: NextRequest) {
     const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
     const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
-    await prisma.user.upsert({
+    // Delete old admin user if email is different (migration from old seed)
+    const oldAdminEmail = 'admin';
+    if (adminEmail !== oldAdminEmail) {
+      await prisma.user.deleteMany({
+        where: { email: oldAdminEmail },
+      });
+    }
+
+    const adminUser = await prisma.user.upsert({
       where: { email: adminEmail },
-      update: { passwordHash: hashedPassword },
+      update: { passwordHash: hashedPassword, name: 'Admin', role: 'ADMIN' },
       create: {
         email: adminEmail,
         name: 'Admin',
