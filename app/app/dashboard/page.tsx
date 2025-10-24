@@ -2,7 +2,7 @@ import { LayoutDashboard } from 'lucide-react';
 
 export default function DashboardPage() {
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
+    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center" style={{ width: '100%' }}>
       <div className="text-center space-y-4">
         <div className="flex justify-center">
           <div className="rounded-full bg-muted p-6">

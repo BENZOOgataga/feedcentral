@@ -30,7 +30,7 @@ export default function AppLayout({
       <TopNav onSearchClick={() => setIsSearchOpen(true)} />
       <SideNav />
       
-      <main className="md:pl-16 lg:pl-20 pt-16">
+      <main className="md:pl-16 lg:pl-20 pt-16" style={{ width: '100%' }}>
         {children}
       </main>
 
