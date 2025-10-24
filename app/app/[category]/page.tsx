@@ -87,7 +87,7 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
   }));
 
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       {/* Category Tabs */}
       <AppTabs tabs={tabs} />
 

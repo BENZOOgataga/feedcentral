@@ -103,7 +103,7 @@ export default function AppDashboard() {
   }));
 
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       {/* Category Tabs */}
       <AppTabs tabs={tabs} />
 
