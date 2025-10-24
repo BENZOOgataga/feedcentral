@@ -35,13 +35,14 @@ export function TopNav({ onSearchClick }: TopNavProps) {
         {/* Center - Search Bar */}
         <div className="hidden md:flex flex-1 max-w-xl mx-8" style={{ width: '100%', maxWidth: '36rem' }}>
           <div className="relative w-full group" style={{ width: '100%' }}>
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-all duration-300 ease-out group-hover:text-foreground" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground will-change-[color] transition-all duration-300 ease-in-out group-hover:text-foreground" />
             <Input
               type="text"
               placeholder="Search articles..."
               onClick={onSearchClick}
               readOnly
-              className="w-full pl-10 h-9 bg-muted/50 border-border-glass cursor-pointer transition-all duration-300 ease-out hover:bg-muted hover:border-border hover:shadow-sm focus:ring-2 focus:ring-primary/20"
+              style={{ willChange: 'transform, opacity, background-color, border-color, box-shadow' }}
+              className="w-full pl-10 h-9 bg-muted/50 border-border-glass cursor-pointer transition-all duration-300 ease-in-out hover:bg-muted hover:border-border hover:shadow-sm focus:ring-2 focus:ring-primary/20"
             />
           </div>
         </div>
