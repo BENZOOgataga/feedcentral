@@ -17,11 +17,10 @@ function createPrismaClient() {
   if (process.env.VERCEL) {
     const connectionString = getDatabaseUrl();
     const pool = new Pool({ connectionString });
-    const adapter = new PrismaNeon(pool);
+    const adapter = new PrismaNeon(pool as any);
     
     return new PrismaClient({
-      // @ts-ignore - adapter type mismatch in Prisma 6
-      adapter,
+      adapter: adapter as any,
       log: ['error'],
     });
   }
