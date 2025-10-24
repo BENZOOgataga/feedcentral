@@ -41,17 +41,17 @@ export async function GET(request: NextRequest) {
 
     // Seed categories
     const categories = [
-      { name: 'Tech', slug: 'tech', description: 'Technology news and updates' },
-      { name: 'News', slug: 'news', description: 'General news and current events' },
-      { name: 'Business', slug: 'business', description: 'Business and finance news' },
-      { name: 'Science', slug: 'science', description: 'Science and research updates' },
+      { name: 'Technology', slug: 'tech', icon: 'Cpu', color: '#7C5CFF', order: 1 },
+      { name: 'Security', slug: 'security', icon: 'Shield', color: '#ef4444', order: 2 },
+      { name: 'Business', slug: 'business', icon: 'TrendingUp', color: '#10b981', order: 3 },
+      { name: 'Science', slug: 'science', icon: 'Atom', color: '#06b6d4', order: 4 },
     ];
 
     const categoryRecords = [];
     for (const cat of categories) {
       const category = await prisma.category.upsert({
         where: { slug: cat.slug },
-        update: cat,
+        update: { name: cat.name, icon: cat.icon, color: cat.color, order: cat.order },
         create: cat,
       });
       categoryRecords.push(category);
@@ -61,17 +61,17 @@ export async function GET(request: NextRequest) {
     const sources = [
       { name: 'TechCrunch', url: 'https://techcrunch.com', feedUrl: 'https://techcrunch.com/feed/', categorySlug: 'tech', isActive: true },
       { name: 'The Verge', url: 'https://www.theverge.com', feedUrl: 'https://www.theverge.com/rss/index.xml', categorySlug: 'tech', isActive: true },
-      { name: 'Wired', url: 'https://www.wired.com', feedUrl: 'https://www.wired.com/feed/rss', categorySlug: 'tech', isActive: true },
+      { name: 'Engadget', url: 'https://www.engadget.com', feedUrl: 'https://www.engadget.com/rss.xml', categorySlug: 'tech', isActive: true },
       { name: 'Ars Technica', url: 'https://arstechnica.com', feedUrl: 'https://feeds.arstechnica.com/arstechnica/index', categorySlug: 'tech', isActive: true },
-      { name: 'BBC News', url: 'https://www.bbc.com/news', feedUrl: 'http://feeds.bbci.co.uk/news/rss.xml', categorySlug: 'news', isActive: true },
-      { name: 'Reuters', url: 'https://www.reuters.com', feedUrl: 'https://www.reutersagency.com/feed/', categorySlug: 'news', isActive: true },
-      { name: 'CNN', url: 'https://www.cnn.com', feedUrl: 'http://rss.cnn.com/rss/edition.rss', categorySlug: 'news', isActive: true },
+      { name: 'Hacker News', url: 'https://news.ycombinator.com', feedUrl: 'https://hnrss.org/frontpage', categorySlug: 'tech', isActive: true },
+      { name: 'Schneier on Security', url: 'https://www.schneier.com', feedUrl: 'https://www.schneier.com/feed/atom/', categorySlug: 'security', isActive: true },
+      { name: 'Krebs on Security', url: 'https://krebsonsecurity.com', feedUrl: 'https://krebsonsecurity.com/feed/', categorySlug: 'security', isActive: true },
       { name: 'Bloomberg', url: 'https://www.bloomberg.com', feedUrl: 'https://www.bloomberg.com/feed/podcast/business.xml', categorySlug: 'business', isActive: true },
       { name: 'Forbes', url: 'https://www.forbes.com', feedUrl: 'https://www.forbes.com/real-time/feed2/', categorySlug: 'business', isActive: true },
-      { name: 'Wall Street Journal', url: 'https://www.wsj.com', feedUrl: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml', categorySlug: 'business', isActive: true },
-      { name: 'Scientific American', url: 'https://www.scientificamerican.com', feedUrl: 'http://rss.sciam.com/ScientificAmerican-Global', categorySlug: 'science', isActive: true },
-      { name: 'Nature', url: 'https://www.nature.com', feedUrl: 'http://feeds.nature.com/nature/rss/current', categorySlug: 'science', isActive: true },
-      { name: 'Science Daily', url: 'https://www.sciencedaily.com', feedUrl: 'https://www.sciencedaily.com/rss/all.xml', categorySlug: 'science', isActive: true },
+      { name: 'Entrepreneur', url: 'https://www.entrepreneur.com', feedUrl: 'https://www.entrepreneur.com/latest.rss', categorySlug: 'business', isActive: true },
+      { name: 'ScienceDaily', url: 'https://www.sciencedaily.com', feedUrl: 'https://www.sciencedaily.com/rss/all.xml', categorySlug: 'science', isActive: true },
+      { name: 'Phys.org', url: 'https://phys.org', feedUrl: 'https://phys.org/rss-feed/', categorySlug: 'science', isActive: true },
+      { name: 'MIT Technology Review', url: 'https://www.technologyreview.com', feedUrl: 'https://www.technologyreview.com/feed/', categorySlug: 'science', isActive: true },
     ];
 
     const sourceRecords = [];
