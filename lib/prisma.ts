@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaNeon } from '@prisma/adapter-neon';
-import { Pool } from '@neondatabase/serverless';
-import { getDatabaseUrl } from './env';
+import { Pool, neonConfig } from '@neondatabase/serverless';
 
 /**
  * PrismaClient singleton instance
@@ -15,7 +14,16 @@ const globalForPrisma = globalThis as unknown as {
 function createPrismaClient() {
   // Use Neon adapter for Vercel (serverless-friendly, no binary engines)
   if (process.env.VERCEL) {
-    const connectionString = getDatabaseUrl();
+    // Use POSTGRES_URL for direct connection (not pooled)
+    const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+    
+    if (!connectionString) {
+      throw new Error('No database connection string found. Set POSTGRES_URL or DATABASE_URL.');
+    }
+    
+    // Configure for serverless
+    neonConfig.fetchConnectionCache = true;
+    
     const pool = new Pool({ connectionString });
     const adapter = new PrismaNeon(pool as any);
     
