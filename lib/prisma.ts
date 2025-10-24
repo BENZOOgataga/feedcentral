@@ -20,7 +20,7 @@ function createPrismaClient() {
     const adapter = new PrismaNeon(pool);
     
     return new PrismaClient({
-      adapter,
+      adapter: adapter as any,
       log: ['error'],
     });
   }
