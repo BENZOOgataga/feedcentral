@@ -14,19 +14,24 @@ const globalForPrisma = globalThis as unknown as {
 function createPrismaClient() {
   // Use Neon adapter for Vercel (serverless-friendly, no binary engines)
   if (process.env.VERCEL) {
-    // Vercel Postgres provides POSTGRES_PRISMA_URL for pooled connections
-    // Use POSTGRES_PRISMA_URL (pooled) for better serverless performance
+    // Get connection string - try all possible env vars
     const connectionString = 
-      process.env.POSTGRES_PRISMA_URL || 
       process.env.POSTGRES_URL || 
-      process.env.DATABASE_URL;
+      process.env.DATABASE_URL ||
+      process.env.POSTGRES_PRISMA_URL;
     
     if (!connectionString) {
-      console.error('Available env vars:', Object.keys(process.env).filter(k => k.includes('POSTGRES') || k.includes('DATABASE')));
-      throw new Error('No database connection string found. Set POSTGRES_PRISMA_URL, POSTGRES_URL, or DATABASE_URL.');
+      const envKeys = Object.keys(process.env).filter(k => 
+        k.includes('POSTGRES') || k.includes('DATABASE') || k.includes('PRISMA')
+      );
+      console.error('❌ No database connection string found!');
+      console.error('Available env vars:', envKeys);
+      throw new Error(`No database connection string found. Available vars: ${envKeys.join(', ')}`);
     }
     
-    console.log('Using connection string length:', connectionString.length);
+    console.log('✅ Using database connection');
+    console.log('Connection string length:', connectionString.length);
+    console.log('Connection starts with:', connectionString.substring(0, 20));
     
     // Configure for serverless
     neonConfig.fetchConnectionCache = true;
@@ -36,7 +41,7 @@ function createPrismaClient() {
     
     return new PrismaClient({
       adapter: adapter as any,
-      log: ['error'],
+      log: ['error', 'warn'],
     });
   }
   
