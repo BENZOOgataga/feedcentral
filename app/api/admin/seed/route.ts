@@ -59,19 +59,19 @@ export async function GET(request: NextRequest) {
 
     // Seed RSS sources
     const sources = [
-      { name: 'TechCrunch', url: 'https://techcrunch.com/feed/', categorySlug: 'tech', isActive: true },
-      { name: 'The Verge', url: 'https://www.theverge.com/rss/index.xml', categorySlug: 'tech', isActive: true },
-      { name: 'Wired', url: 'https://www.wired.com/feed/rss', categorySlug: 'tech', isActive: true },
-      { name: 'Ars Technica', url: 'https://feeds.arstechnica.com/arstechnica/index', categorySlug: 'tech', isActive: true },
-      { name: 'BBC News', url: 'http://feeds.bbci.co.uk/news/rss.xml', categorySlug: 'news', isActive: true },
-      { name: 'Reuters', url: 'https://www.reutersagency.com/feed/', categorySlug: 'news', isActive: true },
-      { name: 'CNN', url: 'http://rss.cnn.com/rss/edition.rss', categorySlug: 'news', isActive: true },
-      { name: 'Bloomberg', url: 'https://www.bloomberg.com/feed/podcast/business.xml', categorySlug: 'business', isActive: true },
-      { name: 'Forbes', url: 'https://www.forbes.com/real-time/feed2/', categorySlug: 'business', isActive: true },
-      { name: 'Wall Street Journal', url: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml', categorySlug: 'business', isActive: true },
-      { name: 'Scientific American', url: 'http://rss.sciam.com/ScientificAmerican-Global', categorySlug: 'science', isActive: true },
-      { name: 'Nature', url: 'http://feeds.nature.com/nature/rss/current', categorySlug: 'science', isActive: true },
-      { name: 'Science Daily', url: 'https://www.sciencedaily.com/rss/all.xml', categorySlug: 'science', isActive: true },
+      { name: 'TechCrunch', url: 'https://techcrunch.com', feedUrl: 'https://techcrunch.com/feed/', categorySlug: 'tech', isActive: true },
+      { name: 'The Verge', url: 'https://www.theverge.com', feedUrl: 'https://www.theverge.com/rss/index.xml', categorySlug: 'tech', isActive: true },
+      { name: 'Wired', url: 'https://www.wired.com', feedUrl: 'https://www.wired.com/feed/rss', categorySlug: 'tech', isActive: true },
+      { name: 'Ars Technica', url: 'https://arstechnica.com', feedUrl: 'https://feeds.arstechnica.com/arstechnica/index', categorySlug: 'tech', isActive: true },
+      { name: 'BBC News', url: 'https://www.bbc.com/news', feedUrl: 'http://feeds.bbci.co.uk/news/rss.xml', categorySlug: 'news', isActive: true },
+      { name: 'Reuters', url: 'https://www.reuters.com', feedUrl: 'https://www.reutersagency.com/feed/', categorySlug: 'news', isActive: true },
+      { name: 'CNN', url: 'https://www.cnn.com', feedUrl: 'http://rss.cnn.com/rss/edition.rss', categorySlug: 'news', isActive: true },
+      { name: 'Bloomberg', url: 'https://www.bloomberg.com', feedUrl: 'https://www.bloomberg.com/feed/podcast/business.xml', categorySlug: 'business', isActive: true },
+      { name: 'Forbes', url: 'https://www.forbes.com', feedUrl: 'https://www.forbes.com/real-time/feed2/', categorySlug: 'business', isActive: true },
+      { name: 'Wall Street Journal', url: 'https://www.wsj.com', feedUrl: 'https://feeds.a.dj.com/rss/RSSMarketsMain.xml', categorySlug: 'business', isActive: true },
+      { name: 'Scientific American', url: 'https://www.scientificamerican.com', feedUrl: 'http://rss.sciam.com/ScientificAmerican-Global', categorySlug: 'science', isActive: true },
+      { name: 'Nature', url: 'https://www.nature.com', feedUrl: 'http://feeds.nature.com/nature/rss/current', categorySlug: 'science', isActive: true },
+      { name: 'Science Daily', url: 'https://www.sciencedaily.com', feedUrl: 'https://www.sciencedaily.com/rss/all.xml', categorySlug: 'science', isActive: true },
     ];
 
     const sourceRecords = [];
@@ -80,23 +80,24 @@ export async function GET(request: NextRequest) {
       if (!category) continue;
 
       const source = await prisma.source.upsert({
-        where: { url: src.url },
-        update: { name: src.name, categoryId: category.id, isActive: src.isActive },
-        create: { name: src.name, url: src.url, categoryId: category.id, isActive: src.isActive },
+        where: { feedUrl: src.feedUrl },
+        update: { name: src.name, url: src.url, categoryId: category.id, isActive: src.isActive },
+        create: { name: src.name, url: src.url, feedUrl: src.feedUrl, categoryId: category.id, isActive: src.isActive },
       });
       sourceRecords.push(source);
     }
 
     // Seed admin user
-    const adminUsername = process.env.ADMIN_USERNAME || 'admin@feedcentral.local';
+    const adminEmail = process.env.ADMIN_USERNAME || 'admin@feedcentral.local';
     const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
     const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
     await prisma.user.upsert({
-      where: { email: adminUsername },
+      where: { email: adminEmail },
       update: { passwordHash: hashedPassword },
       create: {
-        email: adminUsername,
+        email: adminEmail,
+        name: 'Admin',
         passwordHash: hashedPassword,
         role: 'ADMIN',
       },
@@ -110,7 +111,7 @@ export async function GET(request: NextRequest) {
       details: {
         categories: categoryRecords.length,
         sources: sourceRecords.length,
-        adminUser: adminUsername,
+        adminUser: adminEmail,
       },
     });
   } catch (error) {
