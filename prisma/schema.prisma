@@ -2,8 +2,7 @@
 // PostgreSQL database schema for RSS feed aggregator
 
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
