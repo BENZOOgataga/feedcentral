@@ -3,10 +3,6 @@
   "installCommand": "npm install",
   "framework": "nextjs",
   "regions": ["iad1"],
-  "env": {
-    "DATABASE_URL": "@postgres_url",
-    "PRISMA_DATABASE_URL": "@prisma_database_url"
-  },
   "crons": [
     {
       "path": "/api/cron/fetch-feeds",
