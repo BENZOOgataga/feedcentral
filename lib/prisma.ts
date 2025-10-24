@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client';
-import path from 'path';
+import { PrismaNeon } from '@prisma/adapter-neon';
+import { Pool } from '@neondatabase/serverless';
+import { getDatabaseUrl } from './env';
 
 /**
  * PrismaClient singleton instance
@@ -10,23 +12,26 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-// Set Prisma query engine path for Vercel
-if (process.env.VERCEL) {
-  const queryEnginePath = path.join(
-    process.cwd(),
-    'node_modules',
-    '.prisma',
-    'client',
-    'libquery_engine-rhel-openssl-3.0.x.so.node'
-  );
-  process.env.PRISMA_QUERY_ENGINE_LIBRARY = queryEnginePath;
-}
-
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
+function createPrismaClient() {
+  // Use Neon adapter for Vercel (serverless-friendly, no binary engines)
+  if (process.env.VERCEL) {
+    const connectionString = getDatabaseUrl();
+    const pool = new Pool({ connectionString });
+    const adapter = new PrismaNeon(pool);
+    
+    return new PrismaClient({
+      adapter,
+      log: ['error'],
+    });
+  }
+  
+  // Use standard Prisma Client for local development
+  return new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   });
+}
+
+export const prisma = globalForPrisma.prisma ?? createPrismaClient();
 
 if (process.env.NODE_ENV !== 'production') {
   globalForPrisma.prisma = prisma;
