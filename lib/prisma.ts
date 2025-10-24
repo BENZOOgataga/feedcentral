@@ -12,13 +12,27 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function createPrismaClient() {
+  console.log('🔧 Creating Prisma client...');
+  console.log('VERCEL env var:', process.env.VERCEL);
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+  
+  // Check if we're in Vercel (use NODE_ENV as fallback check)
+  const isVercel = process.env.VERCEL === '1' || process.env.VERCEL === 'true' || !!process.env.VERCEL;
+  
   // Use Neon adapter for Vercel (serverless-friendly, no binary engines)
-  if (process.env.VERCEL) {
+  if (isVercel) {
+    console.log('🌐 Detected Vercel environment');
+    
     // Get connection string - try all possible env vars
     const connectionString = 
       process.env.POSTGRES_URL || 
       process.env.DATABASE_URL ||
       process.env.POSTGRES_PRISMA_URL;
+    
+    console.log('Database env vars check:');
+    console.log('- POSTGRES_URL:', !!process.env.POSTGRES_URL, process.env.POSTGRES_URL?.substring(0, 20));
+    console.log('- DATABASE_URL:', !!process.env.DATABASE_URL, process.env.DATABASE_URL?.substring(0, 20));
+    console.log('- POSTGRES_PRISMA_URL:', !!process.env.POSTGRES_PRISMA_URL);
     
     if (!connectionString) {
       const envKeys = Object.keys(process.env).filter(k => 
@@ -29,9 +43,7 @@ function createPrismaClient() {
       throw new Error(`No database connection string found. Available vars: ${envKeys.join(', ')}`);
     }
     
-    console.log('✅ Using database connection');
-    console.log('Connection string length:', connectionString.length);
-    console.log('Connection starts with:', connectionString.substring(0, 20));
+    console.log('✅ Using database connection, length:', connectionString.length);
     
     // Configure for serverless
     neonConfig.fetchConnectionCache = true;
@@ -45,6 +57,7 @@ function createPrismaClient() {
     });
   }
   
+  console.log('💻 Using local Prisma client');
   // Use standard Prisma Client for local development
   return new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
