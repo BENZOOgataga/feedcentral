@@ -16,11 +16,10 @@ function createPrismaClient() {
   // Use Neon adapter for Vercel (serverless-friendly, no binary engines)
   if (process.env.VERCEL) {
     const connectionString = getDatabaseUrl();
-    const pool = new Pool({ connectionString });
     const adapter = new PrismaNeon({ connectionString });
     
     return new PrismaClient({
-      adapter: adapter as any,
+      adapter,
       log: ['error'],
     });
   }
