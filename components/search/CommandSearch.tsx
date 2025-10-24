@@ -62,21 +62,34 @@ export function CommandSearch({ isOpen, onClose }: CommandSearchProps) {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, results, selectedIndex]);
 
-  // Search logic (mock for now)
+  // Search logic with debouncing
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
+      setIsSearching(false);
       return;
     }
 
     setIsSearching(true);
     
-    // Simulate API call
-    const timer = setTimeout(() => {
-      // Mock results - replace with actual API call
-      setResults([]);
-      setIsSearching(false);
-      setSelectedIndex(0);
+    // Debounce search
+    const timer = setTimeout(async () => {
+      try {
+        const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=10`);
+        const data = await response.json();
+        
+        if (data.success) {
+          setResults(data.data || []);
+        } else {
+          setResults([]);
+        }
+      } catch (error) {
+        console.error('Search failed:', error);
+        setResults([]);
+      } finally {
+        setIsSearching(false);
+        setSelectedIndex(0);
+      }
     }, 300);
 
     return () => clearTimeout(timer);
@@ -91,7 +104,7 @@ export function CommandSearch({ isOpen, onClose }: CommandSearchProps) {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[20vh]">
+      <div className="fixed inset-0 z-100 flex items-start justify-center pt-[20vh]">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -108,7 +121,8 @@ export function CommandSearch({ isOpen, onClose }: CommandSearchProps) {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: -20 }}
           transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 w-full max-w-2xl mx-4"
+          className="relative z-10 mx-4"
+          style={{ width: '100%', maxWidth: '42rem' }}
         >
           <div className="overflow-hidden rounded-xl border border-border bg-card shadow-2xl">
             {/* Search input */}
@@ -155,7 +169,7 @@ export function CommandSearch({ isOpen, onClose }: CommandSearchProps) {
                           : 'hover:bg-muted/50'
                       )}
                     >
-                      <FileText className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                      <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
                       <div className="flex-1 overflow-hidden">
                         <p className="truncate text-sm font-medium">
                           {article.title}
@@ -164,7 +178,7 @@ export function CommandSearch({ isOpen, onClose }: CommandSearchProps) {
                           {article.source.name} • {new Date(article.publishedAt).toLocaleDateString()}
                         </p>
                       </div>
-                      <ArrowRight className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                      <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground" />
                     </button>
                   ))}
                 </div>

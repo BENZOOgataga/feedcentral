@@ -26,7 +26,7 @@ export default function AppLayout({
   }, []);
 
   return (
-    <div className="relative min-h-screen">
+    <>
       <TopNav onSearchClick={() => setIsSearchOpen(true)} />
       <SideNav />
       
@@ -38,6 +38,6 @@ export default function AppLayout({
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
       />
-    </div>
+    </>
   );
 }

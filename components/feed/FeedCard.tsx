@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Article } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { decodeHtmlEntities } from '@/lib/decode-html';
 
 interface FeedCardProps {
   article: Article;
@@ -40,30 +41,28 @@ export function FeedCard({ article, index = 0 }: FeedCardProps) {
         )}
       >
         <div className="flex gap-4">
-          {/* Article Image */}
-          {article.imageUrl && (
-            <div className="relative h-24 w-32 flex-shrink-0 overflow-hidden rounded-lg bg-muted">
-              <Image
-                src={article.imageUrl}
-                alt={article.title}
-                fill
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
-                sizes="(max-width: 768px) 128px, 128px"
-              />
-            </div>
-          )}
+          {/* Article Image - Always shown with fallback */}
+          <div className="relative h-24 w-32 shrink-0 overflow-hidden rounded-lg bg-muted">
+            <Image
+              src={article.imageUrl || `https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=300&fit=crop`}
+              alt={article.title}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              sizes="(max-width: 768px) 128px, 128px"
+            />
+          </div>
 
           {/* Content */}
           <div className="flex flex-1 flex-col gap-2">
             {/* Title */}
             <h3 className="line-clamp-2 text-base font-medium leading-snug text-foreground transition-colors group-hover:text-primary">
-              {article.title}
+              {decodeHtmlEntities(article.title)}
             </h3>
 
             {/* Description */}
             {article.description && (
               <p className="line-clamp-2 text-sm text-muted-foreground">
-                {article.description}
+                {decodeHtmlEntities(article.description)}
               </p>
             )}
 
@@ -81,7 +80,7 @@ export function FeedCard({ article, index = 0 }: FeedCardProps) {
 
               <div className="flex items-center gap-1">
                 <Calendar className="h-3 w-3" />
-                <time dateTime={article.publishedAt.toISOString()}>{formattedDate}</time>
+                <time dateTime={typeof article.publishedAt === 'string' ? article.publishedAt : article.publishedAt.toISOString()}>{formattedDate}</time>
               </div>
 
               {article.author && (
@@ -91,7 +90,7 @@ export function FeedCard({ article, index = 0 }: FeedCardProps) {
           </div>
 
           {/* External link indicator */}
-          <div className="flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100">
+          <div className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100">
             <ExternalLink className="h-4 w-4 text-muted-foreground" />
           </div>
         </div>

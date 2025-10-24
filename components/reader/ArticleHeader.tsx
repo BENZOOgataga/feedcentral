@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Article } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { decodeHtmlEntities } from '@/lib/decode-html';
 
 interface ArticleHeaderProps {
   article: Article;
@@ -22,20 +23,16 @@ export function ArticleHeader({ article }: ArticleHeaderProps) {
         <Badge variant="outline">{article.category.name}</Badge>
         <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
           <Calendar className="h-3.5 w-3.5" />
-          <time dateTime={article.publishedAt.toISOString()}>{formattedDate}</time>
+          <time dateTime={typeof article.publishedAt === 'string' ? article.publishedAt : article.publishedAt.toISOString()}>{formattedDate}</time>
         </div>
       </div>
 
       <h1 className="mb-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-        {article.title}
+        {decodeHtmlEntities(article.title)}
       </h1>
 
       {article.author && (
-        <p className="mb-4 text-sm text-muted-foreground">by {article.author}</p>
-      )}
-
-      {article.description && (
-        <p className="mb-6 text-lg text-muted-foreground">{article.description}</p>
+        <p className="mb-6 text-sm text-muted-foreground">by {decodeHtmlEntities(article.author)}</p>
       )}
 
       <Button asChild className="gap-2">

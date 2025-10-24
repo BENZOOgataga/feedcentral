@@ -149,12 +149,31 @@
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
   }
+  
+  html {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    min-width: 100vw;
+    height: 100%;
+  }
+  
   body {
     @apply bg-background text-foreground;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    min-width: 100vw;
+    height: 100%;
     font-feature-settings: 'rlig' 1, 'calt' 1;
+    overflow-x: hidden;
   }
   
   /* Support for reduced motion */

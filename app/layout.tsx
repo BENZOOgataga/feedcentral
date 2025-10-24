@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { AuthProvider } from "@/lib/hooks/useAuth";
+import { Toaster } from "@/components/ui/toaster";
 import { VercelAnalytics } from "@/components/analytics/VercelAnalytics";
 import { SpeedInsights } from "@/components/analytics/SpeedInsights";
 import "./globals.css";
@@ -32,9 +34,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider>
-          {children}
-          <VercelAnalytics />
-          <SpeedInsights />
+          <AuthProvider>
+            {children}
+            <Toaster />
+            <VercelAnalytics />
+            <SpeedInsights />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

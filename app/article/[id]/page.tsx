@@ -1,26 +1,70 @@
 'use client';
 
+import { use, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ArticleHeader } from '@/components/reader/ArticleHeader';
 import { ArticleContent } from '@/components/reader/ArticleContent';
 import { Article } from '@/types';
 
-// Mock article fetching - replace with actual API call
-async function getArticle(id: string): Promise<Article | null> {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  return null; // Replace with actual fetch
-}
+export default function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const [article, setArticle] = useState<Article | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-export default function ArticlePage({ params }: { params: { id: string } }) {
-  // For now, return a mock state - in production, use proper data fetching
-  const article = null as Article | null;
+  useEffect(() => {
+    fetchArticle();
+  }, [id]);
 
-  if (!article) {
+  async function fetchArticle() {
+    try {
+      const startTime = Date.now();
+      const response = await fetch(`/api/articles/${id}`);
+      const data = await response.json();
+
+      if (data.success) {
+        setArticle(data.data);
+      } else {
+        setError(true);
+      }
+
+      // Ensure minimum loading time of 1 second for smoother UX
+      const elapsed = Date.now() - startTime;
+      const minLoadTime = 1000;
+      if (elapsed < minLoadTime) {
+        await new Promise(resolve => setTimeout(resolve, minLoadTime - elapsed));
+      }
+    } catch (err) {
+      console.error('Failed to fetch article:', err);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="content-container px-4 py-12 sm:px-6">
+        <div className="mx-auto max-w-3xl">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 w-24 rounded bg-neutral-800" />
+            <div className="h-12 w-3/4 rounded bg-neutral-800" />
+            <div className="h-6 w-1/2 rounded bg-neutral-800" />
+            <div className="space-y-2">
+              <div className="h-4 rounded bg-neutral-800" />
+              <div className="h-4 rounded bg-neutral-800" />
+              <div className="h-4 w-5/6 rounded bg-neutral-800" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !article) {
     return (
       <div className="content-container px-4 py-12 sm:px-6">
         <div className="mx-auto max-w-3xl text-center">

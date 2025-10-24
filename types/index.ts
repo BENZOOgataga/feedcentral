@@ -6,9 +6,9 @@ export interface Article {
   description: string;
   content?: string;
   url: string;
-  imageUrl?: string;
-  author?: string;
-  publishedAt: Date;
+  imageUrl?: string | null;
+  author?: string | null;
+  publishedAt: Date | string;
   source: Source;
   category: Category;
   tags?: string[];

@@ -1,9 +1,10 @@
 'use client';
 
-import { Search, User } from 'lucide-react';
+import { Search } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { UserMenu } from '@/components/layout/UserMenu';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -17,7 +18,7 @@ export function TopNav({ onSearchClick }: TopNavProps) {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60"
     >
       <div className="content-container flex h-16 items-center justify-between px-4 sm:px-6">
         {/* Logo */}
@@ -64,15 +65,8 @@ export function TopNav({ onSearchClick }: TopNavProps) {
           {/* Theme toggle */}
           <ThemeToggle />
 
-          {/* User profile */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-9 w-9 transition-all duration-200 hover:bg-muted hover:scale-105 active:scale-95"
-            aria-label="User profile"
-          >
-            <User className="h-4 w-4" />
-          </Button>
+          {/* User menu */}
+          <UserMenu />
         </div>
       </div>
     </motion.header>

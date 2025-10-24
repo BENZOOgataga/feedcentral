@@ -19,8 +19,17 @@ export function AppTabs({ tabs }: AppTabsProps) {
   const pathname = usePathname();
 
   const getCurrentTab = () => {
-    const match = tabs.find((tab) => pathname === tab.href || pathname?.startsWith(`${tab.href}/`));
-    return match?.value || tabs[0]?.value;
+    // First try exact match
+    const exactMatch = tabs.find((tab) => pathname === tab.href);
+    if (exactMatch) return exactMatch.value;
+
+    // Then try prefix match (for nested routes), but ensure it's a real path segment
+    const prefixMatch = tabs.find((tab) => {
+      if (tab.href === '/app') return false; // Don't match /app for /app/category
+      return pathname?.startsWith(`${tab.href}/`) || pathname?.startsWith(`${tab.href}?`);
+    });
+    
+    return prefixMatch?.value || tabs[0]?.value;
   };
 
   const activeTab = getCurrentTab();

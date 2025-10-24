@@ -1,0 +1,137 @@
+// FeedCentral Prisma Schema
+// PostgreSQL database schema for RSS feed aggregator
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Supports multiple env var names for flexibility
+  // Vercel: POSTGRES_URL or PRISMA_DATABASE_URL
+  // Local: DATABASE_URL
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// User Management
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  passwordHash  String
+  role          UserRole  @default(USER)
+  avatar        String?
+  createdAt     DateTime  @default(now())
+  lastLoginAt   DateTime?
+  updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+// ============================================
+// Content Organization
+// ============================================
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  icon      String?
+  color     String?
+  order     Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  sources   Source[]
+  articles  Article[]
+
+  @@index([slug])
+  @@map("categories")
+}
+
+model Source {
+  id             String    @id @default(cuid())
+  name           String
+  url            String
+  feedUrl        String    @unique
+  categoryId     String
+  logoUrl        String?
+  isActive       Boolean   @default(true)
+  lastFetchedAt  DateTime?
+  fetchInterval  Int       @default(30) // minutes
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  category       Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  articles       Article[]
+  feedJobs       FeedJob[]
+
+  @@index([categoryId])
+  @@index([isActive])
+  @@index([lastFetchedAt])
+  @@map("sources")
+}
+
+model Article {
+  id           String    @id @default(cuid())
+  title        String
+  description  String    @db.Text
+  content      String?   @db.Text
+  url          String    @unique
+  imageUrl     String?
+  author       String?
+  publishedAt  DateTime
+  sourceId     String
+  categoryId   String
+  tags         String[]  @default([])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  source       Source    @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  category     Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([sourceId])
+  @@index([categoryId])
+  @@index([publishedAt(sort: Desc)])
+  @@index([url])
+  @@map("articles")
+}
+
+// ============================================
+// Feed Management
+// ============================================
+
+model FeedJob {
+  id              String     @id @default(cuid())
+  sourceId        String
+  status          JobStatus  @default(PENDING)
+  startedAt       DateTime   @default(now())
+  completedAt     DateTime?
+  articlesFound   Int        @default(0)
+  articlesAdded   Int        @default(0)
+  error           String?    @db.Text
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  source          Source     @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@index([sourceId])
+  @@index([status])
+  @@index([startedAt(sort: Desc)])
+  @@map("feed_jobs")
+}
+
+enum JobStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
