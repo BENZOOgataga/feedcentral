@@ -10,7 +10,7 @@
   "crons": [
     {
       "path": "/api/cron/fetch-feeds",
-      "schedule": "*/30 * * * *"
+      "schedule": "0 0 * * *"
     }
   ]
 }
