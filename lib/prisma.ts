@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import path from 'path';
 
 /**
  * PrismaClient singleton instance
@@ -8,6 +9,18 @@ import { PrismaClient } from '@prisma/client';
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
+
+// Set Prisma query engine path for Vercel
+if (process.env.VERCEL) {
+  const queryEnginePath = path.join(
+    process.cwd(),
+    'node_modules',
+    '.prisma',
+    'client',
+    'libquery_engine-rhel-openssl-3.0.x.so.node'
+  );
+  process.env.PRISMA_QUERY_ENGINE_LIBRARY = queryEnginePath;
+}
 
 export const prisma =
   globalForPrisma.prisma ??
