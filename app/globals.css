@@ -227,6 +227,23 @@
     margin-left: auto;
     margin-right: auto;
   }
+  
+  /* High FPS animations - force 120fps */
+  * {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    perspective: 1000px;
+    -webkit-perspective: 1000px;
+  }
+  
+  /* Optimize all transitions for 120fps */
+  *[class*="transition"],
+  *[class*="hover:"],
+  *[class*="duration-"] {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
 }
 
 @keyframes fadeIn {

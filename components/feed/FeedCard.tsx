@@ -26,19 +26,21 @@ export function FeedCard({ article, index = 0 }: FeedCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        duration: 0.3,
-        delay: index * 0.03,
-        ease: [0.16, 1, 0.3, 1],
+        duration: 0.25,
+        delay: index * 0.02,
+        ease: [0.25, 0.1, 0.25, 1],
       }}
+      style={{ willChange: 'transform, opacity' }}
       className="group"
     >
       <Link
         href={`/article/${article.id}`}
         className={cn(
-          'block rounded-xl border border-border/50 bg-card p-4 transition-all duration-200',
+          'block rounded-xl border border-border/50 bg-card p-4 transition-all duration-150',
           'hover:-translate-y-0.5 hover:border-border hover:shadow-lg hover:shadow-black/5',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
         )}
+        style={{ willChange: 'transform, box-shadow, border-color' }}
       >
         <div className="flex gap-4">
           {/* Article Image - Always shown with fallback */}
