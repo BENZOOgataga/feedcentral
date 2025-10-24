@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
       const category = categoryRecords.find((c) => c.slug === src.categorySlug);
       if (!category) continue;
 
-      const source = await prisma.rSSSource.upsert({
+      const source = await prisma.source.upsert({
         where: { url: src.url },
         update: { name: src.name, categoryId: category.id, isActive: src.isActive },
         create: { name: src.name, url: src.url, categoryId: category.id, isActive: src.isActive },
@@ -93,10 +93,10 @@ export async function GET(request: NextRequest) {
     const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
     await prisma.user.upsert({
-      where: { username: adminUsername },
+      where: { email: adminUsername },
       update: { passwordHash: hashedPassword },
       create: {
-        username: adminUsername,
+        email: adminUsername,
         passwordHash: hashedPassword,
         role: 'ADMIN',
       },
