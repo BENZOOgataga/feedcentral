@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaNeon } from '@prisma/adapter-neon';
+import { Pool } from '@neondatabase/serverless';
 import { getDatabaseUrl } from './env';
 
 /**
@@ -15,9 +16,11 @@ function createPrismaClient() {
   // Use Neon adapter for Vercel (serverless-friendly, no binary engines)
   if (process.env.VERCEL) {
     const connectionString = getDatabaseUrl();
-    const adapter = new PrismaNeon(connectionString);
+    const pool = new Pool({ connectionString });
+    const adapter = new PrismaNeon(pool);
     
     return new PrismaClient({
+      // @ts-ignore - adapter type mismatch in Prisma 6
       adapter,
       log: ['error'],
     });
