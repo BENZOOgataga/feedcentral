@@ -121,11 +121,11 @@ export default function AdminPanel() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="content-container px-4 py-8 sm:px-6">
+      <div className="content-container px-6 py-8 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            Admin Dashboard
+            Dashboard Overview
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Welcome back, {user.name}. Here's what's happening with your feed aggregator.
@@ -133,13 +133,13 @@ export default function AdminPanel() {
         </div>
 
         {/* Stats Grid */}
-        <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {statCards.map((stat) => {
             const Icon = stat.icon;
             return (
               <div
                 key={stat.title}
-                className="rounded-lg border border-border bg-card p-6"
+                className="rounded-lg border border-border bg-card p-6 transition-all hover:shadow-md"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -167,7 +167,7 @@ export default function AdminPanel() {
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {adminSections.map((section) => {
             const Icon = section.icon;
             return (

@@ -95,6 +95,8 @@ model Article {
   sourceId     String
   categoryId   String
   tags         String[]  @default([])
+  deletedAt    DateTime? // Soft delete timestamp
+  archivedData Json?     // Preserve article data for bookmarks when soft-deleted
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
@@ -106,6 +108,7 @@ model Article {
   @@index([categoryId])
   @@index([publishedAt(sort: Desc)])
   @@index([url])
+  @@index([deletedAt]) // Index for filtering out deleted articles
   @@map("articles")
 }
 

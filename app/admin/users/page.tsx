@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRequireAdmin } from '@/lib/hooks/useAuth';
-import { Users, Plus, Search, Shield, User as UserIcon, Mail, Calendar, Edit, Trash2, X, ArrowLeft } from 'lucide-react';
+import { Users, Plus, Search, Shield, User as UserIcon, Mail, Calendar, Edit, Trash2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import Link from 'next/link';
 import {
   Dialog,
   DialogContent,
@@ -154,18 +153,8 @@ export default function UsersPage() {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="content-container px-4 py-8 sm:px-6">
-        {/* Back to Admin */}
-        <div className="mb-6">
-          <Link href="/admin">
-            <Button variant="outline" size="sm" className="gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              Back to Admin Panel
-            </Button>
-          </Link>
-        </div>
-
+    <div className="min-h-screen bg-background px-6 py-8 lg:px-8">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">

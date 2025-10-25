@@ -14,7 +14,7 @@
 
 /**
  * Get database URL with fallback priority:
- * 1. POSTGRES_PRISMA_URL (Vercel Postgres with connection pooling - recommended for Prisma)
+ * 1. PRISMA_DATABASE_URL (Vercel Postgres pooled URL) or POSTGRES_PRISMA_URL (legacy)
  * 2. POSTGRES_URL (Vercel Postgres direct connection)
  * 3. DATABASE_URL (local development or custom setup)
  */
@@ -22,10 +22,16 @@ export function getDatabaseUrl(): string {
   const isVercel = process.env.VERCEL === '1';
   
   // Try Vercel Postgres pooled connection first (optimized for serverless + Prisma)
+  // Prefer the canonical Prisma/Vercel pooled URL name
+  if (process.env.PRISMA_DATABASE_URL) {
+    return process.env.PRISMA_DATABASE_URL;
+  }
+
+  // Backwards-compatible name some projects used
   if (process.env.POSTGRES_PRISMA_URL) {
     return process.env.POSTGRES_PRISMA_URL;
   }
-  
+
   // Try Vercel Postgres direct connection
   if (process.env.POSTGRES_URL) {
     return process.env.POSTGRES_URL;
@@ -190,7 +196,7 @@ export function getEnvInfo() {
     isProduction: isProduction(),
     isVercel: isVercel(),
     siteUrl: getSiteUrl(),
-    hasDatabase: !!process.env.DATABASE_URL || !!process.env.POSTGRES_URL || !!process.env.POSTGRES_PRISMA_URL,
+  hasDatabase: !!process.env.DATABASE_URL || !!process.env.POSTGRES_URL || !!process.env.POSTGRES_PRISMA_URL || !!process.env.PRISMA_DATABASE_URL,
     hasJwtSecret: !!process.env.JWT_SECRET,
     hasCronKey: !!process.env.CRON_API_KEY,
   };

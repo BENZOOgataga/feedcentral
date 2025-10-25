@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRequireAdmin } from '@/lib/hooks/useAuth';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, CheckCircle2, XCircle, Loader2, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
+import { Clock, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 
 interface FeedJob {
   id: string;
@@ -103,74 +102,65 @@ export default function AdminJobsPage() {
   }
 
   return (
-    <div className="content-container px-4 py-6 sm:px-6">
-      <div className="space-y-6">
-        {/* Back to Admin */}
+    <div className="min-h-screen bg-background px-6 py-8 lg:px-8">
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Header */}
         <div>
-          <Link href="/admin">
-            <Button variant="outline" size="sm" className="gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              Back to Admin Panel
-            </Button>
-          </Link>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Feed Jobs</h1>
+          <p className="text-sm text-muted-foreground mt-2">
+            RSS feed fetch job history and status (auto-refreshes every 10s)
+          </p>
         </div>
 
-        <div>
-          <h1 className="text-2xl font-bold text-white">Feed Jobs</h1>
-        <p className="text-sm text-neutral-400 mt-1">
-          RSS feed fetch job history and status
-        </p>
-      </div>
-
-      <div className="space-y-2">
-        {jobs.map((job) => (
-          <div
-            key={job.id}
-            className="rounded-lg border border-white/10 bg-neutral-900 p-4"
-          >
-            <div className="flex items-start justify-between">
-              <div className="flex items-start gap-3 flex-1">
-                {getStatusIcon(job.status)}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-medium text-white">{job.source.name}</h3>
-                    {getStatusBadge(job.status)}
-                  </div>
-                  <div className="mt-1 text-sm text-neutral-400">
-                    Started: {new Date(job.startedAt).toLocaleString()}
-                  </div>
-                  {job.completedAt && (
-                    <div className="text-sm text-neutral-400">
-                      Completed: {new Date(job.completedAt).toLocaleString()}
+        {/* Jobs List */}
+        <div className="space-y-3">
+          {jobs.map((job) => (
+            <div
+              key={job.id}
+              className="rounded-lg border border-border bg-card p-5 hover:shadow-md transition-all"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3 flex-1">
+                  {getStatusIcon(job.status)}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-semibold text-foreground">{job.source.name}</h3>
+                      {getStatusBadge(job.status)}
                     </div>
-                  )}
+                    <div className="mt-2 space-y-1 text-sm text-muted-foreground">
+                      <div>Started: {new Date(job.startedAt).toLocaleString()}</div>
+                      {job.completedAt && (
+                        <div>Completed: {new Date(job.completedAt).toLocaleString()}</div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <div className="text-sm text-muted-foreground">
+                    Found: <span className="font-medium text-foreground">{job.articlesFound}</span>
+                  </div>
+                  <div className="text-sm text-green-600 dark:text-green-400">
+                    Added: <span className="font-medium">{job.articlesAdded}</span>
+                  </div>
                 </div>
               </div>
 
-              <div className="text-right">
-                <div className="text-sm text-neutral-400">
-                  Found: {job.articlesFound}
+              {job.error && (
+                <div className="mt-4 rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-600 dark:text-red-400">
+                  <span className="font-semibold">Error:</span> {job.error}
                 </div>
-                <div className="text-sm text-green-400">
-                  Added: {job.articlesAdded}
-                </div>
-              </div>
+              )}
             </div>
+          ))}
 
-            {job.error && (
-              <div className="mt-3 rounded-md bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-400">
-                <span className="font-medium">Error:</span> {job.error}
-              </div>
-            )}
-          </div>
-        ))}
-
-        {jobs.length === 0 && (
-          <div className="text-center py-12 text-neutral-400">
-            No jobs found
-          </div>
-        )}
-      </div>
+          {jobs.length === 0 && (
+            <div className="text-center py-16 text-muted-foreground">
+              <p className="text-lg">No jobs found</p>
+              <p className="text-sm mt-1">Feed jobs will appear here once RSS sources are fetched</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

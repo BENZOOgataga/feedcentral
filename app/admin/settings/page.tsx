@@ -2,10 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRequireAdmin } from '@/lib/hooks/useAuth';
-import { Settings as SettingsIcon, Save, RefreshCw, Database, Key, Globe, Bell, ArrowLeft } from 'lucide-react';
+import { Settings as SettingsIcon, Save, RefreshCw, Database, Key, Globe, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import Link from 'next/link';
 
 export default function SettingsPage() {
   const { user, isLoading: authLoading } = useRequireAdmin();
@@ -46,18 +45,8 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="content-container px-4 py-8 sm:px-6">
-        {/* Back to Admin */}
-        <div className="mb-6">
-          <Link href="/admin">
-            <Button variant="outline" size="sm" className="gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              Back to Admin Panel
-            </Button>
-          </Link>
-        </div>
-
+    <div className="min-h-screen bg-background px-6 py-8 lg:px-8">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight text-foreground">

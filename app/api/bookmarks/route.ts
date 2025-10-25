@@ -22,9 +22,48 @@ export async function GET(request: NextRequest) {
         orderBy: { createdAt: 'desc' },
       });
 
+      // Transform bookmarks to handle deleted articles
+      const transformedBookmarks = bookmarks.map(bookmark => {
+        const article = bookmark.article;
+        
+        // If article is soft-deleted, use archived data
+        if (article.deletedAt && article.archivedData) {
+          const archived = article.archivedData as any;
+          return {
+            ...bookmark,
+            article: {
+              ...article,
+              title: archived.title || article.title,
+              description: archived.description || article.description,
+              url: archived.url || article.url,
+              imageUrl: archived.imageUrl || article.imageUrl,
+              author: archived.author || article.author,
+              publishedAt: archived.publishedAt || article.publishedAt,
+              isDeleted: true, // Flag for UI
+              source: {
+                ...article.source,
+                name: archived.sourceName || article.source.name,
+              },
+              category: {
+                ...article.category,
+                name: archived.categoryName || article.category.name,
+              },
+            },
+          };
+        }
+        
+        return {
+          ...bookmark,
+          article: {
+            ...article,
+            isDeleted: false,
+          },
+        };
+      });
+
       return NextResponse.json({
         success: true,
-        data: bookmarks,
+        data: transformedBookmarks,
       });
     } catch (error: any) {
       console.error('Get bookmarks error:', error);

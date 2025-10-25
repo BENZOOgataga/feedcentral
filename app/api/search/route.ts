@@ -2,78 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
 /**
- * Calculate relevance score for an article based on search query
- * Higher score = more relevant
- */
-function calculateRelevanceScore(article: any, query: string): number {
-  const queryLower = query.toLowerCase();
-  const queryWords = queryLower.split(/\s+/).filter(w => w.length > 0);
-  
-  let score = 0;
-  
-  const title = (article.title || '').toLowerCase();
-  const description = (article.description || '').toLowerCase();
-  const content = (article.content || '').toLowerCase();
-  const author = (article.author || '').toLowerCase();
-  
-  // Exact phrase match in title = highest priority (100 points)
-  if (title.includes(queryLower)) {
-    score += 100;
-  }
-  
-  // Title starts with query (80 points)
-  if (title.startsWith(queryLower)) {
-    score += 80;
-  }
-  
-  // Individual word matches in title (10 points per word)
-  queryWords.forEach(word => {
-    if (title.includes(word)) {
-      score += 10;
-    }
-  });
-  
-  // Exact phrase match in description (50 points)
-  if (description.includes(queryLower)) {
-    score += 50;
-  }
-  
-  // Individual word matches in description (5 points per word)
-  queryWords.forEach(word => {
-    if (description.includes(word)) {
-      score += 5;
-    }
-  });
-  
-  // Exact phrase match in content (30 points)
-  if (content.includes(queryLower)) {
-    score += 30;
-  }
-  
-  // Individual word matches in content (2 points per word)
-  queryWords.forEach(word => {
-    if (content.includes(word)) {
-      score += 2;
-    }
-  });
-  
-  // Author match (20 points)
-  if (author.includes(queryLower)) {
-    score += 20;
-  }
-  
-  // Recency boost (up to 10 points for articles from last 7 days)
-  const daysOld = (Date.now() - new Date(article.publishedAt).getTime()) / (1000 * 60 * 60 * 24);
-  if (daysOld < 7) {
-    score += Math.max(0, 10 - daysOld);
-  }
-  
-  return score;
-}
-
-/**
  * GET /api/search
- * Full-text search across articles with relevance ranking
+ * Full-text search across articles using PostgreSQL FTS with relevance ranking
  * Query params: q (search query), limit (max results, default 20)
  */
 export async function GET(request: NextRequest) {
@@ -89,71 +19,72 @@ export async function GET(request: NextRequest) {
       }, { status: 400 });
     }
 
-    // Perform case-insensitive search on title, description, and content
-    const articles = await prisma.article.findMany({
-      where: {
-        OR: [
-          {
-            title: {
-              contains: query,
-              mode: 'insensitive',
-            },
-          },
-          {
-            description: {
-              contains: query,
-              mode: 'insensitive',
-            },
-          },
-          {
-            content: {
-              contains: query,
-              mode: 'insensitive',
-            },
-          },
-          {
-            author: {
-              contains: query,
-              mode: 'insensitive',
-            },
-          },
-        ],
-      },
-      include: {
-        source: {
-          select: {
-            id: true,
-            name: true,
-            url: true,
-            logoUrl: true,
-          },
-        },
-        category: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-            color: true,
-            icon: true,
-          },
-        },
-      },
-      take: limit * 3, // Get more results to sort by relevance
-    });
+    // Use PostgreSQL full-text search with ts_rank for relevance
+    // tsquery automatically handles word stemming and stop words
+    const searchQuery = query.trim().split(/\s+/).join(' & '); // AND search for all terms
 
-    // Calculate relevance scores and sort by score
-    const scoredArticles = articles.map(article => ({
-      ...article,
-      relevanceScore: calculateRelevanceScore(article, query),
-    }))
-    .sort((a, b) => b.relevanceScore - a.relevanceScore)
-    .slice(0, limit)
-    .map(({ relevanceScore, ...article }) => article); // Remove score from final results
+    const articles = await prisma.$queryRaw`
+      SELECT
+        a.id,
+        a.title,
+        a.description,
+        a.content,
+        a.url,
+        a."imageUrl",
+        a.author,
+        a."publishedAt",
+        a."sourceId",
+        a."categoryId",
+        a.tags,
+        a."createdAt",
+        a."updatedAt",
+        ts_rank(a.search_vector, to_tsquery('english', ${searchQuery})) AS rank
+      FROM articles a
+      WHERE a.search_vector @@ to_tsquery('english', ${searchQuery})
+      ORDER BY rank DESC, a."publishedAt" DESC
+      LIMIT ${limit}
+    `;
+
+    // Fetch related source and category data for each article
+    const enrichedArticles = await Promise.all(
+      (articles as any[]).map(async (article) => {
+        const [source, category] = await Promise.all([
+          prisma.source.findUnique({
+            where: { id: article.sourceId },
+            select: {
+              id: true,
+              name: true,
+              url: true,
+              logoUrl: true,
+            },
+          }),
+          prisma.category.findUnique({
+            where: { id: article.categoryId },
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              color: true,
+              icon: true,
+            },
+          }),
+        ]);
+
+        // Remove the rank field from final output
+        const { rank, ...articleData } = article;
+        
+        return {
+          ...articleData,
+          source,
+          category,
+        };
+      })
+    );
 
     return NextResponse.json({
       success: true,
-      data: scoredArticles,
-      total: scoredArticles.length,
+      data: enrichedArticles,
+      total: enrichedArticles.length,
       query,
     });
   } catch (error: any) {
