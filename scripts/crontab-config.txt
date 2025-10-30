@@ -1,0 +1,68 @@
+# FeedCentral - Cron Task Configuration
+# This file contains cron job configurations for the FeedCentral RSS aggregator
+
+# Instructions:
+# 1. Copy this file to your server
+# 2. Make the script executable: chmod +x /path/to/refresh-feeds.sh
+# 3. Edit your crontab: crontab -e
+# 4. Add the desired cron job from the options below
+# 5. Save and exit
+
+# ==============================================================================
+# CRON JOB OPTIONS
+# ==============================================================================
+
+# Option 1: Run every 15 minutes
+# */15 * * * * /path/to/refresh-feeds.sh
+
+# Option 2: Run every 30 minutes
+# */30 * * * * /path/to/refresh-feeds.sh
+
+# Option 3: Run every hour
+# 0 * * * * /path/to/refresh-feeds.sh
+
+# Option 4: Run every 2 hours
+# 0 */2 * * * /path/to/refresh-feeds.sh
+
+# Option 5: Run every 6 hours
+# 0 */6 * * * /path/to/refresh-feeds.sh
+
+# ==============================================================================
+# RECOMMENDED: Run every 30 minutes
+# ==============================================================================
+*/30 * * * * /path/to/refresh-feeds.sh
+
+# ==============================================================================
+# CRON TIME FORMAT REFERENCE
+# ==============================================================================
+# ┌───────────── minute (0 - 59)
+# │ ┌───────────── hour (0 - 23)
+# │ │ ┌───────────── day of month (1 - 31)
+# │ │ │ ┌───────────── month (1 - 12)
+# │ │ │ │ ┌───────────── day of week (0 - 6) (Sunday to Saturday)
+# │ │ │ │ │
+# * * * * * command to execute
+
+# ==============================================================================
+# SETUP INSTRUCTIONS
+# ==============================================================================
+# 1. Copy refresh-feeds.sh to your server (e.g., /usr/local/bin/)
+#    scp scripts/refresh-feeds.sh user@yourserver:/usr/local/bin/
+#
+# 2. Make it executable:
+#    chmod +x /usr/local/bin/refresh-feeds.sh
+#
+# 3. Create log directory (if needed):
+#    sudo mkdir -p /var/log
+#    sudo touch /var/log/feedcentral-refresh.log
+#    sudo chown $USER:$USER /var/log/feedcentral-refresh.log
+#
+# 4. Add to crontab:
+#    crontab -e
+#    Then add: */30 * * * * /usr/local/bin/refresh-feeds.sh
+#
+# 5. Verify cron job is installed:
+#    crontab -l
+#
+# 6. Monitor logs:
+#    tail -f /var/log/feedcentral-refresh.log
