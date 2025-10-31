@@ -135,6 +135,29 @@ export async function POST(request: NextRequest) {
         );
       }
 
+      // Check bookmark limit for non-admin users (10 bookmarks max)
+      const userRecord = await prisma.user.findUnique({
+        where: { id: user.userId },
+        select: { role: true },
+      });
+
+      if (userRecord?.role !== 'ADMIN') {
+        const bookmarkCount = await prisma.bookmark.count({
+          where: { userId: user.userId },
+        });
+
+        if (bookmarkCount >= 10) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: 'Bookmark limit reached',
+              message: 'Free users can bookmark up to 10 articles. Please remove some bookmarks or upgrade to premium.',
+            },
+            { status: 403 }
+          );
+        }
+      }
+
       // Create bookmark
       const bookmark = await prisma.bookmark.create({
         data: {

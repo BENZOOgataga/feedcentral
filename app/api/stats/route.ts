@@ -19,15 +19,20 @@ export async function GET() {
       categories,
       recentJobs,
     ] = await Promise.all([
-      // Total articles count
-      prisma.article.count(),
+      // Total articles count (excluding deleted)
+      prisma.article.count({
+        where: {
+          deletedAt: null,
+        },
+      }),
 
-      // Articles from last 24 hours
+      // Articles from last 24 hours (excluding deleted)
       prisma.article.count({
         where: {
           publishedAt: {
             gte: yesterday,
           },
+          deletedAt: null,
         },
       }),
 

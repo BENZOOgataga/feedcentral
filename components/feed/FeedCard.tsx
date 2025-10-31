@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Calendar, ExternalLink } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -22,17 +21,7 @@ export function FeedCard({ article, index = 0 }: FeedCardProps) {
   });
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.25,
-        delay: index * 0.02,
-        ease: [0.25, 0.1, 0.25, 1],
-      }}
-      style={{ willChange: 'transform, opacity' }}
-      className="group"
-    >
+    <article className="group">
       <Link
         href={`/article/${article.id}`}
         className={cn(
@@ -40,7 +29,6 @@ export function FeedCard({ article, index = 0 }: FeedCardProps) {
           'hover:-translate-y-0.5 hover:border-border hover:shadow-lg hover:shadow-black/5',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
         )}
-        style={{ willChange: 'transform, box-shadow, border-color' }}
       >
         <div className="flex gap-4">
           {/* Article Image - Always shown with fallback */}
@@ -51,6 +39,7 @@ export function FeedCard({ article, index = 0 }: FeedCardProps) {
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-105"
               sizes="(max-width: 768px) 128px, 128px"
+              loading="lazy"
             />
           </div>
 
@@ -97,6 +86,6 @@ export function FeedCard({ article, index = 0 }: FeedCardProps) {
           </div>
         </div>
       </Link>
-    </motion.article>
+    </article>
   );
 }

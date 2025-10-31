@@ -11,8 +11,11 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const article = await prisma.article.findUnique({
-      where: { id },
+    const article = await prisma.article.findFirst({
+      where: { 
+        id,
+        deletedAt: null, // Only show non-deleted articles
+      },
       include: {
         source: {
           select: {

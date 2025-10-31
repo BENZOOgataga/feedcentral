@@ -1,0 +1,126 @@
+# FeedCentral Cron Jobs - Production Setup
+
+## 🔧 PRODUCTION SCRIPTS (Your Server)
+
+### Scripts Location: `/root/scripts/`
+
+**1. Fetch Feeds Script** (`fetch-feeds.sh`)
+```bash
+#!/bin/bash
+DOMAIN="example.com"
+ENDPOINT="https://${DOMAIN}/api/cron/fetch-feeds"
+API_KEY="your-api-key-here"
+LOG_FILE="/var/log/feedcentral-fetch.log"
+
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
+}
+
+log "Starting feed refresh..."
+RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$ENDPOINT" \
+    -H "Authorization: Bearer $API_KEY" \
+    -H "Content-Type: application/json" \
+    --max-time 300)
+
+HTTP_CODE=$(echo "$RESPONSE" | tail -n 1)
+BODY=$(echo "$RESPONSE" | sed '$d')
+
+if [ "$HTTP_CODE" -eq 200 ]; then
+    log "✓ Feed refresh successful (HTTP $HTTP_CODE)"
+    log "Response: $BODY"
+else
+    log "✗ Feed refresh failed (HTTP $HTTP_CODE)"
+    log "Error: $BODY"
+    exit 1
+fi
+log "Feed refresh completed"
+```
+
+**2. Cleanup Articles Script** (`cleanup-articles.sh`)
+```bash
+#!/bin/bash
+DOMAIN="your-domain.com"
+ENDPOINT="https://${DOMAIN}/api/cron/cleanup-articles"
+API_KEY="your-api-key-here"
+LOG_FILE="/var/log/feedcentral-cleanup.log"
+
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
+}
+
+log "Starting article cleanup..."
+RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$ENDPOINT" \
+    -H "Authorization: Bearer $API_KEY" \
+    -H "Content-Type: application/json" \
+    --max-time 300)
+
+HTTP_CODE=$(echo "$RESPONSE" | tail -n 1)
+BODY=$(echo "$RESPONSE" | sed '$d')
+
+if [ "$HTTP_CODE" -eq 200 ]; then
+    log "✓ Article cleanup successful (HTTP $HTTP_CODE)"
+    log "Response: $BODY"
+    
+    SOFT_DELETED=$(echo "$BODY" | grep -oP '"softDeleted":\K\d+' || echo "N/A")
+    ARCHIVED=$(echo "$BODY" | grep -oP '"archived":\K\d+' || echo "N/A")
+    HARD_DELETED=$(echo "$BODY" | grep -oP '"hardDeleted":\K\d+' || echo "N/A")
+    
+    log "Stats: Soft-deleted: $SOFT_DELETED | Archived: $ARCHIVED | Hard-deleted: $HARD_DELETED"
+else
+    log "✗ Article cleanup failed (HTTP $HTTP_CODE)"
+    log "Error: $BODY"
+    exit 1
+fi
+log "Article cleanup completed"
+```
+
+---
+
+## 📅 CRONTAB CONFIGURATION
+
+```bash
+# Edit crontab
+crontab -e
+
+# Add these lines:
+*/30 * * * * /root/scripts/fetch-feeds.sh
+0 2 * * * /root/scripts/cleanup-articles.sh
+```
+
+**Schedule:**
+- Fetch feeds: Every 30 minutes
+- Cleanup: Daily at 2 AM
+
+---
+
+## 🚀 DEPLOYMENT STEPS
+
+```bash
+# 1. Upload scripts to server
+scp scripts/run-cron.sh root@your-server:/root/scripts/fetch-feeds.sh
+scp scripts/cleanup-articles.sh root@your-server:/root/scripts/
+
+# 2. Make executable
+ssh root@your-server "chmod +x /root/scripts/*.sh"
+
+# 3. Update crontab (add cleanup line)
+ssh root@your-server "crontab -e"
+
+# 4. Test scripts
+ssh root@your-server "/root/scripts/cleanup-articles.sh"
+```
+
+---
+
+## 📊 MONITORING
+
+```bash
+# View fetch logs
+tail -f /var/log/feedcentral-fetch.log
+
+# View cleanup logs  
+tail -f /var/log/feedcentral-cleanup.log
+
+# Check cleanup stats
+grep "Stats:" /var/log/feedcentral-cleanup.log | tail -10
+```

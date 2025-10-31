@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# RSS Feed Refresh Script
-# This script triggers the feed refresh endpoint for FeedCentral
+# FeedCentral - Fetch Feeds Script
+# This script triggers the feed refresh endpoint
 
-DOMAIN="feed.benzoogataga.com"
+DOMAIN="your-domain.com"
 ENDPOINT="https://${DOMAIN}/api/cron/fetch-feeds"
-API_KEY="21958304291578d6cb765bc04090bdd1e1abbfd35c00c461aad66b1e04a5e661"
-LOG_FILE="/var/log/feedcentral-refresh.log"
+API_KEY="your-api-key-here"
+LOG_FILE="/var/log/feedcentral-fetch.log"
 
 # Function to log with timestamp
 log() {

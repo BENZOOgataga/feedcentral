@@ -16,7 +16,9 @@ export async function GET(request: NextRequest) {
     const pageSize = Math.min(100, Math.max(1, parseInt(searchParams.get('pageSize') || '20')));
 
     // Build where clause
-    const where: any = {};
+    const where: any = {
+      deletedAt: null, // Exclude soft-deleted articles
+    };
     
     if (category) {
       where.category = {

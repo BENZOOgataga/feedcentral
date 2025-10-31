@@ -1,10 +1,4 @@
 {
   "framework": "nextjs",
-  "regions": ["iad1"],
-  "crons": [
-    {
-      "path": "/api/cron/fetch-feeds",
-      "schedule": "0 0 * * *"
-    }
-  ]
+  "regions": ["iad1"]
 }
