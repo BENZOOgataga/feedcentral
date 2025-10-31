@@ -98,7 +98,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1"
-                placeholder={isRegistering ? "you@example.com" : "admin@feedcentral.local"}
+                placeholder="you@example.com"
               />
             </div>
 
