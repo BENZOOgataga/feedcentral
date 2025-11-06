@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="content-container px-4 pt-24 pb-16 sm:px-6">
         <div className="mx-auto max-w-3xl text-center">
@@ -35,7 +35,7 @@ export default function LandingPage() {
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="text-base">
-              <Link href="/admin">Admin Panel</Link>
+              <Link href="/changelog">Changelog</Link>
             </Button>
           </div>
         </div>
