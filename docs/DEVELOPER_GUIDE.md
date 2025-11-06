@@ -22,7 +22,7 @@ FeedCentral is a **professional RSS feed aggregator** built with Next.js 14, des
 
 ### ✅ Design System
 
-**Reference:** The design is inspired by **Vercel's dashboard** — clean, modern, professional, with subtle animations and consistent spacing.
+**Reference:** The design is inspired by **Vercel's dashboard**, clean, modern, professional, with subtle animations and consistent spacing.
 
 #### Color Palette
 - **Primary accent:** `#7C5CFF` (violet)
@@ -264,7 +264,7 @@ FeedCentral is a **professional RSS feed aggregator** built with Next.js 14, des
 
 ### Visual Identity
 
-FeedCentral should feel like a **tool of truth** — stable, clear, and trustworthy. The design language is:
+FeedCentral should feel like a **tool of truth**, stable, clear, and trustworthy. The design language is:
 
 - **Minimal:** No unnecessary elements
 - **Elegant:** Subtle animations, generous spacing

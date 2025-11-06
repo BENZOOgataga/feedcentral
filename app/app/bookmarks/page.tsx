@@ -8,6 +8,7 @@ import { FeedSkeleton } from '@/components/feed/FeedSkeleton';
 import { EmptyState } from '@/components/feed/EmptyState';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import { BookMarked, Check } from 'lucide-react';
 
 interface Bookmark {
   id: string;
@@ -125,7 +126,10 @@ export default function BookmarksPage() {
         <div className="w-full max-w-3xl mx-auto px-4 py-8">
           <div className="text-center space-y-6 max-w-2xl mx-auto">
             <div>
-              <h1 className="text-3xl font-bold mb-3">📚 Save Your Favorite Articles</h1>
+              <h1 className="text-3xl font-bold mb-3 flex items-center justify-center gap-3">
+                <BookMarked className="h-8 w-8" />
+                Save Your Favorite Articles
+              </h1>
               <p className="text-neutral-400 text-lg">
                 Create an account or sign in to bookmark articles and access them anytime.
               </p>
@@ -136,19 +140,19 @@ export default function BookmarksPage() {
                 <h3 className="font-semibold text-white">Benefits of bookmarking:</h3>
                 <ul className="text-sm text-neutral-400 space-y-2">
                   <li className="flex items-start">
-                    <span className="mr-2">✓</span>
+                    <Check className="mr-2 h-4 w-4 mt-0.5 shrink-0" />
                     <span>Save articles to read later</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="mr-2">✓</span>
+                    <Check className="mr-2 h-4 w-4 mt-0.5 shrink-0" />
                     <span>Access your bookmarks from any device</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="mr-2">✓</span>
+                    <Check className="mr-2 h-4 w-4 mt-0.5 shrink-0" />
                     <span>Keep track of important stories</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="mr-2">✓</span>
+                    <Check className="mr-2 h-4 w-4 mt-0.5 shrink-0" />
                     <span>Build your personal reading list</span>
                   </li>
                 </ul>

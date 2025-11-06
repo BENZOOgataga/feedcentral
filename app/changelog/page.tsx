@@ -1,262 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Calendar, CheckCircle2, Zap, Database, Shield, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-
-interface ChangelogEntry {
-  version: string;
-  name: string; // Human-readable release name
-  type: 'major' | 'minor' | 'patch'; // Semantic versioning type
-  date: string;
-  changes: {
-    type: 'feature' | 'improvement' | 'fix' | 'removal';
-    description: string;
-    details?: string; // Optional extended explanation
-  }[];
-}
-
-const changelog: ChangelogEntry[] = [
-  {
-    version: '1.1.0',
-    name: 'Database Optimization & Changelog',
-    type: 'minor',
-    date: 'November 6, 2025',
-    changes: [
-      {
-        type: 'feature',
-        description: 'Added article retention warning in bookmarks page to inform users about automatic cleanup',
-        details: 'A prominent information banner now appears on the bookmarks page, clearly explaining that unbookmarked articles are removed after 7 days while bookmarked articles are preserved forever. This helps users understand the importance of bookmarking content they want to keep.',
-      },
-      {
-        type: 'feature',
-        description: 'Added changelog page to track FeedCentral updates and improvements',
-        details: 'This dedicated changelog page provides a comprehensive history of all updates, organized by version with color-coded tags for different change types. Includes expandable cards for detailed explanations and a legend to help users understand what each update means.',
-      },
-      {
-        type: 'improvement',
-        description: 'Optimized article retention to 7 days (down from 30 days) to reduce database usage by 64%',
-        details: 'Articles older than 7 days are now automatically soft-deleted unless they are bookmarked. This aggressive cleanup strategy helps keep database size under control on the free tier. Hard-deletion occurs after 14 days for permanently removing unbookmarked articles from the database.',
-      },
-      {
-        type: 'improvement',
-        description: 'Bookmarked articles are now permanently preserved and never deleted',
-        details: 'The cleanup system is smart enough to detect bookmarked articles and exclude them from both soft-delete and hard-delete operations. Bookmarked articles are also archived with their full metadata (title, description, images, source info) to ensure they remain accessible even if the original source is removed.',
-      },
-      {
-        type: 'improvement',
-        description: 'Replaced admin panel link with changelog link on landing page for better user experience',
-      },
-      {
-        type: 'fix',
-        description: 'Fixed gradient banding artifacts on landing page and changelog header for smoother visuals',
-        details: 'Removed CSS gradients that were causing visible color banding (horizontal lines) on certain displays. Replaced with solid backgrounds for a clean, professional appearance without visual artifacts.',
-      },
-    ],
-  },
-  {
-    version: '1.0.5',
-    name: 'Automated Cleanup System',
-    type: 'patch',
-    date: 'November 5, 2025',
-    changes: [
-      {
-        type: 'removal',
-        description: 'Removed one-time migration endpoints to clean up API surface',
-        details: 'Temporary API endpoints used for initial database migrations were removed after successful deployment. These endpoints were only needed during the transition period and posed a potential security risk if left active in production.',
-      },
-      {
-        type: 'feature',
-        description: 'Implemented automated article cleanup system with soft-delete (7 days) and hard-delete (14 days) strategies',
-        details: 'A three-tier cleanup strategy: (1) Soft-delete unbookmarked articles after 7 days by setting a deletedAt timestamp, (2) Archive bookmarked articles with preserved metadata, and (3) Hard-delete very old unbookmarked articles after 14 days to permanently free up database space.',
-      },
-      {
-        type: 'feature',
-        description: 'Added crontab configuration and automated feed refresh scripts for production deployment',
-        details: 'Production server now runs automated tasks: feed fetching every 30 minutes to keep content fresh, and article cleanup daily at 2 AM to maintain database health. Both scripts include detailed logging and error handling for reliable operation.',
-      },
-      {
-        type: 'improvement',
-        description: 'Added soft-delete migration support for production database',
-      },
-    ],
-  },
-  {
-    version: '1.0.4',
-    name: 'Bookmarks & User Experience',
-    type: 'patch',
-    date: 'November 4, 2025',
-    changes: [
-      {
-        type: 'feature',
-        description: 'Complete bookmarks feature: user-linked bookmarks with full CRUD API and dedicated UI',
-        details: 'Users can now save their favorite articles with a one-click bookmark button. Bookmarked articles are permanently preserved and will never be deleted by the automatic cleanup system. The bookmarks page provides a clean interface to manage all saved articles.',
-      },
-      {
-        type: 'feature',
-        description: 'Added database migration for bookmarks table with SQL scripts and API endpoints',
-      },
-      {
-        type: 'improvement',
-        description: 'Replaced password change dialog with toast notifications for better UX',
-      },
-      {
-        type: 'fix',
-        description: 'Fixed empty preferences route that was causing build errors',
-      },
-    ],
-  },
-  {
-    version: '1.0.3',
-    name: 'Search Performance & Registration',
-    type: 'patch',
-    date: 'November 3, 2025',
-    changes: [
-      {
-        type: 'feature',
-        description: 'Added user registration with password recovery warning and admin contact guidance',
-        details: 'New users can now create accounts with a clear warning that password recovery via email is not available. If users forget their password, they must contact the administrator for a manual reset. This is clearly communicated during registration to set proper expectations.',
-      },
-      {
-        type: 'feature',
-        description: 'Implemented Google-like relevance ranking for search results',
-        details: 'Search results are now ranked by relevance using multiple factors: exact title matches are prioritized, followed by partial title matches, then description matches. This ensures the most relevant articles appear at the top of search results, similar to how Google ranks pages.',
-      },
-      {
-        type: 'improvement',
-        description: 'Optimized search modal animations to 120fps with GPU acceleration and spring physics',
-        details: 'Search interactions now feel incredibly smooth and responsive. By leveraging GPU acceleration (will-change CSS hints) and optimized transition timings, the search modal animates at up to 120fps on capable displays. Spring physics create natural, fluid motion.',
-      },
-      {
-        type: 'improvement',
-        description: 'Enhanced search bar with smooth 300ms animations and GPU acceleration',
-      },
-      {
-        type: 'fix',
-        description: 'Fixed search bar width, padding, and API response structure issues',
-      },
-    ],
-  },
-  {
-    version: '1.0.2',
-    name: 'Layout Fixes & Security',
-    type: 'patch',
-    date: 'November 2, 2025',
-    changes: [
-      {
-        type: 'removal',
-        description: 'Removed Cmd+K keyboard shortcut indicator from search bar for cleaner UI',
-        details: 'The Cmd+K (or Ctrl+K) keyboard shortcut badge was removed from the search bar to reduce visual clutter. The shortcut still works, but the UI is now cleaner and more minimalist. Power users can still use the keyboard shortcut without the visual indicator.',
-      },
-      {
-        type: 'removal',
-        description: 'Removed default credentials text from login page for better security',
-        details: 'Removed the display of default admin credentials from the login page to improve security. While this was helpful during development, showing credentials publicly is a security risk in production. Users should receive credentials securely through other channels.',
-      },
-      {
-        type: 'feature',
-        description: 'Added placeholder pages for Bookmarks, Dashboard, and Settings',
-      },
-      {
-        type: 'improvement',
-        description: 'Removed Cmd+K keyboard shortcut indicator and default credentials from login page',
-      },
-      {
-        type: 'fix',
-        description: 'Fixed Feed nav item staying active when navigating to other sections',
-      },
-      {
-        type: 'fix',
-        description: 'Fixed width 0px issues in content containers across the application',
-        details: 'Resolved a critical layout bug where content containers would sometimes render at 0px width due to Tailwind CSS class conflicts. Added explicit inline width styles and fixed arbitrary value handling to ensure consistent, responsive layouts across all pages.',
-      },
-      {
-        type: 'fix',
-        description: 'Resolved text wrapping issues on placeholder pages with proper max-width and padding',
-      },
-    ],
-  },
-  {
-    version: '1.0.1',
-    name: 'Deployment Fixes',
-    type: 'patch',
-    date: 'November 1, 2025',
-    changes: [
-      {
-        type: 'removal',
-        description: 'Removed debug endpoints after fixing database connection issues',
-        details: 'Temporary debugging endpoints that were used to diagnose Prisma and Neon adapter connection issues have been removed. These endpoints exposed internal system information and were only needed during troubleshooting. Removing them improves security and reduces API surface area.',
-      },
-      {
-        type: 'removal',
-        description: 'Removed temporary setup endpoints after successful deployment',
-      },
-      {
-        type: 'improvement',
-        description: 'Allowed all HTTPS images in Next.js config for article thumbnails',
-        details: 'Updated Next.js image optimization configuration to accept images from any HTTPS source. This is necessary because RSS feeds reference images from various domains, and trying to maintain a whitelist of all possible sources would be impractical. Only HTTPS sources are allowed for security.',
-      },
-      {
-        type: 'fix',
-        description: 'Fixed admin user creation and email configuration',
-      },
-      {
-        type: 'fix',
-        description: 'Resolved Prisma client issues with Neon adapter and Vercel deployment',
-        details: 'Fixed multiple issues with Prisma deployment on Vercel: configured the Neon serverless adapter correctly, set proper connection pooling, resolved binary bundling issues, and ensured the database client initializes correctly in edge runtime. This involved extensive trial and error with Prisma 6.x and Vercel edge functions.',
-      },
-      {
-        type: 'fix',
-        description: 'Fixed database connection pooling with proper environment variables',
-      },
-      {
-        type: 'fix',
-        description: 'Multiple fixes for seed endpoint and database schema alignment',
-      },
-    ],
-  },
-  {
-    version: '1.0.0',
-    name: 'Initial Release',
-    type: 'major',
-    date: 'October 25, 2025',
-    changes: [
-      {
-        type: 'feature',
-        description: 'Initial release of FeedCentral RSS aggregator with Vercel-like design system',
-      },
-      {
-        type: 'feature',
-        description: 'User authentication and authorization with JWT tokens',
-      },
-      {
-        type: 'feature',
-        description: 'Automatic RSS feed fetching and article aggregation',
-      },
-      {
-        type: 'feature',
-        description: 'Admin panel for managing sources, categories, and users',
-      },
-      {
-        type: 'feature',
-        description: 'Full-text search with relevance ranking',
-      },
-      {
-        type: 'feature',
-        description: 'Responsive design with dark mode support',
-      },
-      {
-        type: 'feature',
-        description: 'PostgreSQL database with Prisma ORM',
-      },
-      {
-        type: 'feature',
-        description: 'Vercel deployment with automatic HTTPS and edge caching',
-      },
-    ],
-  },
-];
+import { changelog, type ChangelogEntry } from '@/lib/changelog-data';
+import { markChangelogAsSeen } from '@/components/changelog/ChangelogNotification';
 
 const getUpdateTypeBadge = (type: 'major' | 'minor' | 'patch') => {
   const styles = {
@@ -306,10 +55,30 @@ const getTypeBadge = (type: string) => {
   return styles[type as keyof typeof styles] || 'bg-neutral-500/10 text-neutral-500 border-neutral-500/20';
 };
 
+// Sort changes by type priority: removal -> feature -> improvement -> fix
+const sortChangesByType = (changes: ChangelogEntry['changes']) => {
+  const typePriority = {
+    removal: 0,
+    feature: 1,
+    improvement: 2,
+    fix: 3,
+  };
+  
+  return [...changes].sort((a, b) => {
+    return typePriority[a.type] - typePriority[b.type];
+  });
+};
+
 export default function ChangelogPage() {
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const [currentPage, setCurrentPage] = useState(1);
+  const entriesRef = useRef<HTMLDivElement>(null);
   const ITEMS_PER_PAGE = 5;
+
+  // Mark changelog as seen when page is visited
+  useEffect(() => {
+    markChangelogAsSeen();
+  }, []);
 
   const toggleExpanded = (entryIndex: number, changeIndex: number) => {
     const key = `${entryIndex}-${changeIndex}`;
@@ -334,7 +103,17 @@ export default function ChangelogPage() {
 
   const goToPage = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll to entries section when paginating
+    if (entriesRef.current) {
+      const headerOffset = 20; // Small offset from top
+      const elementPosition = entriesRef.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
@@ -457,7 +236,8 @@ export default function ChangelogPage() {
             </div>
           </div>
 
-          <div className="space-y-12">
+          {/* Entries Section - scroll target for pagination */}
+          <div ref={entriesRef} className="space-y-12">
             {paginatedChangelog.map((entry, index) => {
               const actualIndex = startIndex + index;
               return (
@@ -500,7 +280,7 @@ export default function ChangelogPage() {
 
                   {/* Changes List */}
                   <div className="space-y-3 pl-12">
-                    {entry.changes.map((change, changeIndex) => {
+                    {sortChangesByType(entry.changes).map((change, changeIndex) => {
                       const hasDetails = !!change.details;
                       const itemKey = `${actualIndex}-${changeIndex}`;
                       const expanded = isExpanded(actualIndex, changeIndex);
