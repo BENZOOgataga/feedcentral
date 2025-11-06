@@ -29,6 +29,8 @@ export default function RoadmapPage() {
       bgColor: 'bg-blue-500/5',
       status: 'thinking',
       items: [
+        'French translation (confirmed - in progress)',
+        'Landing page overhaul (confirmed - in progress)',
         'Better mobile experience & PWA',
         'Article filtering by keywords',
         'Improve dark/light themes',
