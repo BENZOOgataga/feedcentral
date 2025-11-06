@@ -312,7 +312,7 @@ export default function ChangelogPage() {
   const ITEMS_PER_PAGE = 5;
 
   const toggleExpanded = (entryIndex: number, changeIndex: number) => {
-    const key = `${versionIndex}-${changeIndex}`;
+    const key = `${entryIndex}-${changeIndex}`;
     const newExpanded = new Set(expandedItems);
     if (newExpanded.has(key)) {
       newExpanded.delete(key);
