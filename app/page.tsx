@@ -125,7 +125,7 @@ export default function LandingPage() {
               <p className="text-lg text-muted-foreground leading-relaxed mb-6">
                 In a world of algorithmic feeds and endless scrolling, FeedCentral brings you back to the basics: 
                 <span className="font-semibold text-foreground"> curated, chronological content from sources you trust</span>. 
-                No engagement manipulation, no hidden agendas—just the information you choose to follow.
+                No engagement manipulation, no hidden agendas, just the information you choose to follow.
               </p>
               <p className="text-base text-muted-foreground leading-relaxed">
                 We believe that staying informed shouldn't come at the cost of your privacy, attention, or sanity. 
