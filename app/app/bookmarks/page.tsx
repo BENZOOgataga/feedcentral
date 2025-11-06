@@ -324,6 +324,24 @@ export default function BookmarksPage() {
           </span>
         </div>
 
+        {/* Article Retention Warning */}
+        <div className="mb-6 rounded-lg border border-blue-500/20 bg-blue-500/5 p-4">
+          <div className="flex items-start gap-3">
+            <svg className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-blue-400 mb-1">
+                Articles are preserved when bookmarked
+              </h3>
+              <p className="text-xs text-neutral-400">
+                Unbookmarked articles are automatically removed after 7 days to optimize storage. 
+                Your bookmarked articles are permanently saved and will never be deleted.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="space-y-4">
           {bookmarks.map((bookmark, index) => (
             <div key={bookmark.id} className="relative group">

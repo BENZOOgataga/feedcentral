@@ -6,8 +6,8 @@ import { getCronApiKey } from '@/lib/env';
  * Cron endpoint for article cleanup
  * 
  * Strategy:
- * 1. Soft-delete articles older than 30 days (deletedAt timestamp)
- * 2. Hard-delete articles older than 90 days (permanent removal)
+ * 1. Soft-delete articles older than 7 days (deletedAt timestamp)
+ * 2. Hard-delete articles older than 14 days (permanent removal)
  * 3. NEVER delete bookmarked articles - preserve them with archived data
  * 
  * This prevents database saturation while maintaining user bookmarks
@@ -34,10 +34,10 @@ export async function GET(request: NextRequest) {
 
     // Calculate cutoff dates
     const now = new Date();
-    const softDeleteCutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
-    const hardDeleteCutoff = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000); // 90 days ago
+    const softDeleteCutoff = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
+    const hardDeleteCutoff = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000); // 14 days ago
 
-    // Step 1: Find articles to soft-delete (30+ days old, not already deleted, not bookmarked)
+    // Step 1: Find articles to soft-delete (7+ days old, not already deleted, not bookmarked)
     const articlesToSoftDelete = await prisma.article.findMany({
       where: {
         publishedAt: {
@@ -123,7 +123,7 @@ export async function GET(request: NextRequest) {
       archived++;
     }
 
-    // Step 3: Hard-delete very old articles (90+ days, not bookmarked)
+    // Step 3: Hard-delete very old articles (14+ days, not bookmarked)
     const hardDeleteResult = await prisma.article.deleteMany({
       where: {
         publishedAt: {
