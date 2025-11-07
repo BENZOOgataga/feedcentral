@@ -1,3 +1,5 @@
+'use client';
+
 import { 
   ArrowRight, 
   CheckCircle2, 
@@ -13,13 +15,11 @@ import {
   Lock,
   Sparkles
 } from 'lucide-react';
-import { Link } from '@/i18n-navigation';
-import { getTranslations } from 'next-intl/server';
-import { setRequestLocale } from 'next-intl/server';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ChangelogToast } from '@/components/changelog/ChangelogNotification';
-import { ChangelogButton } from './ChangelogButton';
+import { ChangelogToast, useHasNewChangelog, markChangelogAsSeen } from '@/components/changelog/ChangelogNotification';
 
+// Decorative separator with dots
 function DotSeparator() {
   return (
     <div className="flex items-center justify-center gap-2 py-8">
@@ -32,71 +32,15 @@ function DotSeparator() {
   );
 }
 
+// Gradient separator component
 function GradientSeparator() {
   return (
     <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent opacity-50" />
   );
 }
 
-export default async function LandingPage({
-  params
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
-  
-  // Enable static rendering
-  setRequestLocale(locale);
-  
-  const t = await getTranslations('landing');
-
-  const features = [
-    {
-      icon: Shield,
-      title: t('features.verifiedSources.title'),
-      description: t('features.verifiedSources.description'),
-    },
-    {
-      icon: Zap,
-      title: t('features.realtimeUpdates.title'),
-      description: t('features.realtimeUpdates.description'),
-    },
-    {
-      icon: BookmarkCheck,
-      title: t('features.smartBookmarks.title'),
-      description: t('features.smartBookmarks.description'),
-    },
-    {
-      icon: Search,
-      title: t('features.powerfulSearch.title'),
-      description: t('features.powerfulSearch.description'),
-    },
-    {
-      icon: Palette,
-      title: t('features.beautifulDesign.title'),
-      description: t('features.beautifulDesign.description'),
-    },
-    {
-      icon: Globe,
-      title: t('features.openSource.title'),
-      description: t('features.openSource.description'),
-    },
-  ];
-
-  const privacyItems = [
-    {
-      title: t('privacy.noTracking.title'),
-      description: t('privacy.noTracking.description'),
-    },
-    {
-      title: t('privacy.noAds.title'),
-      description: t('privacy.noAds.description'),
-    },
-    {
-      title: t('privacy.gdpr.title'),
-      description: t('privacy.gdpr.description'),
-    },
-  ];
+export default function LandingPage() {
+  const hasNewChangelog = useHasNewChangelog();
 
   return (
     <div className="min-h-screen bg-background">
@@ -105,6 +49,7 @@ export default async function LandingPage({
       {/* Hero Section */}
       <section className="content-container px-4 pt-24 pb-16 sm:px-6">
         <div className="mx-auto max-w-3xl text-center">
+          {/* Logo */}
           <div className="mb-6 flex justify-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary">
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-foreground">
@@ -115,23 +60,42 @@ export default async function LandingPage({
             </div>
           </div>
 
+          {/* Heading */}
           <h1 className="mb-6 text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
-            {t('hero.title')}{' '}
-            <span className="text-primary">{t('hero.titleHighlight')}</span>
+            Your News,{' '}
+            <span className="text-primary">Centralized</span>
           </h1>
 
           <p className="mb-8 text-lg text-muted-foreground sm:text-xl">
-            {t('hero.subtitle')}
+            FeedCentral aggregates your trusted RSS sources into a clean, modern interface.
+            Stay informed without the noise.
           </p>
 
+          {/* CTA */}
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Button asChild size="lg" className="gap-2 text-base">
               <Link href="/app">
-                {t('hero.ctaBrowse')}
+                Start Browsing
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-            <ChangelogButton label={t('hero.ctaChangelog')} />
+            <Button 
+              asChild 
+              variant={hasNewChangelog ? "default" : "outline"}
+              size="lg" 
+              className={`gap-2 text-base relative ${hasNewChangelog ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white border-0 shadow-lg shadow-yellow-500/50' : ''}`}
+            >
+              <Link href="/changelog">
+                <FileText className="h-4 w-4" />
+                Changelog
+                {hasNewChangelog && (
+                  <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>
+                  </span>
+                )}
+              </Link>
+            </Button>
             <Button asChild variant="outline" size="lg" className="gap-2 text-base">
               <a 
                 href="https://www.patreon.com/BENZOOgataga" 
@@ -139,53 +103,88 @@ export default async function LandingPage({
                 rel="noopener noreferrer"
               >
                 <Heart className="h-4 w-4" />
-                {t('hero.ctaSupport')}
+                Support Us
               </a>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Mission Section */}
+      {/* Mission Section with Gradient Transitions */}
       <section className="relative w-full">
+        {/* Top gradient fade */}
         <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background to-transparent pointer-events-none z-10" />
         
+        {/* Content with background */}
         <div className="bg-muted/30 py-16">
           <div className="content-container px-4 sm:px-6">
             <div className="mx-auto max-w-3xl text-center">
               <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
                 <Sparkles className="h-4 w-4" />
-                {t('mission.badge')}
+                Our Mission
               </div>
               <h2 className="mb-6 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                {t('mission.title')}
+                Take Back Control of Your News Feed
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                {t('mission.description1')}{' '}
-                <span className="font-semibold text-foreground">{t('mission.description1Highlight')}</span>. 
+                In a world of algorithmic feeds and endless scrolling, FeedCentral brings you back to the basics: 
+                <span className="font-semibold text-foreground"> curated, chronological content from sources you trust</span>. 
+                No engagement manipulation, no hidden agendas, just the information you choose to follow.
               </p>
               <p className="text-base text-muted-foreground leading-relaxed">
-                {t('mission.description2')}
+                We believe that staying informed shouldn't come at the cost of your privacy, attention, or sanity. 
+                FeedCentral is built with transparency, simplicity, and user respect at its core.
               </p>
             </div>
           </div>
         </div>
         
+        {/* Bottom gradient fade */}
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none z-10" />
       </section>
-
       {/* Core Features Section */}
       <section className="content-container px-4 py-16 sm:px-6">
         <div className="mx-auto max-w-4xl">
           <h2 className="mb-4 text-center text-3xl font-bold tracking-tight text-foreground">
-            {t('features.title')}
+            Everything You Need, Nothing You Don't
           </h2>
           <p className="mb-12 text-center text-muted-foreground max-w-2xl mx-auto">
-            {t('features.subtitle')}
+            FeedCentral combines powerful features with a clean, distraction-free experience
           </p>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature) => (
+            {[
+              {
+                icon: Shield,
+                title: 'Verified Sources',
+                description: 'Only reliable, curated RSS feeds from trusted publishers and established media outlets.',
+              },
+              {
+                icon: Zap,
+                title: 'Real-time Updates',
+                description: 'Automatic feed refresh keeps you up to date with breaking news and latest publications.',
+              },
+              {
+                icon: BookmarkCheck,
+                title: 'Smart Bookmarks',
+                description: 'Save articles permanently with one click. Bookmarked content never expires.',
+              },
+              {
+                icon: Search,
+                title: 'Powerful Search',
+                description: 'Full-text search across all articles with advanced filtering by source and category.',
+              },
+              {
+                icon: Palette,
+                title: 'Beautiful Design',
+                description: 'Clean, modern interface with dark mode support and responsive design for all devices.',
+              },
+              {
+                icon: Globe,
+                title: 'Open Source',
+                description: 'Fully transparent codebase. Fork it, self-host it, or contribute to make it better.',
+              },
+            ].map((feature) => (
               <div
                 key={feature.title}
                 className="rounded-xl border border-border/50 bg-card p-6 transition-all hover:-translate-y-1 hover:border-border hover:shadow-lg"
@@ -201,28 +200,43 @@ export default async function LandingPage({
         </div>
       </section>
 
-      {/* Privacy & Trust Section */}
+      {/* Privacy & Trust Section with Gradient Transitions */}
       <section className="relative w-full">
+        {/* Top gradient fade */}
         <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background to-transparent pointer-events-none z-10" />
         
+        {/* Content with background */}
         <div className="bg-muted/30 py-16">
           <div className="content-container px-4 sm:px-6">
             <div className="mx-auto max-w-4xl">
               <div className="text-center mb-12">
                 <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
                   <Lock className="h-4 w-4" />
-                  {t('privacy.badge')}
+                  Privacy First
                 </div>
                 <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground">
-                  {t('privacy.title')}
+                  Your Data Stays Yours
                 </h2>
                 <p className="text-muted-foreground max-w-2xl mx-auto">
-                  {t('privacy.subtitle')}
+                  We take privacy seriously. Here's our commitment to you.
                 </p>
               </div>
 
               <div className="grid gap-6 md:grid-cols-3">
-                {privacyItems.map((item) => (
+                {[
+                  {
+                    title: 'No Tracking',
+                    description: 'We don\'t use analytics, cookies, or any tracking tools. Your browsing habits are yours alone.',
+                  },
+                  {
+                    title: 'No Ads',
+                    description: 'Zero advertising. Our mission is to serve you, not advertisers. Support us directly if you want.',
+                  },
+                  {
+                    title: 'GDPR Compliant',
+                    description: 'Operated from France with full GDPR compliance. Your data rights are protected by law.',
+                  },
+                ].map((item) => (
                   <div
                     key={item.title}
                     className="rounded-xl border border-border/50 bg-card p-6 transition-all hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg"
@@ -239,6 +253,7 @@ export default async function LandingPage({
           </div>
         </div>
         
+        {/* Bottom gradient fade */}
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none z-10" />
       </section>
 
@@ -246,10 +261,10 @@ export default async function LandingPage({
       <section className="content-container px-4 py-16 sm:px-6">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="mb-4 text-2xl font-bold tracking-tight text-foreground">
-            {t('sources.title')}
+            Trusted Sources
           </h2>
           <p className="mb-8 text-muted-foreground">
-            {t('sources.subtitle')}
+            Aggregating content from leading tech publications, blogs, and news outlets.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-8 opacity-60">
             {['TechCrunch', 'The Verge', 'Ars Technica', 'Wired', 'MIT Technology Review'].map(
@@ -267,29 +282,30 @@ export default async function LandingPage({
       <footer className="border-t border-border/40 py-12">
         <div className="content-container px-4 sm:px-6 mb-8">
           <div className="mx-auto max-w-4xl">
+            {/* Footer Links Grid */}
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {/* Project */}
               <div>
-                <h3 className="mb-3 text-sm font-semibold text-foreground">{t('footer.project')}</h3>
+                <h3 className="mb-3 text-sm font-semibold text-foreground">Project</h3>
                 <ul className="space-y-2 text-sm">
                   <li>
                     <Link href="/changelog" className="text-muted-foreground transition-colors hover:text-foreground">
-                      {t('footer.changelog')}
+                      Changelog
                     </Link>
                   </li>
                   <li>
                     <Link href="/roadmap" className="text-muted-foreground transition-colors hover:text-foreground">
-                      {t('footer.roadmap')}
+                      Roadmap
                     </Link>
                   </li>
                   <li>
                     <Link href="/sources" className="text-muted-foreground transition-colors hover:text-foreground">
-                      {t('footer.rssSources')}
+                      RSS Sources
                     </Link>
                   </li>
                   <li>
                     <Link href="/contributors" className="text-muted-foreground transition-colors hover:text-foreground">
-                      {t('footer.contributors')}
+                      Contributors
                     </Link>
                   </li>
                   <li>
@@ -299,7 +315,7 @@ export default async function LandingPage({
                       rel="noopener noreferrer"
                       className="text-muted-foreground transition-colors hover:text-foreground"
                     >
-                      {t('footer.github')}
+                      GitHub
                     </a>
                   </li>
                 </ul>
@@ -307,21 +323,21 @@ export default async function LandingPage({
 
               {/* Legal */}
               <div>
-                <h3 className="mb-3 text-sm font-semibold text-foreground">{t('footer.legal')}</h3>
+                <h3 className="mb-3 text-sm font-semibold text-foreground">Legal</h3>
                 <ul className="space-y-2 text-sm">
                   <li>
                     <Link href="/privacy" className="text-muted-foreground transition-colors hover:text-foreground">
-                      {t('footer.privacy')}
+                      Privacy Policy
                     </Link>
                   </li>
                   <li>
                     <Link href="/terms" className="text-muted-foreground transition-colors hover:text-foreground">
-                      {t('footer.terms')}
+                      Terms of Service
                     </Link>
                   </li>
                   <li>
                     <Link href="/cookies" className="text-muted-foreground transition-colors hover:text-foreground">
-                      {t('footer.cookies')}
+                      Cookie Policy
                     </Link>
                   </li>
                 </ul>
@@ -329,7 +345,7 @@ export default async function LandingPage({
 
               {/* Resources */}
               <div>
-                <h3 className="mb-3 text-sm font-semibold text-foreground">{t('footer.resources')}</h3>
+                <h3 className="mb-3 text-sm font-semibold text-foreground">Resources</h3>
                 <ul className="space-y-2 text-sm">
                   <li>
                     <a 
@@ -338,7 +354,7 @@ export default async function LandingPage({
                       rel="noopener noreferrer"
                       className="text-muted-foreground transition-colors hover:text-foreground"
                     >
-                      {t('footer.documentation')}
+                      Documentation
                     </a>
                   </li>
                   <li>
@@ -348,7 +364,7 @@ export default async function LandingPage({
                       rel="noopener noreferrer"
                       className="text-muted-foreground transition-colors hover:text-foreground"
                     >
-                      {t('footer.reportIssues')}
+                      Report Issues
                     </a>
                   </li>
                   <li>
@@ -358,7 +374,7 @@ export default async function LandingPage({
                       rel="noopener noreferrer"
                       className="text-muted-foreground transition-colors hover:text-foreground"
                     >
-                      {t('footer.discussions')}
+                      Discussions
                     </a>
                   </li>
                 </ul>
@@ -366,14 +382,14 @@ export default async function LandingPage({
 
               {/* Contact */}
               <div>
-                <h3 className="mb-3 text-sm font-semibold text-foreground">{t('footer.contact')}</h3>
+                <h3 className="mb-3 text-sm font-semibold text-foreground">Contact</h3>
                 <ul className="space-y-2 text-sm">
                   <li>
                     <a 
                       href="mailto:contact@benzoogataga.com" 
                       className="text-muted-foreground transition-colors hover:text-foreground"
                     >
-                      {t('footer.emailSupport')}
+                      Email Support
                     </a>
                   </li>
                   <li>
@@ -383,7 +399,7 @@ export default async function LandingPage({
                       rel="noopener noreferrer"
                       className="text-muted-foreground transition-colors hover:text-foreground"
                     >
-                      {t('footer.officialInstance')}
+                      Official Instance
                     </a>
                   </li>
                   <li>
@@ -393,7 +409,7 @@ export default async function LandingPage({
                       rel="noopener noreferrer"
                       className="text-muted-foreground transition-colors hover:text-foreground"
                     >
-                      {t('footer.supportUs')}
+                      Support Us
                     </a>
                   </li>
                 </ul>
@@ -406,10 +422,10 @@ export default async function LandingPage({
         <div className="w-full pt-6">
           <div className="content-container px-4 sm:px-6 text-center">
             <p className="mb-2 text-sm text-muted-foreground">
-              © {new Date().getFullYear()} {t('footer.copyright')}
+              © {new Date().getFullYear()} FeedCentral. Open source RSS aggregator built with Next.js.
             </p>
             <p className="text-xs text-muted-foreground">
-              {t('footer.tagline')}
+              Operated from France • GDPR Compliant • No tracking, no ads, no BS
             </p>
           </div>
         </div>
