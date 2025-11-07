@@ -8,6 +8,7 @@
     "feed": "Flux",
     "bookmarks": "Favoris",
     "dashboard": "Tableau de bord",
+    "mySources": "Mes Sources",
     "settings": "Paramètres",
     "admin": "Admin",
     "login": "Connexion",
@@ -253,6 +254,7 @@
       "sources": "Sources",
       "jobs": "Tâches de flux",
       "users": "Utilisateurs",
+      "licenses": "Clés de licence",
       "settings": "Paramètres"
     },
     "stats": {
@@ -530,7 +532,118 @@
     "active": "Sources actives",
     "category": "Catégorie",
     "website": "Visiter le site",
-    "addSource": "Ajouter une source"
+    "addSource": "Ajouter une source",
+    "mySources": {
+      "title": "Mes Sources",
+      "subtitle": "Gérez vos flux RSS personnalisés et vos préférences de sources par défaut",
+      "tabs": {
+        "custom": "Sources Personnalisées",
+        "defaults": "Sources Par Défaut"
+      },
+      "customSources": {
+        "empty": {
+          "title": "Aucune source personnalisée",
+          "description": "Ajoutez votre premier flux RSS pour personnaliser votre expérience",
+          "cta": "Ajouter une Source"
+        },
+        "addButton": "Ajouter une Source",
+        "stats": {
+          "total": "{count} au total",
+          "active": "{count} actives",
+          "limit": "{current} / {max} sources",
+          "unlimited": "Illimité"
+        },
+        "upgradePrompt": {
+          "title": "Passer à Premium",
+          "description": "Vous avez atteint la limite gratuite de 10 sources personnalisées. Passez à Premium pour des sources illimitées.",
+          "cta": "Passer à Premium"
+        }
+      },
+      "defaultSources": {
+        "title": "Sources Par Défaut",
+        "description": "Activez ou désactivez les sources par défaut qui apparaissent dans votre flux. Les sources désactivées n'apparaîtront pas dans votre vue personnalisée.",
+        "empty": "Aucune source par défaut disponible",
+        "enabledCount": "{count} activées",
+        "disabledCount": "{count} désactivées",
+        "counts": {
+          "total": "Total : {count}",
+          "enabled": "Activées : {count}"
+        }
+      },
+      "sourceCard": {
+        "articles": "{count} articles",
+        "lastFetched": "Dernière récupération : {date}",
+        "neverFetched": "Jamais récupéré",
+        "fetchError": "Erreur de récupération",
+        "invalid": "Flux invalide",
+        "enabled": "Activé",
+        "disabled": "Désactivé",
+        "statuses": {
+          "enabled": "Activé",
+          "disabled": "Désactivé"
+        },
+        "actions": {
+          "edit": "Modifier",
+          "refresh": "Actualiser",
+          "delete": "Supprimer",
+          "enable": "Activer",
+          "disable": "Désactiver"
+        }
+      },
+      "addDialog": {
+        "title": "Ajouter une Source Personnalisée",
+        "description": "Ajoutez un nouveau flux RSS ou Atom à vos sources personnelles",
+        "feedUrl": {
+          "label": "URL du Flux",
+          "placeholder": "https://exemple.com/feed.xml",
+          "required": "L'URL du flux est requise",
+          "invalid": "Veuillez entrer une URL valide"
+        },
+        "customName": {
+          "label": "Nom Personnalisé (Optionnel)",
+          "placeholder": "Mon blog préféré"
+        },
+        "category": {
+          "label": "Catégorie (Optionnel)",
+          "placeholder": "Sélectionner une catégorie",
+          "none": "Aucune catégorie"
+        },
+        "validating": "Validation du flux...",
+        "adding": "Ajout de la source...",
+        "success": "Source ajoutée avec succès",
+        "errors": {
+          "invalidFeed": "Flux RSS invalide",
+          "duplicate": "Vous avez déjà ajouté ce flux",
+          "limitReached": "Limite gratuite atteinte",
+          "network": "Erreur réseau, veuillez réessayer",
+          "unknown": "Échec de l'ajout de la source"
+        },
+        "buttons": {
+          "cancel": "Annuler",
+          "add": "Ajouter la Source"
+        }
+      },
+      "editDialog": {
+        "title": "Modifier la Source",
+        "description": "Mettre à jour les paramètres de la source",
+        "buttons": {
+          "cancel": "Annuler",
+          "save": "Enregistrer"
+        }
+      },
+      "deleteDialog": {
+        "title": "Supprimer la Source",
+        "description": "Êtes-vous sûr de vouloir supprimer cette source ? Cela supprimera également tous les articles de ce flux.",
+        "warning": "Cette action est irréversible.",
+        "buttons": {
+          "cancel": "Annuler",
+          "delete": "Supprimer la Source"
+        }
+      },
+      "refreshing": "Actualisation...",
+      "refreshSuccess": "{found} articles trouvés, {added} nouveaux ajoutés",
+      "refreshError": "Échec de l'actualisation de la source"
+    }
   },
   "issues": {
     "title": "Signaler un problème",

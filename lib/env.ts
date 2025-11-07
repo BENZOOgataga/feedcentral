@@ -109,6 +109,35 @@ export function getCronApiKey(): string | undefined {
 }
 
 /**
+ * Get license signing secret for premium key generation
+ * This secret is instance-specific and prevents license keys from being
+ * used across different FeedCentral instances (official vs forks)
+ */
+export function getLicenseSigningSecret(): string {
+  const secret = process.env.LICENSE_SIGNING_SECRET;
+  const env = process.env.NODE_ENV || 'development';
+
+  if (!secret) {
+    if (env === 'production') {
+      throw new Error(
+        'LICENSE_SIGNING_SECRET not configured for production environment.\n' +
+        'This is required to generate and verify premium license keys.\n' +
+        'Add LICENSE_SIGNING_SECRET to your environment variables (minimum 32 characters).'
+      );
+    }
+    // Development fallback - warns but doesn't crash
+    console.warn('⚠️  LICENSE_SIGNING_SECRET not set. Using development fallback. DO NOT USE IN PRODUCTION!');
+    return 'dev-license-secret-INSECURE-change-in-production-minimum-32-chars';
+  }
+
+  if (secret.length < 32) {
+    throw new Error('LICENSE_SIGNING_SECRET must be at least 32 characters for security');
+  }
+
+  return secret;
+}
+
+/**
  * Get admin credentials for database seeding
  * Supports both plain password (hashed during seed) and pre-hashed password
  * Priority: ADMIN_PASSWORD_HASH > ADMIN_PASSWORD

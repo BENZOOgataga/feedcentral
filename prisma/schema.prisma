@@ -19,17 +19,25 @@ datasource db {
 // ============================================
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  name          String
-  passwordHash  String
-  role          UserRole  @default(USER)
-  avatar        String?
-  createdAt     DateTime  @default(now())
-  lastLoginAt   DateTime?
-  updatedAt     DateTime  @updatedAt
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         UserRole @default(USER)
+  avatar       String?
 
-  bookmarks     Bookmark[]
+  // Premium tier support
+  premiumTier      String    @default("free") // "free" | "premium" | "pro"
+  premiumExpiresAt DateTime?
+
+  createdAt   DateTime  @default(now())
+  lastLoginAt DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  bookmarks             Bookmark[]
+  userSources           UserSource[]
+  userSourcePreferences UserSourcePreference[]
+  userArticles          UserArticle[]
 
   @@map("users")
 }
@@ -44,38 +52,40 @@ enum UserRole {
 // ============================================
 
 model Category {
-  id        String    @id @default(cuid())
-  name      String    @unique
-  slug      String    @unique
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
   icon      String?
   color     String?
-  order     Int       @default(0)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  sources   Source[]
-  articles  Article[]
+  sources     Source[]
+  articles    Article[]
+  userSources UserSource[]
 
   @@index([slug])
   @@map("categories")
 }
 
 model Source {
-  id             String    @id @default(cuid())
-  name           String
-  url            String
-  feedUrl        String    @unique
-  categoryId     String
-  logoUrl        String?
-  isActive       Boolean   @default(true)
-  lastFetchedAt  DateTime?
-  fetchInterval  Int       @default(30) // minutes
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  id            String    @id @default(cuid())
+  name          String
+  url           String
+  feedUrl       String    @unique
+  categoryId    String
+  logoUrl       String?
+  isActive      Boolean   @default(true)
+  lastFetchedAt DateTime?
+  fetchInterval Int       @default(30) // minutes
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  category       Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  articles       Article[]
-  feedJobs       FeedJob[]
+  category              Category               @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  articles              Article[]
+  feedJobs              FeedJob[]
+  userSourcePreferences UserSourcePreference[]
 
   @@index([categoryId])
   @@index([isActive])
@@ -96,13 +106,13 @@ model Article {
   categoryId   String
   tags         String[]  @default([])
   deletedAt    DateTime? // Soft delete timestamp
-  archivedData Json?     // Preserve article data for bookmarks when soft-deleted
+  archivedData Json? // Preserve article data for bookmarks when soft-deleted
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
-  source       Source    @relation(fields: [sourceId], references: [id], onDelete: Cascade)
-  category     Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  bookmarks    Bookmark[]
+  source    Source     @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  category  Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  bookmarks Bookmark[]
 
   @@index([sourceId])
   @@index([categoryId])
@@ -117,13 +127,15 @@ model Article {
 // ============================================
 
 model Bookmark {
-  id          String   @id @default(cuid())
-  userId      String
-  articleId   String
-  createdAt   DateTime @default(now())
+  id        String   @id @default(cuid())
+  userId    String
+  articleId String
+  createdAt DateTime @default(now())
 
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  article     Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article       Article      @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  UserArticle   UserArticle? @relation(fields: [userArticleId], references: [id])
+  userArticleId String?
 
   @@unique([userId, articleId])
   @@index([userId])
@@ -137,23 +149,144 @@ model Bookmark {
 // ============================================
 
 model FeedJob {
-  id              String     @id @default(cuid())
-  sourceId        String
-  status          JobStatus  @default(PENDING)
-  startedAt       DateTime   @default(now())
-  completedAt     DateTime?
-  articlesFound   Int        @default(0)
-  articlesAdded   Int        @default(0)
-  error           String?    @db.Text
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  id            String    @id @default(cuid())
+  sourceId      String
+  status        JobStatus @default(PENDING)
+  startedAt     DateTime  @default(now())
+  completedAt   DateTime?
+  articlesFound Int       @default(0)
+  articlesAdded Int       @default(0)
+  error         String?   @db.Text
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  source          Source     @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  source Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
 
   @@index([sourceId])
   @@index([status])
   @@index([startedAt(sort: Desc)])
   @@map("feed_jobs")
+}
+
+// ============================================
+// Custom User Sources
+// ============================================
+
+model UserSource {
+  id     String @id @default(cuid())
+  userId String
+
+  // Custom feed details
+  feedUrl    String
+  customName String?
+
+  // Feed metadata (fetched from RSS)
+  feedTitle       String?
+  feedDescription String? @db.Text
+  siteUrl         String?
+  logoUrl         String?
+
+  // User preferences
+  isEnabled  Boolean @default(true)
+  categoryId String?
+
+  // Feed status
+  lastFetchedAt  DateTime?
+  lastFetchError String?   @db.Text
+  fetchAttempts  Int       @default(0)
+  isValid        Boolean   @default(true)
+  articleCount   Int       @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category?     @relation(fields: [categoryId], references: [id])
+  articles UserArticle[]
+
+  @@unique([userId, feedUrl])
+  @@index([userId])
+  @@index([isEnabled])
+  @@map("user_sources")
+}
+
+model UserSourcePreference {
+  id        String   @id @default(cuid())
+  userId    String
+  sourceId  String
+  isEnabled Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  source Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, sourceId])
+  @@index([userId])
+  @@map("user_source_preferences")
+}
+
+model UserArticle {
+  id          String   @id @default(cuid())
+  title       String
+  url         String
+  excerpt     String?  @db.Text
+  imageUrl    String?
+  author      String?
+  publishedAt DateTime
+
+  userSourceId String
+  userId       String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  userSource UserSource @relation(fields: [userSourceId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookmarks  Bookmark[]
+
+  @@index([userSourceId])
+  @@index([userId])
+  @@index([publishedAt(sort: Desc)])
+  @@index([deletedAt])
+  @@map("user_articles")
+}
+
+// ============================================
+// Premium License Management
+// ============================================
+
+model LicenseKey {
+  id        String   @id @default(cuid())
+  key       String   @unique // The actual license key (format: FEED-XXXX-XXXX-XXXX-XXXX)
+  tier      String // "premium" | "pro"
+  duration  Int // Duration in days
+  issuedBy  String // Admin user ID who generated this key
+  issuedAt  DateTime @default(now())
+  
+  // Redemption tracking
+  redeemedBy  String?   @unique // User ID who redeemed this key
+  redeemedAt  DateTime?
+  expiresAt   DateTime? // When the license expires (set at redemption time)
+  
+  // Instance binding (prevents cross-instance abuse)
+  instanceId  String // Derived from LICENSE_SIGNING_SECRET hash
+  signature   String // HMAC signature to verify authenticity
+  
+  // Metadata
+  notes       String?   @db.Text
+  isRevoked   Boolean   @default(false)
+  revokedAt   DateTime?
+  revokedBy   String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([redeemedBy])
+  @@index([isRevoked])
+  @@index([instanceId])
+  @@map("license_keys")
 }
 
 enum JobStatus {

@@ -1,6 +1,6 @@
 'use client';
 
-import { LayoutDashboard, Rss, Activity, Users, Settings, ChevronLeft } from 'lucide-react';
+import { LayoutDashboard, Rss, Activity, Users, Settings, ChevronLeft, Key } from 'lucide-react';
 import { Link } from '@/i18n-navigation';
 import { usePathname } from '@/i18n-navigation';
 import { motion } from 'framer-motion';
@@ -25,6 +25,7 @@ const adminNavItems: NavItem[] = [
   { name: 'Sources', translationKey: 'admin.navigation.sources', href: '/admin/sources', icon: Rss },
   { name: 'Feed Jobs', translationKey: 'admin.navigation.jobs', href: '/admin/jobs', icon: Activity },
   { name: 'Users', translationKey: 'admin.navigation.users', href: '/admin/users', icon: Users },
+  { name: 'Licenses', translationKey: 'admin.navigation.licenses', href: '/admin/licenses', icon: Key },
   { name: 'Settings', translationKey: 'admin.navigation.settings', href: '/admin/settings', icon: Settings },
 ];
 

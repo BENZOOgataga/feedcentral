@@ -12,6 +12,54 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: '1.3.0',
+    name: 'Testing Infrastructure & Premium Licensing',
+    type: 'minor',
+    date: 'November 7, 2025',
+    changes: [
+      {
+        type: 'feature',
+        description: 'Premium license key system with instance-specific security',
+        details: 'Implemented secure license key generation system for Premium and Pro tiers. Uses HMAC-SHA256 cryptographic signatures to bind keys to specific deployments, preventing cross-instance abuse. Admin UI for generating keys with configurable duration (days), quantity (1-100), and tier. License format: FEED-XXXX-XXXX-XXXX-XXXX with instance ID and signature validation. Includes key revocation, redemption tracking, and expiration management.',
+      },
+      {
+        type: 'feature',
+        description: 'Comprehensive API test suite with 200+ test cases',
+        details: 'Complete Jest-based testing infrastructure covering all major API endpoints: authentication (login/logout/me), articles feed (pagination, filtering, merging), custom RSS sources (CRUD operations), source preferences, and integration workflows. Includes mock setup for Prisma, bcrypt, JWT, and RSS parser. Test utilities for creating mock requests, responses, and authentication. Supports watch mode, coverage reports, and CI/CD integration.',
+      },
+      {
+        type: 'feature',
+        description: 'License tier system with source limits',
+        details: 'Three-tier system: Free (10 custom sources), Premium (50 custom sources, priority support, ad-free), and Pro (unlimited sources, early access features). License keys control tier upgrades with automatic expiration tracking. User model extended with premiumTier and premiumExpiresAt fields.',
+      },
+      {
+        type: 'feature',
+        description: 'Admin license management interface',
+        details: 'New /admin/licenses page for administrators to generate license keys. Form with tier selection, duration input, quantity control, and optional notes. Generated keys display with one-click copy-to-clipboard functionality. Security notice explaining instance binding. Navigation integrated into admin sidebar with Key icon.',
+      },
+      {
+        type: 'feature',
+        description: 'License redemption API with validation',
+        details: 'User-facing /api/user/licenses/redeem endpoint for activating premium keys. Validates key format, checks redemption status, verifies instance ID match, and confirms cryptographic signature. Uses Prisma transaction to atomically update license record and user tier. Calculates expiration date based on duration.',
+      },
+      {
+        type: 'improvement',
+        description: 'Database migration system improvements',
+        details: 'Reorganized Prisma migrations with proper baseline (0_init migration). Added LicenseKey model with 17 fields including redemption tracking, instance binding (instanceId, signature), revocation support, and metadata. Migration history now properly tracked via _prisma_migrations table.',
+      },
+      {
+        type: 'improvement',
+        description: 'Environment variable security enhancements',
+        details: 'Added LICENSE_SIGNING_SECRET environment variable with minimum 32-character requirement. Helper function getLicenseSigningSecret() with development fallback and production validation. Updated .env.example with generation instructions (openssl rand -hex 32).',
+      },
+      {
+        type: 'improvement',
+        description: 'Complete testing documentation and scripts',
+        details: 'Added tests/README.md with comprehensive guide covering test structure, running tests, writing new tests, mocking strategies, and troubleshooting. Created run-tests.sh helper script with quick reference commands. Test summary document (TEST_SUMMARY.md) documenting all 200+ test cases.',
+      },
+    ],
+  },
+  {
     version: '1.2.0',
     name: 'Internationalization & Transparency',
     type: 'minor',

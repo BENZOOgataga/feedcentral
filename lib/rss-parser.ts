@@ -71,6 +71,13 @@ export class RSSFeedParser {
   }
 
   /**
+   * Parse feed metadata without fetching articles
+   */
+  async parseFeedMetadata(feedUrl: string) {
+    return await this.parser.parseURL(feedUrl);
+  }
+
+  /**
    * Extract image URL from RSS item
    */
   private extractImage(item: any): string | undefined {
@@ -284,6 +291,176 @@ export async function fetchAllActiveSources() {
 
   return results.map((result, index) => ({
     source: sources[index].name,
+    status: result.status,
+    data: result.status === 'fulfilled' ? result.value : undefined,
+    error: result.status === 'rejected' ? result.reason : undefined,
+  }));
+}
+
+/**
+ * Validate an RSS feed URL for custom user sources
+ * Returns feed metadata if valid, throws error if invalid
+ */
+export async function validateRSSFeed(feedUrl: string): Promise<{
+  isValid: boolean;
+  feedTitle?: string;
+  feedDescription?: string;
+  siteUrl?: string;
+  logoUrl?: string;
+  error?: string;
+}> {
+  const parser = new RSSFeedParser();
+
+  try {
+    // Validate URL format
+    const url = new URL(feedUrl);
+    if (!['http:', 'https:'].includes(url.protocol)) {
+      return {
+        isValid: false,
+        error: 'Only HTTP and HTTPS URLs are supported',
+      };
+    }
+
+    // Try to fetch and parse the feed
+    const feed = await parser.parseFeedMetadata(feedUrl);
+
+    // Extract metadata
+    return {
+      isValid: true,
+      feedTitle: feed.title || undefined,
+      feedDescription: feed.description || undefined,
+      siteUrl: feed.link || undefined,
+      logoUrl: feed.image?.url || undefined,
+    };
+  } catch (error: any) {
+    console.error(`RSS validation failed for ${feedUrl}:`, error);
+    
+    let errorMessage = 'Invalid RSS feed';
+    if (error.code === 'ENOTFOUND') {
+      errorMessage = 'Feed URL not found';
+    } else if (error.code === 'ETIMEDOUT') {
+      errorMessage = 'Feed request timed out';
+    } else if (error.message?.includes('Invalid XML')) {
+      errorMessage = 'Invalid RSS/Atom format';
+    }
+
+    return {
+      isValid: false,
+      error: errorMessage,
+    };
+  }
+}
+
+/**
+ * Fetch articles from a user's custom RSS source and store in database
+ */
+export async function fetchAndStoreUserArticles(userSource: {
+  id: string;
+  userId: string;
+  feedUrl: string;
+  customName: string | null;
+  categoryId: string | null;
+}): Promise<{
+  found: number;
+  added: number;
+  error?: string;
+}> {
+  const parser = new RSSFeedParser();
+
+  try {
+    // Fetch articles from RSS feed
+    const articles = await parser.fetchFeed(userSource.feedUrl);
+
+    // Store articles in UserArticle table
+    let addedCount = 0;
+    for (const article of articles) {
+      try {
+        await prisma.userArticle.create({
+          data: {
+            title: article.title,
+            excerpt: article.description,
+            url: article.url,
+            imageUrl: article.imageUrl,
+            author: article.author,
+            publishedAt: article.publishedAt,
+            userId: userSource.userId,
+            userSourceId: userSource.id,
+          },
+        });
+        addedCount++;
+      } catch (error: any) {
+        // Skip duplicate URLs (unique constraint violation)
+        if (error.code === 'P2002') {
+          continue;
+        }
+        throw error;
+      }
+    }
+
+    // Update user source metadata
+    await prisma.userSource.update({
+      where: { id: userSource.id },
+      data: {
+        lastFetchedAt: new Date(),
+        lastFetchError: null,
+        fetchAttempts: 0,
+        isValid: true,
+        articleCount: {
+          increment: addedCount,
+        },
+      },
+    });
+
+    return {
+      found: articles.length,
+      added: addedCount,
+    };
+  } catch (error: any) {
+    // Update user source with error
+    const currentSource = await prisma.userSource.findUnique({
+      where: { id: userSource.id },
+      select: { fetchAttempts: true },
+    });
+
+    const newAttempts = (currentSource?.fetchAttempts || 0) + 1;
+    const isInvalid = newAttempts >= 5;
+
+    await prisma.userSource.update({
+      where: { id: userSource.id },
+      data: {
+        lastFetchedAt: new Date(),
+        lastFetchError: error.message,
+        fetchAttempts: newAttempts,
+        isValid: !isInvalid,
+      },
+    });
+
+    return {
+      found: 0,
+      added: 0,
+      error: error.message,
+    };
+  }
+}
+
+/**
+ * Fetch all active user sources for a specific user
+ */
+export async function fetchUserSources(userId: string) {
+  const userSources = await prisma.userSource.findMany({
+    where: {
+      userId,
+      isEnabled: true,
+      isValid: true,
+    },
+  });
+
+  const results = await Promise.allSettled(
+    userSources.map((source) => fetchAndStoreUserArticles(source))
+  );
+
+  return results.map((result, index) => ({
+    source: userSources[index].customName || userSources[index].feedUrl,
     status: result.status,
     data: result.status === 'fulfilled' ? result.value : undefined,
     error: result.status === 'rejected' ? result.reason : undefined,

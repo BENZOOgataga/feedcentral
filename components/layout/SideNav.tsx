@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, Bookmark, Settings, LayoutDashboard } from 'lucide-react';
+import { Home, Bookmark, Settings, LayoutDashboard, Rss } from 'lucide-react';
 import { Link } from '@/i18n-navigation';
 import { usePathname } from '@/i18n-navigation';
 import { motion } from 'framer-motion';
@@ -24,6 +24,7 @@ const navItems: NavItem[] = [
   { name: 'Feed', translationKey: 'navigation.feed', href: '/app', icon: Home },
   { name: 'Bookmarks', translationKey: 'navigation.bookmarks', href: '/app/bookmarks', icon: Bookmark },
   { name: 'Dashboard', translationKey: 'navigation.dashboard', href: '/app/dashboard', icon: LayoutDashboard },
+  { name: 'My Sources', translationKey: 'navigation.mySources', href: '/app/sources', icon: Rss },
   { name: 'Settings', translationKey: 'navigation.settings', href: '/app/settings', icon: Settings },
 ];
 
@@ -37,7 +38,7 @@ export function SideNav() {
         {navItems.map((item, index) => {
           // Special handling for /app to avoid matching /app/bookmarks, /app/settings, etc.
           const isActive = item.href === '/app' 
-            ? (pathname === '/app' || pathname?.startsWith('/app/') && !pathname?.match(/\/(bookmarks|dashboard|settings)/))
+            ? (pathname === '/app' || pathname?.startsWith('/app/') && !pathname?.match(/\/(bookmarks|dashboard|sources|settings)/))
             : pathname === item.href || pathname?.startsWith(`${item.href}/`);
           const Icon = item.icon;
 
