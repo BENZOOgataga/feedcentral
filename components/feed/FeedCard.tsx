@@ -20,6 +20,9 @@ export function FeedCard({ article, index = 0 }: FeedCardProps) {
     year: 'numeric',
   });
 
+  // Priority loading for first 3 articles (above the fold)
+  const isPriority = index < 3;
+
   return (
     <article className="group">
       <Link
@@ -39,7 +42,9 @@ export function FeedCard({ article, index = 0 }: FeedCardProps) {
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-105"
               sizes="(max-width: 768px) 128px, 128px"
-              loading="lazy"
+              priority={isPriority}
+              loading={isPriority ? undefined : "lazy"}
+              fetchPriority={isPriority ? "high" : "low"}
             />
           </div>
 

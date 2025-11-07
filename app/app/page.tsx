@@ -14,10 +14,11 @@ export default function AppDashboard() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(() => {
-    fetchCategories();
-    fetchArticles();
+    // Fetch categories and articles in parallel for faster LCP
+    Promise.all([fetchCategories(), fetchArticles()]);
   }, []);
 
   async function fetchCategories() {
@@ -49,7 +50,6 @@ export default function AppDashboard() {
   async function fetchArticles(pageNum = 1) {
     try {
       setIsLoading(pageNum === 1);
-      const startTime = Date.now();
       const response = await fetch(`/api/articles?page=${pageNum}&pageSize=20`);
       const data = await response.json();
 
@@ -58,17 +58,11 @@ export default function AppDashboard() {
         setHasMore(data.pagination.hasNext);
         setPage(pageNum);
       }
-
-      // Ensure minimum loading time of 1 second for smoother UX
-      const elapsed = Date.now() - startTime;
-      const minLoadTime = 1000;
-      if (elapsed < minLoadTime) {
-        await new Promise(resolve => setTimeout(resolve, minLoadTime - elapsed));
-      }
     } catch (error) {
       console.error('Failed to fetch articles:', error);
     } finally {
       setIsLoading(false);
+      setInitialLoad(false);
     }
   }
 
@@ -123,8 +117,8 @@ export default function AppDashboard() {
 
 
         {/* Feed List */}
-        {isLoading && page === 1 ? (
-          <FeedSkeleton count={5} />
+        {initialLoad ? (
+          <FeedSkeleton count={3} />
         ) : articles.length > 0 ? (
           <>
             <FeedList articles={articles} />

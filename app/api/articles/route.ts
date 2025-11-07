@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
 
     const totalPages = Math.ceil(total / pageSize);
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       data: articles,
       pagination: {
@@ -76,6 +76,11 @@ export async function GET(request: NextRequest) {
         hasPrev: page > 1,
       },
     });
+
+    // Cache for 60 seconds, stale-while-revalidate for better performance
+    response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
+
+    return response;
   } catch (error: any) {
     console.error('Error fetching articles:', error);
     return NextResponse.json(

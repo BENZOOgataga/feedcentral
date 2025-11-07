@@ -79,7 +79,7 @@ export async function GET() {
       }),
     ]);
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       data: {
         totalArticles,
@@ -106,6 +106,11 @@ export async function GET() {
         })),
       },
     });
+
+    // Cache stats for 2 minutes with stale-while-revalidate
+    response.headers.set('Cache-Control', 'public, s-maxage=120, stale-while-revalidate=300');
+
+    return response;
   } catch (error: any) {
     console.error('Error fetching stats:', error);
     return NextResponse.json(
