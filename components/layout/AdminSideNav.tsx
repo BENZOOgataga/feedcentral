@@ -5,6 +5,7 @@ import { Link } from '@/i18n-navigation';
 import { usePathname } from '@/i18n-navigation';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 import {
   Tooltip,
   TooltipContent,
@@ -14,20 +15,22 @@ import {
 
 interface NavItem {
   name: string;
+  translationKey: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
 }
 
 const adminNavItems: NavItem[] = [
-  { name: 'Overview', href: '/admin', icon: LayoutDashboard },
-  { name: 'Sources', href: '/admin/sources', icon: Rss },
-  { name: 'Feed Jobs', href: '/admin/jobs', icon: Activity },
-  { name: 'Users', href: '/admin/users', icon: Users },
-  { name: 'Settings', href: '/admin/settings', icon: Settings },
+  { name: 'Overview', translationKey: 'admin.navigation.overview', href: '/admin', icon: LayoutDashboard },
+  { name: 'Sources', translationKey: 'admin.navigation.sources', href: '/admin/sources', icon: Rss },
+  { name: 'Feed Jobs', translationKey: 'admin.navigation.jobs', href: '/admin/jobs', icon: Activity },
+  { name: 'Users', translationKey: 'admin.navigation.users', href: '/admin/users', icon: Users },
+  { name: 'Settings', translationKey: 'admin.navigation.settings', href: '/admin/settings', icon: Settings },
 ];
 
 export function AdminSideNav() {
   const pathname = usePathname();
+  const t = useTranslations();
 
   return (
     <nav className="fixed left-0 top-16 bottom-0 z-40 flex w-64 flex-col border-r border-border/40 bg-background/95 backdrop-blur">
@@ -38,13 +41,13 @@ export function AdminSideNav() {
           className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ChevronLeft className="h-4 w-4" />
-          Back to Feed
+          {t('navigation.backToFeed')}
         </Link>
         <h2 className="mt-4 text-lg font-semibold text-foreground">
-          Admin Panel
+          {t('admin.title')}
         </h2>
         <p className="text-xs text-muted-foreground mt-1">
-          Manage your FeedCentral
+          {t('admin.subtitle')}
         </p>
       </div>
 
@@ -83,11 +86,11 @@ export function AdminSideNav() {
                         />
                       )}
                       <Icon className="h-5 w-5 shrink-0" />
-                      <span className="flex-1">{item.name}</span>
+                      <span className="flex-1">{t(item.translationKey)}</span>
                     </Link>
                   </TooltipTrigger>
                   <TooltipContent side="right" className="text-xs">
-                    {item.name}
+                    {t(item.translationKey)}
                   </TooltipContent>
                 </Tooltip>
               );

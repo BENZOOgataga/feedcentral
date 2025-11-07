@@ -193,27 +193,29 @@
     "signOut": "Sign Out",
     "login": {
       "title": "Welcome back",
-      "subtitle": "Sign in to your FeedCentral account",
-      "email": "Email",
+      "subtitle": "Sign in to your account",
+      "email": "Email address",
       "password": "Password",
-      "submit": "Sign In",
-      "noAccount": "Don't have an account?",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "noAccount": "Don't have an account? Register",
       "register": "Register here",
       "error": "Invalid email or password"
     },
     "register": {
       "title": "Create account",
-      "subtitle": "Join FeedCentral",
-      "name": "Name",
+      "subtitle": "Create your account",
+      "name": "Full Name",
       "email": "Email",
       "password": "Password",
-      "submit": "Create Account",
-      "hasAccount": "Already have an account?",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "hasAccount": "Already have an account? Sign in",
       "signIn": "Sign in here",
+      "error": "Registration failed",
       "warning": {
-        "title": "Important: No Password Recovery",
-        "description": "FeedCentral doesn't have email functionality yet, so there's no password reset. If you forget your password, contact an admin to reset it manually.",
-        "contact": "Admin contact: contact@benzoogataga.com"
+        "title": "Important",
+        "description": "We don't have email support configured on our server. There is no password recovery option. Please remember your password. If you forget it, contact the administrator for assistance."
       }
     }
   },
@@ -223,11 +225,19 @@
     "signOut": "Sign Out"
   },
   "admin": {
-    "title": "Admin Dashboard",
+    "title": "Admin Panel",
+    "subtitle": "Manage your FeedCentral",
     "sources": "Sources",
     "jobs": "Jobs",
     "users": "Users",
     "settings": "Settings",
+    "navigation": {
+      "overview": "Overview",
+      "sources": "Sources",
+      "jobs": "Feed Jobs",
+      "users": "Users",
+      "settings": "Settings"
+    },
     "stats": {
       "totalArticles": "Total Articles",
       "todayArticles": "Today's Articles",
@@ -244,9 +254,9 @@
     "results": "{count} results for \"{query}\""
   },
   "theme": {
-    "light": "Light",
+    "light": "Light mode",
     "lightDescription": "Clean and bright",
-    "dark": "Dark",
+    "dark": "Dark mode",
     "darkDescription": "Easy on the eyes",
     "system": "System"
   },
@@ -502,7 +512,8 @@
     "submit": "Submit",
     "reset": "Reset",
     "apply": "Apply",
-    "clear": "Clear"
+    "clear": "Clear",
+    "minCharacters": "min. {count} characters"
   },
   "disclaimer": {
     "title": "Content Language Notice",

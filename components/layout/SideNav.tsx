@@ -5,6 +5,7 @@ import { Link } from '@/i18n-navigation';
 import { usePathname } from '@/i18n-navigation';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 import {
   Tooltip,
   TooltipContent,
@@ -14,19 +15,21 @@ import {
 
 interface NavItem {
   name: string;
+  translationKey: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
 }
 
 const navItems: NavItem[] = [
-  { name: 'Feed', href: '/app', icon: Home },
-  { name: 'Bookmarks', href: '/app/bookmarks', icon: Bookmark },
-  { name: 'Dashboard', href: '/app/dashboard', icon: LayoutDashboard },
-  { name: 'Settings', href: '/app/settings', icon: Settings },
+  { name: 'Feed', translationKey: 'navigation.feed', href: '/app', icon: Home },
+  { name: 'Bookmarks', translationKey: 'navigation.bookmarks', href: '/app/bookmarks', icon: Bookmark },
+  { name: 'Dashboard', translationKey: 'navigation.dashboard', href: '/app/dashboard', icon: LayoutDashboard },
+  { name: 'Settings', translationKey: 'navigation.settings', href: '/app/settings', icon: Settings },
 ];
 
 export function SideNav() {
   const pathname = usePathname();
+  const t = useTranslations();
 
   return (
     <nav className="fixed left-0 top-16 bottom-0 z-40 hidden md:flex w-16 lg:w-20 flex-col items-center border-r border-border/40 bg-background/95 backdrop-blur py-6 gap-2">
@@ -66,7 +69,7 @@ export function SideNav() {
                 </Link>
               </TooltipTrigger>
               <TooltipContent side="right" className="text-xs">
-                {item.name}
+                {t(item.translationKey)}
               </TooltipContent>
             </Tooltip>
           );

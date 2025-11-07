@@ -193,27 +193,29 @@
     "signOut": "Se déconnecter",
     "login": {
       "title": "Bon retour",
-      "subtitle": "Connectez-vous à votre compte FeedCentral",
-      "email": "Email",
+      "subtitle": "Connectez-vous à votre compte",
+      "email": "Adresse e-mail",
       "password": "Mot de passe",
       "submit": "Se connecter",
-      "noAccount": "Pas encore de compte ?",
+      "submitting": "Connexion...",
+      "noAccount": "Vous n'avez pas de compte ? S'inscrire",
       "register": "S'inscrire ici",
       "error": "Email ou mot de passe invalide"
     },
     "register": {
       "title": "Créer un compte",
-      "subtitle": "Rejoindre FeedCentral",
-      "name": "Nom",
+      "subtitle": "Créez votre compte",
+      "name": "Nom complet",
       "email": "Email",
       "password": "Mot de passe",
       "submit": "Créer un compte",
-      "hasAccount": "Vous avez déjà un compte ?",
+      "submitting": "Création du compte...",
+      "hasAccount": "Vous avez déjà un compte ? Se connecter",
       "signIn": "Se connecter ici",
+      "error": "Échec de l'inscription",
       "warning": {
-        "title": "Important : Pas de récupération de mot de passe",
-        "description": "FeedCentral n'a pas encore de fonctionnalité email, il n'y a donc pas de réinitialisation de mot de passe. Si vous oubliez votre mot de passe, contactez un administrateur pour le réinitialiser manuellement.",
-        "contact": "Contact administrateur : contact@benzoogataga.com"
+        "title": "Important",
+        "description": "Notre serveur n'a pas de support e-mail configuré. Il n'y a pas d'option de récupération de mot de passe. Veuillez mémoriser votre mot de passe. Si vous l'oubliez, contactez l'administrateur pour obtenir de l'aide."
       }
     }
   },
@@ -223,11 +225,19 @@
     "signOut": "Se déconnecter"
   },
   "admin": {
-    "title": "Tableau de bord administrateur",
+    "title": "Panneau d'administration",
+    "subtitle": "Gérez votre FeedCentral",
     "sources": "Sources",
     "jobs": "Tâches",
     "users": "Utilisateurs",
     "settings": "Paramètres",
+    "navigation": {
+      "overview": "Vue d'ensemble",
+      "sources": "Sources",
+      "jobs": "Tâches de flux",
+      "users": "Utilisateurs",
+      "settings": "Paramètres"
+    },
     "stats": {
       "totalArticles": "Total des articles",
       "todayArticles": "Articles du jour",
@@ -244,9 +254,9 @@
     "results": "{count} résultats pour « {query} »"
   },
   "theme": {
-    "light": "Clair",
+    "light": "Mode clair",
     "lightDescription": "Propre et lumineux",
-    "dark": "Sombre",
+    "dark": "Mode sombre",
     "darkDescription": "Doux pour les yeux",
     "system": "Système"
   },
@@ -502,7 +512,8 @@
     "submit": "Soumettre",
     "reset": "Réinitialiser",
     "apply": "Appliquer",
-    "clear": "Effacer"
+    "clear": "Effacer",
+    "minCharacters": "min. {count} caractères"
   },
   "disclaimer": {
     "title": "Avis sur la langue du contenu",

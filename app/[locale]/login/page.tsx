@@ -5,10 +5,12 @@ import { useRouter } from '@/i18n-navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useTranslations } from 'next-intl';
 
 export default function LoginPage() {
   const router = useRouter();
   const { login, register } = useAuth();
+  const t = useTranslations();
   const [isRegistering, setIsRegistering] = useState(false);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -34,7 +36,7 @@ export default function LoginPage() {
       router.push(redirectPath);
       router.refresh();
     } else {
-      setError(result.error || (isRegistering ? 'Registration failed' : 'Login failed'));
+      setError(result.error || t(isRegistering ? 'auth.register.error' : 'auth.login.error'));
     }
     
     setLoading(false);
@@ -46,7 +48,7 @@ export default function LoginPage() {
         <div className="text-center">
           <h1 className="text-3xl font-bold text-white">FeedCentral</h1>
           <p className="mt-2 text-sm text-neutral-400">
-            {isRegistering ? 'Create your account' : 'Sign in to your account'}
+            {isRegistering ? t('auth.register.subtitle') : t('auth.login.subtitle')}
           </p>
         </div>
 
@@ -59,9 +61,7 @@ export default function LoginPage() {
 
           {isRegistering && (
             <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-3 text-xs text-amber-400">
-              <strong>⚠️ Important:</strong> We don't have email support configured on our server. 
-              <strong> There is no password recovery option.</strong> Please remember your password. 
-              If you forget it, contact the administrator for assistance.
+              <strong>⚠️ {t('auth.register.warning.title')}:</strong> {t('auth.register.warning.description')}
             </div>
           )}
 
@@ -69,7 +69,7 @@ export default function LoginPage() {
             {isRegistering && (
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-neutral-300">
-                  Full Name
+                  {t('auth.register.name')}
                 </label>
                 <Input
                   id="name"
@@ -87,7 +87,7 @@ export default function LoginPage() {
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-neutral-300">
-                Email address
+                {t('auth.login.email')}
               </label>
               <Input
                 id="email"
@@ -104,7 +104,7 @@ export default function LoginPage() {
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-neutral-300">
-                Password {isRegistering && <span className="text-neutral-500">(min. 6 characters)</span>}
+                {t('auth.login.password')} {isRegistering && <span className="text-neutral-500">({t('common.minCharacters', { count: 6 })})</span>}
               </label>
               <Input
                 id="password"
@@ -126,8 +126,8 @@ export default function LoginPage() {
             disabled={loading}
           >
             {loading 
-              ? (isRegistering ? 'Creating account...' : 'Signing in...') 
-              : (isRegistering ? 'Create account' : 'Sign in')
+              ? (isRegistering ? t('auth.register.submitting') : t('auth.login.submitting')) 
+              : (isRegistering ? t('auth.register.submit') : t('auth.login.submit'))
             }
           </Button>
 
@@ -144,8 +144,8 @@ export default function LoginPage() {
               className="text-sm text-neutral-400 hover:text-neutral-200 transition-colors duration-200"
             >
               {isRegistering 
-                ? 'Already have an account? Sign in' 
-                : "Don't have an account? Register"
+                ? t('auth.register.hasAccount') 
+                : t('auth.login.noAccount')
               }
             </button>
           </div>
