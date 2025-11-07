@@ -43,6 +43,26 @@ const contributors: Contributor[] = [
       'User experience feedback',
     ],
   },
+  {
+    name: 'smechrafi',
+    github: 'smechrafi',
+    role: 'Early Contributor',
+    contributions: [
+      'Early supporter and tester',
+      'Feedback and suggestions',
+      'Community engagement',
+    ],
+  },
+  {
+    name: 'Seanero',
+    github: 'Seanero',
+    role: 'Bug Hunter',
+    contributions: [
+      'Found critical article reader image overflow bug',
+      'Reported inline style issues with RSS images',
+      'Helped improve article reading experience',
+    ],
+  },
 ];
 
 export default function ContributorsPage() {
