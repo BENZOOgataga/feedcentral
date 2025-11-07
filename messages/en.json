@@ -364,6 +364,14 @@
     "fixDescription": "Bug fixes and corrections",
     "removal": "Removal",
     "removalDescription": "Deprecated or removed features",
+    "notification": {
+      "whatsNew": "What's New in v{version}!",
+      "featuresAndMore": "{count} features and more",
+      "improvementsAndMore": "{count} improvements and more",
+      "fixesAndMore": "{count} fixes and more",
+      "updatesAndMore": "{count} updates",
+      "viewChangelog": "View Changelog"
+    },
     "types": {
       "major": "Major Update",
       "minor": "Minor Update",

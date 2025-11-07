@@ -13,11 +13,11 @@
   },
   "landing": {
     "hero": {
-      "title": "Vos actualités,",
+      "title": "Vos Actualités,",
       "titleHighlight": "Centralisées",
       "subtitle": "FeedCentral agrège vos sources RSS de confiance dans une interface moderne et épurée. Restez informé sans le bruit.",
       "ctaBrowse": "Commencer",
-      "ctaChangelog": "Journal des modifications",
+      "ctaChangelog": "Changelog",
       "ctaSupport": "Nous soutenir"
     },
     "mission": {
@@ -81,7 +81,7 @@
       "legal": "Légal",
       "resources": "Ressources",
       "contact": "Contact",
-      "changelog": "Journal des modifications",
+      "changelog": "Changelog",
       "roadmap": "Feuille de route",
       "rssSources": "Sources RSS",
       "contributors": "Contributeurs",
@@ -342,10 +342,10 @@
     "refreshFeeds": "Rafraîchir les flux"
   },
   "changelog": {
-    "title": "Journal des modifications",
+    "title": "Changelog",
     "subtitle": "Suivez toutes les mises à jour, améliorations et nouvelles fonctionnalités ajoutées à FeedCentral",
     "note": "Note",
-    "noteDescription": "Ce journal des modifications reflète les changements apportés à cette instance spécifique de FeedCentral. Certains détails peuvent différer des autres déploiements, tels que le contenu de la base de données, les paramètres de configuration ou les fonctionnalités personnalisées.",
+    "noteDescription": "Ce changelog reflète les changements apportés à cette instance spécifique de FeedCentral. Certains détails peuvent différer des autres déploiements, tels que le contenu de la base de données, les paramètres de configuration ou les fonctionnalités personnalisées.",
     "backToDashboard": "Retour au tableau de bord",
     "legend": "Légende",
     "updateTypes": "Types de mise à jour",
@@ -364,6 +364,14 @@
     "fixDescription": "Corrections de bugs",
     "removal": "Suppression",
     "removalDescription": "Fonctionnalités dépréciées ou supprimées",
+    "notification": {
+      "whatsNew": "Nouveautés de la v{version} !",
+      "featuresAndMore": "{count} fonctionnalités et plus",
+      "improvementsAndMore": "{count} améliorations et plus",
+      "fixesAndMore": "{count} correctifs et plus",
+      "updatesAndMore": "{count} mises à jour",
+      "viewChangelog": "Voir le changelog"
+    },
     "types": {
       "major": "Mise à jour majeure",
       "minor": "Mise à jour mineure",

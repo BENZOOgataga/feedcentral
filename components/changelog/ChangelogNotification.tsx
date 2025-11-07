@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Sparkles, X } from 'lucide-react';
 import { Link } from '@/i18n-navigation';
 import { getLatestNewChangelog } from '@/lib/changelog-data';
+import { useTranslations } from 'next-intl';
 
 const STORAGE_KEY = 'feedcentral-changelog-seen';
 
@@ -35,6 +36,7 @@ export function markChangelogAsSeen() {
 export function ChangelogToast() {
   const [isVisible, setIsVisible] = useState(false);
   const [latestChangelog, setLatestChangelog] = useState<ReturnType<typeof getLatestNewChangelog>>(null);
+  const t = useTranslations('changelog.notification');
 
   useEffect(() => {
     const latest = getLatestNewChangelog();
@@ -74,14 +76,14 @@ export function ChangelogToast() {
   
   // Determine the most prominent change type
   const counts = [
-    { type: 'feature', count: featureCount, label: 'feature' },
-    { type: 'improvement', count: improvementCount, label: 'improvement' },
-    { type: 'fix', count: fixCount, label: 'fix' }
+    { type: 'feature', count: featureCount, key: 'featuresAndMore' },
+    { type: 'improvement', count: improvementCount, key: 'improvementsAndMore' },
+    { type: 'fix', count: fixCount, key: 'fixesAndMore' }
   ];
   const mostProminent = counts.sort((a, b) => b.count - a.count)[0];
   const summary = mostProminent.count > 0 
-    ? `${mostProminent.count} ${mostProminent.label}${mostProminent.count !== 1 ? 's' : ''} and more`
-    : `${totalChanges} update${totalChanges !== 1 ? 's' : ''}`;
+    ? t(mostProminent.key, { count: mostProminent.count })
+    : t('updatesAndMore', { count: totalChanges });
 
   return (
     <div className="fixed top-20 right-8 z-[9999] animate-in fade-in duration-500">
@@ -96,7 +98,7 @@ export function ChangelogToast() {
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <h3 className="text-sm font-semibold text-foreground">
-                    What's New in v{latestChangelog.version}!
+                    {t('whatsNew', { version: latestChangelog.version })}
                   </h3>
                   <p className="text-xs text-muted-foreground mt-0.5">
                     {summary}
@@ -116,7 +118,7 @@ export function ChangelogToast() {
                 onClick={markChangelogAsSeen}
                 className="inline-flex items-center gap-1.5 mt-3 text-xs font-medium text-yellow-600 dark:text-yellow-500 hover:text-yellow-700 dark:hover:text-yellow-400 transition-colors"
               >
-                View Changelog
+                {t('viewChangelog')}
                 <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
