@@ -22,6 +22,7 @@ interface Source {
   feedUrl: string;
   logoUrl: string | null;
   lastFetchedAt: string | null;
+  createdAt: string;
   category: Category;
   _count: {
     articles: number;
@@ -72,6 +73,13 @@ export default function SourcesPage() {
       Math.round((date.getTime() - Date.now()) / (1000 * 60 * 60 * 24)),
       'day'
     );
+  };
+
+  const isNewSource = (createdAt: string) => {
+    const created = new Date(createdAt);
+    const now = new Date();
+    const daysDiff = Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
+    return daysDiff <= 30; // Consider sources added within last 30 days as "new"
   };
 
   return (
@@ -159,9 +167,16 @@ export default function SourcesPage() {
                           )}
                           
                           <div className="min-w-0 flex-1">
-                            <h3 className="mb-1 font-semibold text-foreground group-hover:text-primary">
-                              {source.name}
-                            </h3>
+                            <div className="mb-1 flex items-center gap-2">
+                              <h3 className="font-semibold text-foreground group-hover:text-primary">
+                                {source.name}
+                              </h3>
+                              {isNewSource(source.createdAt) && (
+                                <span className="inline-flex items-center rounded-full bg-linear-to-r from-green-500/20 to-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold text-green-500 border border-green-500/30">
+                                  NEW
+                                </span>
+                              )}
+                            </div>
                             <p className="text-xs text-muted-foreground">
                               {source._count.articles} articles
                             </p>

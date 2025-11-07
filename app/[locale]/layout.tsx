@@ -29,6 +29,39 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     title: t('title'),
     description: t('description'),
     keywords: ["RSS", "news", "aggregator", "feed", "reader"],
+    openGraph: {
+      title: t('title'),
+      description: t('description'),
+      url: 'https://feed.benzoogataga.com',
+      siteName: 'FeedCentral',
+      locale: locale,
+      type: 'website',
+      images: [
+        {
+          url: 'https://feed.benzoogataga.com/og-image.png',
+          width: 1200,
+          height: 630,
+          alt: 'FeedCentral - Your News, Centralized',
+        }
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t('title'),
+      description: t('description'),
+      images: ['https://feed.benzoogataga.com/og-image.png'],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
   };
 }
 

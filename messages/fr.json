@@ -103,6 +103,16 @@
       "tagline": "Hébergé en France • Conforme RGPD • Pas de suivi, pas de pub, pas de fake news"
     }
   },
+  "app": {
+    "benefitsBanner": {
+      "title": "Débloquez plus de fonctionnalités",
+      "description": "Créez un compte gratuit pour sauvegarder des articles et personnaliser votre fil",
+      "bookmarks": "Sauvegardez des articles pour toujours",
+      "preferences": "Personnalisez votre fil",
+      "createAccount": "Créer un compte",
+      "signIn": "Se connecter"
+    }
+  },
   "feed": {
     "title": "Derniers articles",
     "categories": {

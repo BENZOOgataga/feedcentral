@@ -103,6 +103,16 @@
       "tagline": "Operated from France • GDPR Compliant • No tracking, no ads, no BS"
     }
   },
+  "app": {
+    "benefitsBanner": {
+      "title": "Unlock More Features",
+      "description": "Create a free account to save bookmarks and personalize your feed",
+      "bookmarks": "Save articles forever",
+      "preferences": "Customize your feed",
+      "createAccount": "Create Account",
+      "signIn": "Sign In"
+    }
+  },
   "feed": {
     "title": "Latest Articles",
     "categories": {
