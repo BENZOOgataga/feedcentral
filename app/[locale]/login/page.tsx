@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useTranslations } from 'next-intl';
+import { AlertTriangle } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -61,7 +62,12 @@ export default function LoginPage() {
 
           {isRegistering && (
             <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-3 text-xs text-amber-400">
-              <strong>⚠️ {t('auth.register.warning.title')}:</strong> {t('auth.register.warning.description')}
+              <div className="flex items-start gap-2">
+                <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
+                <div>
+                  <strong>{t('auth.register.warning.title')}:</strong> {t('auth.register.warning.description')}
+                </div>
+              </div>
             </div>
           )}
 
