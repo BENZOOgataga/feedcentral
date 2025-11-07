@@ -1,4 +1,8 @@
 {
+  "metadata": {
+    "title": "FeedCentral - Agrégateur d'Actualités",
+    "description": "Un agrégateur de flux RSS professionnel construit avec Next.js, offrant une interface claire inspirée de Vercel pour centraliser et vérifier vos sources d'actualités."
+  },
   "navigation": {
     "home": "Accueil",
     "feed": "Fil d'actualité",
@@ -195,18 +199,21 @@
       "title": "Bon retour",
       "subtitle": "Connectez-vous à votre compte",
       "email": "Adresse e-mail",
+      "emailPlaceholder": "j.dupont@exemple.fr",
       "password": "Mot de passe",
+      "passwordPlaceholder": "••••••••",
       "submit": "Se connecter",
-      "submitting": "Connexion...",
-      "noAccount": "Vous n'avez pas de compte ? S'inscrire",
+      "submitting": "Connexion en cours...",
+      "noAccount": "Pas encore de compte ? S'inscrire",
       "register": "S'inscrire ici",
-      "error": "Email ou mot de passe invalide"
+      "error": "E-mail ou mot de passe invalide"
     },
     "register": {
       "title": "Créer un compte",
       "subtitle": "Créez votre compte",
       "name": "Nom complet",
-      "email": "Email",
+      "namePlaceholder": "Jean Dupont",
+      "email": "E-mail",
       "password": "Mot de passe",
       "submit": "Créer un compte",
       "submitting": "Création du compte...",
@@ -376,11 +383,12 @@
     "removalDescription": "Fonctionnalités dépréciées ou supprimées",
     "notification": {
       "whatsNew": "Nouveautés de la v{version} !",
-      "featuresAndMore": "{count} fonctionnalités et plus",
+      "featuresAndMore": "{count} nouvelles fonctionnalités et plus",
       "improvementsAndMore": "{count} améliorations et plus",
-      "fixesAndMore": "{count} correctifs et plus",
+      "fixesAndMore": "{count} corrections et plus",
       "updatesAndMore": "{count} mises à jour",
-      "viewChangelog": "Voir le changelog"
+      "viewChangelog": "Voir le journal",
+      "close": "Fermer"
     },
     "types": {
       "major": "Mise à jour majeure",
@@ -513,7 +521,12 @@
     "reset": "Réinitialiser",
     "apply": "Appliquer",
     "clear": "Effacer",
-    "minCharacters": "min. {count} caractères"
+    "minCharacters": "min. {count} caractères",
+    "ariaLabels": {
+      "search": "Rechercher",
+      "userMenu": "Menu utilisateur",
+      "categoryNav": "Navigation par catégories"
+    }
   },
   "disclaimer": {
     "title": "Avis sur la langue du contenu",

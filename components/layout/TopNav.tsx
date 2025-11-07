@@ -54,7 +54,7 @@ export function TopNav({ onSearchClick }: TopNavProps) {
             size="icon"
             className="h-9 w-9 md:hidden"
             onClick={onSearchClick}
-            aria-label="Search"
+            aria-label={t('common.ariaLabels.search')}
           >
             <Search className="h-4 w-4" />
           </Button>

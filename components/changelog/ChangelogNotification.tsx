@@ -107,7 +107,7 @@ export function ChangelogToast() {
                 <button
                   onClick={handleDismiss}
                   className="shrink-0 p-1 rounded-lg hover:bg-muted/50 transition-colors"
-                  aria-label="Close"
+                  aria-label={t('close')}
                 >
                   <X className="h-4 w-4 text-muted-foreground" />
                 </button>

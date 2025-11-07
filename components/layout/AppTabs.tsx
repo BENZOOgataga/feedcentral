@@ -4,6 +4,7 @@ import { Link } from '@/i18n-navigation';
 import { usePathname } from '@/i18n-navigation';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 
 interface Tab {
   label: string;
@@ -33,11 +34,12 @@ export function AppTabs({ tabs }: AppTabsProps) {
   };
 
   const activeTab = getCurrentTab();
+  const t = useTranslations();
 
   return (
     <div className="border-b border-border/40 bg-background/50">
       <div className="content-container px-4 sm:px-6">
-        <nav className="flex gap-6 overflow-x-auto scrollbar-hide" aria-label="Category navigation">
+        <nav className="flex gap-6 overflow-x-auto scrollbar-hide" aria-label={t('common.ariaLabels.categoryNav')}>
           {tabs.map((tab) => {
             const isActive = activeTab === tab.value;
 

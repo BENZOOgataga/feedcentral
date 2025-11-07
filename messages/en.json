@@ -1,4 +1,8 @@
 {
+  "metadata": {
+    "title": "FeedCentral - Centralized News Aggregator",
+    "description": "A professional RSS feed aggregator built with Next.js, offering a clean, Vercel-like interface to centralize and verify your news sources."
+  },
   "navigation": {
     "home": "Home",
     "feed": "Feed",
@@ -195,7 +199,9 @@
       "title": "Welcome back",
       "subtitle": "Sign in to your account",
       "email": "Email address",
+      "emailPlaceholder": "you@example.com",
       "password": "Password",
+      "passwordPlaceholder": "••••••••",
       "submit": "Sign in",
       "submitting": "Signing in...",
       "noAccount": "Don't have an account? Register",
@@ -206,6 +212,7 @@
       "title": "Create account",
       "subtitle": "Create your account",
       "name": "Full Name",
+      "namePlaceholder": "John Doe",
       "email": "Email",
       "password": "Password",
       "submit": "Create account",
@@ -380,7 +387,8 @@
       "improvementsAndMore": "{count} improvements and more",
       "fixesAndMore": "{count} fixes and more",
       "updatesAndMore": "{count} updates",
-      "viewChangelog": "View Changelog"
+      "viewChangelog": "View Changelog",
+      "close": "Close"
     },
     "types": {
       "major": "Major Update",
@@ -513,7 +521,12 @@
     "reset": "Reset",
     "apply": "Apply",
     "clear": "Clear",
-    "minCharacters": "min. {count} characters"
+    "minCharacters": "min. {count} characters",
+    "ariaLabels": {
+      "search": "Search",
+      "userMenu": "User menu",
+      "categoryNav": "Category navigation"
+    }
   },
   "disclaimer": {
     "title": "Content Language Notice",

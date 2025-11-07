@@ -47,7 +47,7 @@ export function UserMenu() {
         size="icon"
         className="h-9 w-9 transition-all duration-200 hover:bg-muted hover:scale-105 active:scale-95"
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="User menu"
+        aria-label={t('common.ariaLabels.userMenu')}
       >
         <User className="h-4 w-4" />
       </Button>

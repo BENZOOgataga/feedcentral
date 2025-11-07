@@ -66,26 +66,24 @@ export default function LoginPage() {
           )}
 
           <div className="space-y-4">
-            {isRegistering && (
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-neutral-300">
-                  {t('auth.register.name')}
-                </label>
-                <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="mt-1"
-                  placeholder="John Doe"
-                />
-              </div>
-            )}
-
+          {isRegistering && (
             <div>
+              <label htmlFor="name" className="block text-sm font-medium text-neutral-300">
+                {t('auth.register.name')}
+              </label>
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                autoComplete="name"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="mt-1"
+                placeholder={t('auth.register.namePlaceholder')}
+              />
+            </div>
+          )}            <div>
               <label htmlFor="email" className="block text-sm font-medium text-neutral-300">
                 {t('auth.login.email')}
               </label>
@@ -98,7 +96,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1"
-                placeholder="you@example.com"
+                placeholder={t('auth.login.emailPlaceholder')}
               />
             </div>
 
@@ -115,7 +113,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1"
-                placeholder="••••••••"
+                placeholder={t('auth.login.passwordPlaceholder')}
               />
             </div>
           </div>

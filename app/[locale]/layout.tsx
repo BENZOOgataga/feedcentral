@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { VercelAnalytics } from "@/components/analytics/VercelAnalytics";
 import { SpeedInsights } from "@/components/analytics/SpeedInsights";
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { locales } from '@/i18n';
 import "../globals.css";
@@ -21,11 +21,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "FeedCentral - Centralized News Aggregator",
-  description: "A professional RSS feed aggregator built with Next.js, offering a clean, Vercel-like interface to centralize and verify your news sources.",
-  keywords: ["RSS", "news", "aggregator", "feed", "reader"],
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'metadata' });
+
+  return {
+    title: t('title'),
+    description: t('description'),
+    keywords: ["RSS", "news", "aggregator", "feed", "reader"],
+  };
+}
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
