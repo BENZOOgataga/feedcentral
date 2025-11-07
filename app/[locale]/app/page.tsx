@@ -31,7 +31,7 @@ export default function AppDashboard() {
       if (data.success) {
         const cats = data.data.categories.map((cat: any) => ({
           id: cat.id,
-          name: cat.name,
+          name: t(`category.${cat.slug}`),
           slug: cat.slug,
           icon: cat.icon,
           color: cat.color,

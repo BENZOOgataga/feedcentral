@@ -36,7 +36,7 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
       if (data.success) {
         const cats = data.data.categories.map((cat: any) => ({
           id: cat.id,
-          name: cat.name,
+          name: t(`category.${cat.slug}`),
           slug: cat.slug,
           icon: cat.icon,
           color: cat.color,
@@ -46,15 +46,12 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
         // Add "All" category with translation
         setCategories([
           { id: 'all', name: t('category.all'), slug: 'all', order: 0 },
-          ...cats.map((cat: any) => ({
-            ...cat,
-            name: t(`category.${cat.slug}`) || cat.name, // Use translation or fallback to original name
-          })),
+          ...cats,
         ]);
 
         // Find current category name and translate it
-        const currentCat = cats.find((c: any) => c.slug === category);
-        const translatedName = currentCat ? (t(`category.${currentCat.slug}`) || currentCat.name) : category;
+        const currentCat = data.data.categories.find((c: any) => c.slug === category);
+        const translatedName = currentCat ? t(`category.${currentCat.slug}`) : category;
         setCategoryName(translatedName);
       }
     } catch (error) {
