@@ -312,6 +312,38 @@
       "title": "Langue",
       "description": "Choisissez votre langue préférée",
       "selectLanguage": "Sélectionner la langue"
+    },
+    "license": {
+      "title": "Licence Premium",
+      "description": "Gérez votre abonnement premium",
+      "currentStatus": "Statut Actuel",
+      "freeTier": "Forfait Gratuit",
+      "upgradePrompt": "Passez au premium pour débloquer plus de fonctionnalités",
+      "redeemKey": "Activer une Clé de Licence",
+      "redeemButton": "Activer la Licence",
+      "redeeming": "Activation...",
+      "redeemHint": "Entrez votre clé de licence pour débloquer les fonctionnalités premium comme les sources illimitées",
+      "securityTitle": "Sécurisé et Spécifique à l'Instance",
+      "securityMessage": "Les clés de licence sont signées cryptographiquement et liées à cette instance FeedCentral pour la sécurité. Chaque clé ne peut être utilisée qu'une seule fois."
+    },
+    "twoFactor": {
+      "title": "Authentification à Deux Facteurs",
+      "description": "Ajoutez une couche de sécurité supplémentaire à votre compte",
+      "recommended": "Recommandé pour les Admins",
+      "status": "Statut",
+      "enabled": "Activé",
+      "disabled": "Désactivé",
+      "enableButton": "Activer 2FA",
+      "enabling": "Configuration...",
+      "scanQR": "Scannez ce code QR avec votre application d'authentification",
+      "manualEntry": "Ou entrez ce code manuellement :",
+      "enterCode": "Entrez le code de vérification à 6 chiffres",
+      "verifyButton": "Vérifier et Activer",
+      "verifying": "Vérification...",
+      "disableButton": "Désactiver 2FA",
+      "disabling": "Désactivation...",
+      "disableWarning": "Entrez votre mot de passe pour désactiver l'authentification à deux facteurs",
+      "enterPassword": "Entrez votre mot de passe"
     }
   },
   "dashboard": {

@@ -46,6 +46,9 @@ export interface User {
   avatar?: string;
   createdAt: Date;
   lastLoginAt?: Date;
+  premiumTier?: string;
+  premiumExpiresAt?: Date | null;
+  twoFactorEnabled?: boolean;
 }
 
 export enum UserRole {

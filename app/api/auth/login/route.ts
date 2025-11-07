@@ -53,6 +53,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if 2FA is enabled
+    if (user.twoFactorEnabled) {
+      // Generate temporary token for 2FA verification (5 minutes)
+      const tempToken = sign(
+        {
+          userId: user.id,
+          email: user.email,
+          purpose: '2fa-verification',
+        },
+        getJwtSecret(),
+        {
+          expiresIn: '5m',
+        }
+      );
+
+      return NextResponse.json({
+        success: true,
+        requiresTwoFactor: true,
+        tempToken,
+      });
+    }
+
     // Update last login
     await prisma.user.update({
       where: { id: user.id },

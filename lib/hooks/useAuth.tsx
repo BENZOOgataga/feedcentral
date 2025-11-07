@@ -8,6 +8,8 @@ export interface User {
   email: string;
   name: string;
   role: 'ADMIN' | 'USER';
+  premiumTier?: string;
+  premiumExpiresAt?: Date | null;
 }
 
 interface AuthContextType {

@@ -312,6 +312,38 @@
       "title": "Language",
       "description": "Choose your preferred language",
       "selectLanguage": "Select Language"
+    },
+    "license": {
+      "title": "Premium License",
+      "description": "Manage your premium subscription",
+      "currentStatus": "Current Status",
+      "freeTier": "Free Tier",
+      "upgradePrompt": "Upgrade to unlock premium features",
+      "redeemKey": "Redeem License Key",
+      "redeemButton": "Activate License",
+      "redeeming": "Activating...",
+      "redeemHint": "Enter your license key to unlock premium features like unlimited sources",
+      "securityTitle": "Secure & Instance-Specific",
+      "securityMessage": "License keys are cryptographically signed and bound to this FeedCentral instance for security. Each key can only be redeemed once."
+    },
+    "twoFactor": {
+      "title": "Two-Factor Authentication",
+      "description": "Add an extra layer of security to your account",
+      "recommended": "Recommended for Admins",
+      "status": "Status",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "enableButton": "Enable 2FA",
+      "enabling": "Setting up...",
+      "scanQR": "Scan this QR code with your authenticator app",
+      "manualEntry": "Or enter this code manually:",
+      "enterCode": "Enter 6-digit verification code",
+      "verifyButton": "Verify & Enable",
+      "verifying": "Verifying...",
+      "disableButton": "Disable 2FA",
+      "disabling": "Disabling...",
+      "disableWarning": "Enter your password to disable two-factor authentication",
+      "enterPassword": "Enter your password"
     }
   },
   "dashboard": {

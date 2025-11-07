@@ -30,6 +30,10 @@ model User {
   premiumTier      String    @default("free") // "free" | "premium" | "pro"
   premiumExpiresAt DateTime?
 
+  // Two-Factor Authentication
+  twoFactorEnabled Boolean @default(false)
+  twoFactorSecret  String? // TOTP secret, encrypted
+  
   createdAt   DateTime  @default(now())
   lastLoginAt DateTime?
   updatedAt   DateTime  @updatedAt

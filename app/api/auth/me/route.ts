@@ -42,6 +42,9 @@ export async function GET(request: NextRequest) {
         avatar: true,
         createdAt: true,
         lastLoginAt: true,
+        premiumTier: true,
+        premiumExpiresAt: true,
+        twoFactorEnabled: true,
       },
     });
 

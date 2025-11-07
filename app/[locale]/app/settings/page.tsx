@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useRouter, usePathname } from '@/i18n-navigation';
-import { Moon, Sun, AlertTriangle, User, Mail, Edit2, Check, X, Lock, Globe } from 'lucide-react';
+import { Moon, Sun, AlertTriangle, User, Mail, Edit2, Check, X, Lock, Globe, Key, Sparkles, Crown, Shield, ShieldCheck, Download } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,6 +25,16 @@ export default function SettingsPage() {
   const [editingEmail, setEditingEmail] = useState(false);
   const [newEmail, setNewEmail] = useState('');
   const [savingEmail, setSavingEmail] = useState(false);
+  const [licenseKey, setLicenseKey] = useState('');
+  const [redeemingLicense, setRedeemingLicense] = useState(false);
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+  const [enablingTwoFactor, setEnablingTwoFactor] = useState(false);
+  const [twoFactorQR, setTwoFactorQR] = useState('');
+  const [twoFactorSecret, setTwoFactorSecret] = useState('');
+  const [twoFactorCode, setTwoFactorCode] = useState('');
+  const [verifyingTwoFactor, setVerifyingTwoFactor] = useState(false);
+  const [disablingTwoFactor, setDisablingTwoFactor] = useState(false);
+  const [disablePassword, setDisablePassword] = useState('');
 
   const languages = [
     { code: 'en', name: 'English', nativeName: 'English' },
@@ -89,6 +99,15 @@ export default function SettingsPage() {
     } else if (user) {
       setNewName(user.name);
       setNewEmail(user.email);
+      // Fetch 2FA status
+      fetch('/api/auth/me')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.data) {
+            setTwoFactorEnabled(data.data.twoFactorEnabled || false);
+          }
+        })
+        .catch(console.error);
     }
   }, [user, authLoading]);
 
@@ -232,6 +251,250 @@ export default function SettingsPage() {
   const handleLanguageChange = (newLocale: string) => {
     router.replace(pathname, { locale: newLocale });
   };
+
+  const handleRedeemLicense = async () => {
+    if (!licenseKey.trim()) {
+      toast({
+        title: t('common.error'),
+        description: "Please enter a license key",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setRedeemingLicense(true);
+    try {
+      const response = await fetch('/api/user/licenses/redeem', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ key: licenseKey.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast({
+          title: t('common.error'),
+          description: data.error || 'Failed to redeem license key',
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: t('common.success'),
+        description: data.message || 'License key activated successfully!',
+      });
+
+      // Clear input and refresh user data
+      setLicenseKey('');
+      await refreshUser();
+      
+    } catch (error) {
+      console.error('Error redeeming license:', error);
+      toast({
+        title: t('common.error'),
+        description: 'Failed to redeem license key. Please try again.',
+        variant: "destructive",
+      });
+    } finally {
+      setRedeemingLicense(false);
+    }
+  };
+
+  const formatLicenseKeyInput = (value: string) => {
+    // Remove all non-alphanumeric characters
+    const cleaned = value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    
+    // Add dashes every 4 characters
+    const parts = [];
+    for (let i = 0; i < cleaned.length; i += 4) {
+      parts.push(cleaned.slice(i, i + 4));
+    }
+    
+    return parts.join('-').slice(0, 24); // FEED-XXXX-XXXX-XXXX-XXXX = 24 chars with dashes
+  };
+
+  const handleLicenseKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatLicenseKeyInput(e.target.value);
+    setLicenseKey(formatted);
+  };
+
+  const getPremiumBadge = () => {
+    if (!user?.premiumTier || user.premiumTier === 'free') {
+      return null;
+    }
+
+    const tierColors = {
+      premium: 'from-blue-500 to-cyan-500',
+      pro: 'from-purple-500 to-pink-500',
+    };
+
+    const tierIcons = {
+      premium: Sparkles,
+      pro: Crown,
+    };
+
+    const Icon = tierIcons[user.premiumTier as keyof typeof tierIcons] || Sparkles;
+    const gradient = tierColors[user.premiumTier as keyof typeof tierColors] || tierColors.premium;
+
+    return (
+      <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r ${gradient} text-white text-sm font-semibold shadow-lg`}>
+        <Icon className="w-4 h-4" />
+        {user.premiumTier.charAt(0).toUpperCase() + user.premiumTier.slice(1)}
+      </div>
+    );
+  };
+
+  const formatExpiryDate = (date: Date | null) => {
+    if (!date) return null;
+    const expiryDate = new Date(date);
+    const now = new Date();
+    const daysLeft = Math.ceil((expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (daysLeft < 0) return 'Expired';
+    if (daysLeft === 0) return 'Expires today';
+    if (daysLeft === 1) return 'Expires tomorrow';
+    return `Expires in ${daysLeft} days`;
+  };
+
+  // 2FA Handlers
+  const handleEnableTwoFactor = async () => {
+    setEnablingTwoFactor(true);
+    try {
+      const response = await fetch('/api/user/2fa/enable', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast({
+          title: t('common.error'),
+          description: data.error || 'Failed to enable 2FA',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      setTwoFactorQR(data.data.qrCode);
+      setTwoFactorSecret(data.data.secret);
+    } catch (error) {
+      console.error('Error enabling 2FA:', error);
+      toast({
+        title: t('common.error'),
+        description: 'Failed to enable 2FA. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setEnablingTwoFactor(false);
+    }
+  };
+
+  const handleVerifyTwoFactor = async () => {
+    if (!twoFactorCode || twoFactorCode.length !== 6) {
+      toast({
+        title: t('common.error'),
+        description: 'Please enter a 6-digit code',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setVerifyingTwoFactor(true);
+    try {
+      const response = await fetch('/api/user/2fa/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: twoFactorCode }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast({
+          title: t('common.error'),
+          description: data.error || 'Invalid verification code',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      toast({
+        title: t('common.success'),
+        description: 'Two-factor authentication enabled successfully!',
+      });
+
+      setTwoFactorEnabled(true);
+      setTwoFactorQR('');
+      setTwoFactorSecret('');
+      setTwoFactorCode('');
+      await refreshUser();
+    } catch (error) {
+      console.error('Error verifying 2FA:', error);
+      toast({
+        title: t('common.error'),
+        description: 'Failed to verify code. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setVerifyingTwoFactor(false);
+    }
+  };
+
+  const handleDisableTwoFactor = async () => {
+    if (!disablePassword) {
+      toast({
+        title: t('common.error'),
+        description: 'Please enter your password',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setDisablingTwoFactor(true);
+    try {
+      const response = await fetch('/api/user/2fa/disable', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: disablePassword }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast({
+          title: t('common.error'),
+          description: data.error || 'Failed to disable 2FA',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      toast({
+        title: t('common.success'),
+        description: 'Two-factor authentication disabled successfully',
+      });
+
+      setTwoFactorEnabled(false);
+      setDisablePassword('');
+      await refreshUser();
+    } catch (error) {
+      console.error('Error disabling 2FA:', error);
+      toast({
+        title: t('common.error'),
+        description: 'Failed to disable 2FA. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setDisablingTwoFactor(false);
+    }
+  };
+
+  // Generate initials from name
 
   return (
     <div>
@@ -542,6 +805,269 @@ export default function SettingsPage() {
                     </Button>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Premium License Section */}
+          <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+            <div className="bg-muted/30 px-6 py-4 border-b border-border">
+              <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
+                <Key className="w-5 h-5" />
+                {t('settings.license.title')}
+              </h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                {t('settings.license.description')}
+              </p>
+            </div>
+
+            <div className="p-6">
+              <div className="space-y-6">
+                {/* Current Premium Status */}
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                    {t('settings.license.currentStatus')}
+                  </label>
+                  <div className="p-4 rounded-lg border border-border bg-muted/30">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        {user?.premiumTier && user.premiumTier !== 'free' ? (
+                          <>
+                            {getPremiumBadge()}
+                            <div className="text-sm text-muted-foreground">
+                              {user.premiumExpiresAt && formatExpiryDate(user.premiumExpiresAt)}
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted text-foreground text-sm font-semibold">
+                              {t('settings.license.freeTier')}
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              {t('settings.license.upgradePrompt')}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* License Key Redemption */}
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                    {t('settings.license.redeemKey')}
+                  </label>
+                  <div className="space-y-3">
+                    <Input
+                      type="text"
+                      value={licenseKey}
+                      onChange={handleLicenseKeyChange}
+                      placeholder="FEED-XXXX-XXXX-XXXX-XXXX"
+                      className="font-mono text-sm"
+                      disabled={redeemingLicense}
+                      maxLength={24}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleRedeemLicense();
+                      }}
+                    />
+                    <Button
+                      onClick={handleRedeemLicense}
+                      disabled={redeemingLicense || !licenseKey.trim() || licenseKey.length < 24}
+                      className="w-full gap-2"
+                    >
+                      {redeemingLicense ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          {t('settings.license.redeeming')}
+                        </>
+                      ) : (
+                        <>
+                          <Key className="w-4 h-4" />
+                          {t('settings.license.redeemButton')}
+                        </>
+                      )}
+                    </Button>
+                    <p className="text-xs text-muted-foreground">
+                      {t('settings.license.redeemHint')}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Security Notice */}
+                <div className="flex items-start gap-3 p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                  <AlertTriangle className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+                  <div className="text-sm text-blue-600 dark:text-blue-400">
+                    <p className="font-medium mb-1">{t('settings.license.securityTitle')}</p>
+                    <p className="text-xs opacity-90">
+                      {t('settings.license.securityMessage')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Two-Factor Authentication Section */}
+            <div className="p-6 rounded-xl border border-border bg-card shadow-sm">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-green-500/10">
+                  <ShieldCheck className="w-5 h-5 text-green-600 dark:text-green-500" />
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-lg font-semibold text-foreground">
+                    {t('settings.twoFactor.title')}
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    {t('settings.twoFactor.description')}
+                  </p>
+                </div>
+                {user?.role === 'ADMIN' && (
+                  <div className="px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20">
+                    <span className="text-xs font-medium text-yellow-600 dark:text-yellow-500">
+                      {t('settings.twoFactor.recommended')}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-4">
+                {/* 2FA Status */}
+                <div className="space-y-2">
+                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                    {t('settings.twoFactor.status')}
+                  </label>
+                  <div className="p-4 rounded-lg border border-border bg-muted/30">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        {twoFactorEnabled ? (
+                          <>
+                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 text-green-600 dark:text-green-500">
+                              <ShieldCheck className="w-4 h-4" />
+                              <span className="text-sm font-semibold">{t('settings.twoFactor.enabled')}</span>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted text-muted-foreground">
+                              <Shield className="w-4 h-4" />
+                              <span className="text-sm font-semibold">{t('settings.twoFactor.disabled')}</span>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Enable 2FA */}
+                {!twoFactorEnabled && !twoFactorQR && (
+                  <div className="space-y-3">
+                    <Button
+                      onClick={handleEnableTwoFactor}
+                      disabled={enablingTwoFactor}
+                      className="w-full gap-2"
+                    >
+                      {enablingTwoFactor ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          {t('settings.twoFactor.enabling')}
+                        </>
+                      ) : (
+                        <>
+                          <ShieldCheck className="w-4 h-4" />
+                          {t('settings.twoFactor.enableButton')}
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
+
+                {/* QR Code Setup */}
+                {twoFactorQR && (
+                  <div className="space-y-4 p-4 rounded-lg border border-border bg-muted/30">
+                    <div className="text-center space-y-3">
+                      <p className="text-sm font-medium">{t('settings.twoFactor.scanQR')}</p>
+                      <div className="flex justify-center">
+                        <img src={twoFactorQR} alt="2FA QR Code" className="w-48 h-48 bg-white p-2 rounded-lg" />
+                      </div>
+                      <div className="space-y-2">
+                        <p className="text-xs text-muted-foreground">{t('settings.twoFactor.manualEntry')}</p>
+                        <div className="font-mono text-xs bg-background p-2 rounded border border-border break-all">
+                          {twoFactorSecret}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">{t('settings.twoFactor.enterCode')}</label>
+                      <Input
+                        type="text"
+                        value={twoFactorCode}
+                        onChange={(e) => setTwoFactorCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                        placeholder="000000"
+                        className="font-mono text-center text-lg tracking-widest"
+                        maxLength={6}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleVerifyTwoFactor();
+                        }}
+                      />
+                      <Button
+                        onClick={handleVerifyTwoFactor}
+                        disabled={verifyingTwoFactor || twoFactorCode.length !== 6}
+                        className="w-full gap-2"
+                      >
+                        {verifyingTwoFactor ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            {t('settings.twoFactor.verifying')}
+                          </>
+                        ) : (
+                          <>
+                            <Check className="w-4 h-4" />
+                            {t('settings.twoFactor.verifyButton')}
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Disable 2FA */}
+                {twoFactorEnabled && (
+                  <div className="space-y-3 p-4 rounded-lg border border-red-500/20 bg-red-500/5">
+                    <p className="text-sm font-medium text-red-600 dark:text-red-500">
+                      {t('settings.twoFactor.disableWarning')}
+                    </p>
+                    <Input
+                      type="password"
+                      value={disablePassword}
+                      onChange={(e) => setDisablePassword(e.target.value)}
+                      placeholder={t('settings.twoFactor.enterPassword')}
+                      className="bg-background"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleDisableTwoFactor();
+                      }}
+                    />
+                    <Button
+                      onClick={handleDisableTwoFactor}
+                      disabled={disablingTwoFactor || !disablePassword}
+                      variant="destructive"
+                      className="w-full gap-2"
+                    >
+                      {disablingTwoFactor ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          {t('settings.twoFactor.disabling')}
+                        </>
+                      ) : (
+                        <>
+                          <Shield className="w-4 h-4" />
+                          {t('settings.twoFactor.disableButton')}
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
