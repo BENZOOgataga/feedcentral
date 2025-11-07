@@ -10,72 +10,72 @@ export default function RoadmapPage() {
   const t = useTranslations();
   const phases = [
     {
-      title: 'Current State',
+      title: t('roadmap.phases.current.title'),
       icon: Check,
       color: 'text-green-500',
       borderColor: 'border-green-500/30',
       bgColor: 'bg-green-500/5',
       status: 'done',
       items: [
-        'RSS feed aggregation',
-        'Article bookmarking',
-        'User accounts & auth',
-        'Search functionality',
-        'Mobile-friendly design',
+        t('roadmap.phases.current.rss'),
+        t('roadmap.phases.current.bookmarks'),
+        t('roadmap.phases.current.auth'),
+        t('roadmap.phases.current.search'),
+        t('roadmap.phases.current.mobile'),
+        t('roadmap.phases.current.translation'),
       ],
     },
     {
-      title: 'Maybe Soon™',
+      title: t('roadmap.phases.soon.title'),
       icon: Sparkles,
       color: 'text-blue-500',
       borderColor: 'border-blue-500/30',
       bgColor: 'bg-blue-500/5',
       status: 'thinking',
       items: [
-        'French translation (confirmed - in progress)',
-        'Landing page overhaul (confirmed - in progress)',
-        'Better mobile experience & PWA',
-        'Article filtering by keywords',
-        'Improve dark/light themes',
+        t('roadmap.phases.soon.pwa'),
+        t('roadmap.phases.soon.filtering'),
+        t('roadmap.phases.soon.themes'),
+        'Landing page overhaul',
       ],
     },
     {
-      title: 'If I Feel Like It',
+      title: t('roadmap.phases.maybe.title'),
       icon: Zap,
       color: 'text-purple-500',
       borderColor: 'border-purple-500/30',
       bgColor: 'bg-purple-500/5',
       status: 'someday',
       items: [
-        'Reading statistics dashboard',
-        'Full-text search improvements',
-        'Custom notification settings',
+        t('roadmap.phases.maybe.stats'),
+        t('roadmap.phases.maybe.fulltext'),
+        t('roadmap.phases.maybe.notifications'),
       ],
     },
     {
-      title: 'Ambitious Ideas',
+      title: t('roadmap.phases.ambitious.title'),
       icon: Rocket,
       color: 'text-orange-500',
       borderColor: 'border-orange-500/30',
       bgColor: 'bg-orange-500/5',
       status: 'ambitious',
       items: [
-        'Let users add their own RSS feeds',
-        'AI-powered article summaries (maybe?)',
-        'Social features (or not, idk)',
+        t('roadmap.phases.ambitious.customFeeds'),
+        t('roadmap.phases.ambitious.ai'),
+        t('roadmap.phases.ambitious.social'),
       ],
     },
     {
-      title: 'Pipe Dreams',
+      title: t('roadmap.phases.dreams.title'),
       icon: Star,
       color: 'text-pink-500',
       borderColor: 'border-pink-500/30',
       bgColor: 'bg-pink-500/5',
       status: 'dream',
       items: [
-        'Mobile apps (iOS/Android)',
-        'Browser extensions',
-        'World domination',
+        t('roadmap.phases.dreams.apps'),
+        t('roadmap.phases.dreams.extensions'),
+        t('roadmap.phases.dreams.domination'),
       ],
     },
   ];
@@ -123,24 +123,14 @@ export default function RoadmapPage() {
             <div className="flex items-start gap-4">
               <Coffee className="h-6 w-6 shrink-0 text-amber-500 mt-1" />
               <div>
-                <h2 className="mb-2 text-xl font-bold text-foreground">This is a Hobby Project</h2>
+                <h2 className="mb-2 text-xl font-bold text-foreground">{t('roadmap.notice.title')}</h2>
                 <div className="space-y-2 text-sm text-muted-foreground">
+                  <p>{t('roadmap.notice.description')}</p>
                   <p>
-                    FeedCentral was built for fun because I wanted a single place to read my news without 
-                    the bullshit from social media or TV fake news. I work on this when I have time and 
-                    feel like it.
-                  </p>
-                  <p>
-                    <strong className="text-foreground">Important:</strong> The features listed below are 
-                    just <span className="italic">ideas</span> I've had. They may or may not be implemented. 
-                    There's no timeline, no commitments, and no guarantees. I'll add stuff when (and if) I 
-                    want to.
+                    <strong className="text-foreground">{t('roadmap.notice.important')}</strong> {t('roadmap.notice.disclaimer')}
                   </p>
                   <p className="flex items-start gap-2">
-                    <span>
-                      If you want something specific, fork the project and build it yourself! It's open source 
-                      for a reason.
-                    </span>
+                    <span>{t('roadmap.notice.opensource')}</span>
                     <Smile className="h-4 w-4 shrink-0 mt-0.5" />
                   </p>
                 </div>
@@ -151,7 +141,7 @@ export default function RoadmapPage() {
           {/* Timeline */}
           <section>
             <h2 className="mb-8 text-center text-2xl font-bold text-foreground">
-              The "Timeline" (Not Really)
+              {t('roadmap.timeline.title')}
             </h2>
             
             <div className="relative">
@@ -210,8 +200,7 @@ export default function RoadmapPage() {
               <p className="text-xs text-muted-foreground text-center flex items-center justify-center gap-2">
                 <Lightbulb className="h-3.5 w-3.5 shrink-0" />
                 <span>
-                  <strong className="text-foreground">Got an idea?</strong> Feel free to open an issue 
-                  on{' '}
+                  <strong className="text-foreground">{t('roadmap.idea.title')}</strong> {t('roadmap.idea.description')}{' '}
                   <a 
                     href="https://github.com/BENZOOgataga/feedcentral/issues" 
                     target="_blank" 
@@ -220,8 +209,7 @@ export default function RoadmapPage() {
                   >
                     GitHub
                   </a>
-                  , but remember: this is a hobby project. I might love your idea, or I might not have time 
-                  to work on it. If you really want it, submit a PR!
+                  , {t('roadmap.idea.disclaimer')}
                 </span>
               </p>
             </div>
@@ -231,21 +219,19 @@ export default function RoadmapPage() {
           <section className="rounded-xl border border-pink-500/20 bg-pink-500/5 p-6">
             <h2 className="mb-4 flex items-center gap-3 text-xl font-bold text-foreground">
               <Heart className="h-5 w-5 text-pink-500" />
-              Want to Support This Project?
+              {t('roadmap.support.title')}
             </h2>
             <div className="space-y-3 text-sm text-muted-foreground">
-              <p>
-                The best way to support FeedCentral is to:
-              </p>
+              <p>{t('roadmap.support.description')}</p>
               <ul className="ml-6 space-y-2 list-disc">
-                <li>Use it and share it with others who hate fake news</li>
-                <li>Star the repo on GitHub if you find it useful</li>
-                <li>Report bugs when you find them</li>
-                <li>Contribute code if you're a developer</li>
-                <li>Tell me what RSS sources you'd like to see added</li>
+                <li>{t('roadmap.support.use')}</li>
+                <li>{t('roadmap.support.star')}</li>
+                <li>{t('roadmap.support.bugs')}</li>
+                <li>{t('roadmap.support.contribute')}</li>
+                <li>{t('roadmap.support.sources')}</li>
               </ul>
               <p className="mt-4">
-                If you really want to throw money at this hobby project, I have a{' '}
+                {t('roadmap.support.patreon')}{' '}
                 <a 
                   href="https://www.patreon.com/BENZOOgataga" 
                   target="_blank" 
@@ -254,17 +240,16 @@ export default function RoadmapPage() {
                 >
                   Patreon
                 </a>
-                . But honestly, just using FeedCentral and sharing feedback is more than enough!
+                . {t('roadmap.support.enough')}
               </p>
             </div>
           </section>
 
           {/* Official Instance Note */}
           <section className="rounded-xl border border-border/50 bg-card p-6">
-            <h2 className="mb-4 text-lg font-bold text-foreground">About This Roadmap</h2>
+            <h2 className="mb-4 text-lg font-bold text-foreground">{t('roadmap.instance.title')}</h2>
             <p className="text-sm text-muted-foreground">
-              This roadmap applies to the <strong className="text-foreground">official FeedCentral 
-              instance</strong> at{' '}
+              {t('roadmap.instance.description')}{' '}
               <a 
                 href="https://feed.benzoogataga.com" 
                 target="_blank" 
@@ -273,7 +258,7 @@ export default function RoadmapPage() {
               >
                 feed.benzoogataga.com
               </a>
-              . If you're using a fork, their roadmap might be completely different (or non-existent).
+              . {t('roadmap.instance.fork')}
             </p>
           </section>
 

@@ -440,6 +440,72 @@
   "roadmap": {
     "title": "Roadmap",
     "subtitle": "Our plans for the future of FeedCentral",
+    "phases": {
+      "current": {
+        "title": "Current State",
+        "rss": "RSS feed aggregation",
+        "bookmarks": "Article bookmarking",
+        "auth": "User accounts & auth",
+        "search": "Search functionality",
+        "mobile": "Mobile-friendly design",
+        "translation": "French translation"
+      },
+      "soon": {
+        "title": "Maybe Soon™",
+        "pwa": "Better mobile experience & PWA",
+        "filtering": "Article filtering by keywords",
+        "themes": "Improve dark/light themes"
+      },
+      "maybe": {
+        "title": "If I Feel Like It",
+        "stats": "Reading statistics dashboard",
+        "fulltext": "Full-text search improvements",
+        "notifications": "Custom notification settings"
+      },
+      "ambitious": {
+        "title": "Ambitious Ideas",
+        "customFeeds": "Let users add their own RSS feeds",
+        "ai": "AI-powered article summaries (maybe?)",
+        "social": "Social features (or not, idk)"
+      },
+      "dreams": {
+        "title": "Pipe Dreams",
+        "apps": "Mobile apps (iOS/Android)",
+        "extensions": "Browser extensions",
+        "domination": "World domination"
+      }
+    },
+    "notice": {
+      "title": "This is a Hobby Project",
+      "description": "FeedCentral was built for fun because I wanted a single place to read my news without the bullshit from social media or TV fake news. I work on this when I have time and feel like it.",
+      "important": "Important:",
+      "disclaimer": "The features listed below are just ideas I've had. They may or may not be implemented. There's no timeline, no commitments, and no guarantees. I'll add stuff when (and if) I want to.",
+      "opensource": "If you want something specific, fork the project and build it yourself! It's open source for a reason."
+    },
+    "timeline": {
+      "title": "The \"Timeline\" (Not Really)"
+    },
+    "idea": {
+      "title": "Got an idea?",
+      "description": "Feel free to open an issue on",
+      "disclaimer": "but remember: this is a hobby project. I might love your idea, or I might not have time to work on it. If you really want it, submit a PR!"
+    },
+    "support": {
+      "title": "Want to Support This Project?",
+      "description": "The best way to support FeedCentral is to:",
+      "use": "Use it and share it with others who hate fake news",
+      "star": "Star the repo on GitHub if you find it useful",
+      "bugs": "Report bugs when you find them",
+      "contribute": "Contribute code if you're a developer",
+      "sources": "Tell me what RSS sources you'd like to see added",
+      "patreon": "If you really want to throw money at this hobby project, I have a",
+      "enough": "But honestly, just using FeedCentral and sharing feedback is more than enough!"
+    },
+    "instance": {
+      "title": "About This Roadmap",
+      "description": "This roadmap applies to the official FeedCentral instance at",
+      "fork": "If you're using a fork, their roadmap might be completely different (or non-existent)."
+    },
     "status": {
       "planned": "Planned",
       "inProgress": "In Progress",

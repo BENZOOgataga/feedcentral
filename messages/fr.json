@@ -1,84 +1,84 @@
 {
   "metadata": {
     "title": "FeedCentral - Agrégateur d'Actualités",
-    "description": "Un agrégateur de flux RSS professionnel construit avec Next.js, offrant une interface claire inspirée de Vercel pour centraliser et vérifier vos sources d'actualités."
+    "description": "Un agrégateur de flux RSS professionnel créé avec Next.js, avec une interface simple et claire pour regrouper et vérifier vos sources d'information."
   },
   "navigation": {
     "home": "Accueil",
-    "feed": "Fil d'actualité",
+    "feed": "Flux",
     "bookmarks": "Favoris",
     "dashboard": "Tableau de bord",
     "settings": "Paramètres",
-    "admin": "Administration",
+    "admin": "Admin",
     "login": "Connexion",
     "logout": "Déconnexion",
-    "backToFeed": "Retour au fil",
+    "backToFeed": "Retour au flux",
     "backToHome": "Retour à l'accueil"
   },
   "landing": {
     "hero": {
       "title": "Vos Actualités,",
-      "titleHighlight": "Centralisées",
-      "subtitle": "FeedCentral agrège vos sources RSS de confiance dans une interface moderne et épurée. Restez informé sans le bruit.",
-      "ctaBrowse": "Commencer",
+      "titleHighlight": "En Mieux",
+      "subtitle": "FeedCentral regroupe vos sources préférées dans une interface moderne et simple. Restez informé sans fake news.",
+      "ctaBrowse": "Actualités",
       "ctaChangelog": "Changelog",
       "ctaSupport": "Nous soutenir"
     },
     "mission": {
       "badge": "Notre Mission",
       "title": "Reprenez le contrôle de votre fil d'actualité",
-      "description1": "Dans un monde de fils algorithmiques et de défilement infini, FeedCentral vous ramène à l'essentiel :",
-      "description1Highlight": "du contenu sélectionné, chronologique, provenant de sources de confiance",
-      "description2": "Nous croyons que rester informé ne devrait pas se faire au détriment de votre vie privée, de votre attention ou de votre santé mentale. FeedCentral est construit avec la transparence, la simplicité et le respect de l'utilisateur au cœur de ses valeurs."
+      "description1": "Dans un monde de fils algorithmiques et de scroll infini, FeedCentral vous ramène à l'essentiel :",
+      "description1Highlight": "du contenu choisi, chronologique, de sources fiables",
+      "description2": "Nous pensons que rester informé ne devrait pas se faire au prix de votre vie privée, de votre attention ou de votre bien-être. FeedCentral est construit avec la transparence, la simplicité et le respect de l'utilisateur au cœur."
     },
     "features": {
       "title": "Tout ce dont vous avez besoin, rien de superflu",
-      "subtitle": "FeedCentral combine des fonctionnalités puissantes avec une expérience épurée et sans distraction",
+      "subtitle": "FeedCentral combine des fonctionnalités puissantes avec une interface simple et sans distraction",
       "verifiedSources": {
         "title": "Sources vérifiées",
-        "description": "Uniquement des flux RSS fiables et sélectionnés provenant d'éditeurs de confiance et de médias établis."
+        "description": "Uniquement des flux RSS fiables de médias et éditeurs reconnus."
       },
       "realtimeUpdates": {
         "title": "Mises à jour en temps réel",
-        "description": "Le rafraîchissement automatique des flux vous tient au courant des dernières nouvelles et publications."
+        "description": "Le flux se met à jour automatiquement pour vous tenir au courant des dernières actualités."
       },
       "smartBookmarks": {
         "title": "Favoris intelligents",
-        "description": "Enregistrez des articles définitivement en un clic. Le contenu favori n'expire jamais."
+        "description": "Sauvegardez vos articles en un clic. Le contenu en favoris n'expire jamais."
       },
       "powerfulSearch": {
         "title": "Recherche puissante",
-        "description": "Recherche en texte intégral dans tous les articles avec filtrage avancé par source et catégorie."
+        "description": "Recherchez dans tous vos articles avec des filtres par source et catégorie."
       },
       "beautifulDesign": {
         "title": "Design élégant",
-        "description": "Interface moderne et épurée avec mode sombre et design adaptatif pour tous les appareils."
+        "description": "Interface moderne et simple avec mode sombre et design adapté à tous les appareils."
       },
       "openSource": {
         "title": "Open Source",
-        "description": "Code source entièrement transparent. Créez un fork, auto-hébergez ou contribuez pour l'améliorer."
+        "description": "Code source totalement transparent. Forkez, auto-hébergez ou contribuez."
       }
     },
     "privacy": {
       "badge": "Confidentialité d'abord",
       "title": "Vos données vous appartiennent",
-      "subtitle": "Nous prenons la vie privée au sérieux. Voici notre engagement envers vous.",
+      "subtitle": "Nous prenons votre vie privée au sérieux. Voici notre engagement.",
       "noTracking": {
         "title": "Pas de suivi",
-        "description": "Nous n'utilisons pas d'analytique, de cookies ou d'outils de suivi. Vos habitudes de navigation vous appartiennent."
+        "description": "Nous n'utilisons pas d'outils d'analyse ou de cookies de suivi. Votre navigation vous appartient."
       },
       "noAds": {
         "title": "Pas de publicité",
-        "description": "Zéro publicité. Notre mission est de vous servir, pas les annonceurs. Soutenez-nous directement si vous le souhaitez."
+        "description": "Zéro pub. Notre mission est de vous servir, pas les annonceurs. Soutenez-nous directement si vous le souhaitez."
       },
       "gdpr": {
         "title": "Conforme RGPD",
-        "description": "Exploité depuis la France avec conformité totale au RGPD. Vos droits sur vos données sont protégés par la loi."
+        "description": "Hébergé en France avec conformité totale au RGPD. Vos droits sur vos données sont protégés par la loi."
       }
     },
     "sources": {
       "title": "Sources de confiance",
-      "subtitle": "Agrégation de contenu provenant des principales publications technologiques, blogs et médias d'actualité."
+      "subtitle": "Contenu des principales publications tech, blogs et médias d'actualité."
     },
     "footer": {
       "project": "Projet",
@@ -86,21 +86,21 @@
       "resources": "Ressources",
       "contact": "Contact",
       "changelog": "Changelog",
-      "roadmap": "Feuille de route",
+      "roadmap": "Roadmap",
       "rssSources": "Sources RSS",
       "contributors": "Contributeurs",
       "github": "GitHub",
-      "privacy": "Politique de confidentialité",
+      "privacy": "Confidentialité",
       "terms": "Conditions d'utilisation",
-      "cookies": "Politique des cookies",
+      "cookies": "Cookies",
       "documentation": "Documentation",
       "reportIssues": "Signaler un problème",
       "discussions": "Discussions",
-      "emailSupport": "Support par email",
+      "emailSupport": "Support email",
       "officialInstance": "Instance officielle",
       "supportUs": "Nous soutenir",
-      "copyright": "FeedCentral. Agrégateur RSS open source construit avec Next.js.",
-      "tagline": "Exploité depuis la France • Conforme RGPD • Pas de suivi, pas de pub, pas de fake news"
+      "copyright": "FeedCentral. Agrégateur RSS open source créé avec Next.js.",
+      "tagline": "Hébergé en France • Conforme RGPD • Pas de suivi, pas de pub, pas de fake news"
     }
   },
   "feed": {
@@ -109,17 +109,17 @@
       "all": "Tout",
       "technology": "Technologie",
       "science": "Science",
-      "business": "Affaires",
+      "business": "Business",
       "security": "Sécurité"
     },
-    "loading": "Chargement des articles...",
+    "loading": "Chargement...",
     "empty": {
       "title": "Aucun article pour le moment",
-      "description": "Revenez bientôt pour les dernières mises à jour de vos sources.",
-      "action": "Rafraîchir le fil"
+      "description": "Revenez plus tard pour voir les dernières actualités.",
+      "action": "Actualiser"
     },
     "error": {
-      "title": "Échec du chargement des articles",
+      "title": "Impossible de charger les articles",
       "description": "Une erreur s'est produite. Veuillez réessayer.",
       "action": "Réessayer"
     }
@@ -132,8 +132,8 @@
     "signInToBookmark": "Connectez-vous pour ajouter aux favoris",
     "notFound": {
       "title": "Article introuvable",
-      "description": "L'article que vous recherchez n'existe pas ou a été supprimé.",
-      "action": "Retour au fil"
+      "description": "Cet article n'existe pas ou a été supprimé.",
+      "action": "Retour au flux"
     }
   },
   "bookmarks": {
@@ -142,24 +142,24 @@
     "article": "article",
     "articles": "articles",
     "empty": {
-      "title": "Aucun favori pour le moment",
-      "description": "Commencez à sauvegarder vos articles préférés pour créer votre collection de lecture personnelle",
+      "title": "Aucun favori",
+      "description": "Commencez à sauvegarder vos articles préférés pour créer votre bibliothèque personnelle",
       "browseArticles": "Parcourir les articles",
       "benefits": {
         "title": "Pourquoi mettre en favoris ?",
-        "retention": "Les articles non favoris sont automatiquement supprimés après 7 jours",
-        "preservation": "Les articles favoris sont conservés pour toujours",
-        "organization": "Gardez une trace des histoires importantes",
-        "readingList": "Créez votre liste de lecture personnelle"
+        "retention": "Les articles non sauvegardés sont supprimés après 7 jours",
+        "preservation": "Les favoris sont conservés pour toujours",
+        "organization": "Gardez vos articles importants",
+        "readingList": "Créez votre liste de lecture"
       },
       "signIn": "Se connecter",
       "createAccount": "Créer un compte",
-      "hint": "Une fois connecté, vous verrez un bouton favori sur chaque article"
+      "hint": "Une fois connecté, vous verrez un bouton favoris sur chaque article"
     },
     "features": {
       "saveForLater": {
         "title": "Sauvegarder pour plus tard",
-        "description": "Cliquez sur l'icône de favori sur n'importe quel article pour le sauvegarder"
+        "description": "Cliquez sur l'icône favoris sur n'importe quel article"
       },
       "accessAnywhere": {
         "title": "Accès partout",
@@ -167,28 +167,28 @@
       },
       "stayOrganized": {
         "title": "Restez organisé",
-        "description": "Créez votre bibliothèque personnelle d'articles importants"
+        "description": "Créez votre bibliothèque d'articles importants"
       },
       "neverLoseTrack": {
-        "title": "Ne perdez jamais le fil",
+        "title": "Ne perdez rien",
         "description": "Les articles restent sauvegardés même s'ils sont supprimés des flux"
       }
     },
     "benefits": {
       "title": "Avantages des favoris :",
-      "save": "Sauvegarder des articles pour les lire plus tard",
-      "access": "Accédez à vos favoris depuis n'importe quel appareil",
-      "track": "Gardez une trace des histoires importantes",
-      "build": "Créez votre liste de lecture personnelle",
-      "hint": "Une fois connecté, vous verrez un bouton favori sur chaque article"
+      "save": "Sauvegarder pour lire plus tard",
+      "access": "Accédez depuis n'importe quel appareil",
+      "track": "Gardez vos articles importants",
+      "build": "Créez votre liste de lecture",
+      "hint": "Une fois connecté, vous verrez un bouton favoris sur chaque article"
     },
     "signInRequired": {
       "title": "Sauvegardez vos articles préférés",
-      "description": "Créez un compte ou connectez-vous pour mettre des articles en favoris et y accéder à tout moment."
+      "description": "Créez un compte ou connectez-vous pour mettre des articles en favoris."
     },
     "warning": {
-      "title": "Les articles sont conservés lorsqu'ils sont mis en favoris",
-      "description": "Les articles non favoris sont automatiquement supprimés après 7 jours pour optimiser le stockage. Vos articles favoris sont sauvegardés définitivement et ne seront jamais supprimés."
+      "title": "Les articles en favoris sont conservés",
+      "description": "Les articles non sauvegardés sont supprimés après 7 jours. Vos favoris sont conservés définitivement."
     },
     "remove": "Retirer"
   },
@@ -198,31 +198,31 @@
     "login": {
       "title": "Bon retour",
       "subtitle": "Connectez-vous à votre compte",
-      "email": "Adresse e-mail",
+      "email": "Adresse email",
       "emailPlaceholder": "j.dupont@exemple.fr",
       "password": "Mot de passe",
       "passwordPlaceholder": "••••••••",
       "submit": "Se connecter",
-      "submitting": "Connexion en cours...",
-      "noAccount": "Pas encore de compte ? S'inscrire",
-      "register": "S'inscrire ici",
-      "error": "E-mail ou mot de passe invalide"
+      "submitting": "Connexion...",
+      "noAccount": "Pas de compte ? S'inscrire",
+      "register": "S'inscrire",
+      "error": "Email ou mot de passe incorrect"
     },
     "register": {
       "title": "Créer un compte",
       "subtitle": "Créez votre compte",
       "name": "Nom complet",
       "namePlaceholder": "Jean Dupont",
-      "email": "E-mail",
+      "email": "Email",
       "password": "Mot de passe",
       "submit": "Créer un compte",
-      "submitting": "Création du compte...",
-      "hasAccount": "Vous avez déjà un compte ? Se connecter",
-      "signIn": "Se connecter ici",
+      "submitting": "Création...",
+      "hasAccount": "Déjà un compte ? Se connecter",
+      "signIn": "Se connecter",
       "error": "Échec de l'inscription",
       "warning": {
         "title": "Important",
-        "description": "Notre serveur n'a pas de support e-mail configuré. Il n'y a pas d'option de récupération de mot de passe. Veuillez mémoriser votre mot de passe. Si vous l'oubliez, contactez l'administrateur pour obtenir de l'aide."
+        "description": "Le serveur n'a pas de système d'email configuré. Il n'y a pas de récupération de mot de passe possible. Notez bien votre mot de passe. Si vous l'oubliez, contactez l'administrateur."
       }
     }
   },
@@ -304,10 +304,10 @@
   },
   "dashboard": {
     "title": "Tableau de bord",
-    "subtitle": "Vos statistiques de lecture et activité",
-    "welcome": "Bon retour, {name} ! Voici un aperçu de votre activité de lecture.",
+    "subtitle": "Vos statistiques de lecture",
+    "welcome": "Bon retour, {name} ! Voici votre activité.",
     "stats": {
-      "totalBookmarks": "Total des favoris",
+      "totalBookmarks": "Favoris",
       "articlesRead": "Articles lus",
       "recentActivity": "Activité récente",
       "articlesSaved": "Articles sauvegardés",
@@ -320,26 +320,26 @@
     "favoriteCategory": "Catégorie préférée",
     "bookmarkedArticles": "{count} articles en favoris",
     "quickActions": "Actions rapides",
-    "browseLatest": "Parcourir les derniers articles",
-    "viewAllBookmarks": "Voir tous les favoris",
+    "browseLatest": "Derniers articles",
+    "viewAllBookmarks": "Tous les favoris",
     "recentBookmarks": "Favoris récents",
     "viewAll": "Voir tout",
     "empty": {
-      "title": "Aucun favori pour le moment",
-      "description": "Commencez à sauvegarder des articles pour voir vos statistiques et activité de lecture ici.",
+      "title": "Aucun favori",
+      "description": "Sauvegardez des articles pour voir vos statistiques ici.",
       "browseArticles": "Parcourir les articles"
     },
     "recentActivity": "Activité récente",
     "topSources": "Principales sources",
     "readingTime": "Temps de lecture",
     "thisWeek": "Cette semaine",
-    "thisMonth": "Ce mois-ci"
+    "thisMonth": "Ce mois"
   },
   "category": {
     "all": "Tout",
     "technology": "Technologie",
     "science": "Science",
-    "business": "Affaires",
+    "business": "Business",
     "security": "Sécurité",
     "entertainment": "Divertissement",
     "sports": "Sports",
@@ -348,46 +348,46 @@
     "tech": "Technologie",
     "latestArticles": "Derniers articles dans {category}",
     "empty": {
-      "title": "Aucun article trouvé",
-      "description": "Aucun article dans la catégorie {category} pour le moment."
+      "title": "Aucun article",
+      "description": "Pas d'article dans la catégorie {category} pour le moment."
     }
   },
   "appPage": {
     "title": "Tous les flux",
-    "subtitle": "Derniers articles de vos sources abonnées",
+    "subtitle": "Derniers articles de vos sources",
     "loadMore": "Charger plus",
-    "refreshFeeds": "Rafraîchir les flux"
+    "refreshFeeds": "Actualiser"
   },
   "changelog": {
     "title": "Changelog",
-    "subtitle": "Suivez toutes les mises à jour, améliorations et nouvelles fonctionnalités ajoutées à FeedCentral",
+    "subtitle": "Suivez toutes les nouveautés et améliorations de FeedCentral",
     "note": "Note",
-    "noteDescription": "Ce changelog reflète les changements apportés à cette instance spécifique de FeedCentral. Certains détails peuvent différer des autres déploiements, tels que le contenu de la base de données, les paramètres de configuration ou les fonctionnalités personnalisées.",
+    "noteDescription": "Ce changelog reflète les changements de cette instance de FeedCentral. Certains détails peuvent différer d'autres déploiements.",
     "backToDashboard": "Retour au tableau de bord",
     "legend": "Légende",
     "updateTypes": "Types de mise à jour",
     "changeTypes": "Types de changement",
     "majorUpdate": "Mise à jour majeure",
-    "majorDescription": "Versions importantes avec de nouvelles fonctionnalités majeures, des changements architecturaux ou des étapes importantes",
+    "majorDescription": "Nouvelles fonctionnalités majeures, changements architecturaux ou étapes importantes",
     "minorUpdate": "Mise à jour mineure",
-    "minorDescription": "Nouvelles fonctionnalités et améliorations qui étendent les fonctionnalités sans casser les fonctionnalités existantes",
+    "minorDescription": "Nouvelles fonctionnalités et améliorations sans casser les fonctionnalités existantes",
     "patchUpdate": "Correctif",
-    "patchDescription": "Corrections de bugs, mises à jour de sécurité et petites améliorations qui n'ajoutent pas de nouvelles fonctionnalités",
+    "patchDescription": "Corrections de bugs et petites améliorations",
     "feature": "Fonctionnalité",
-    "featureDescription": "Nouvelles fonctionnalités et ajouts",
+    "featureDescription": "Nouvelles fonctionnalités",
     "improvement": "Amélioration",
     "improvementDescription": "Améliorations et optimisations",
-    "fix": "Correctif",
+    "fix": "Correction",
     "fixDescription": "Corrections de bugs",
     "removal": "Suppression",
-    "removalDescription": "Fonctionnalités dépréciées ou supprimées",
+    "removalDescription": "Fonctionnalités supprimées",
     "notification": {
-      "whatsNew": "Nouveautés de la v{version} !",
-      "featuresAndMore": "{count} nouvelles fonctionnalités et plus",
-      "improvementsAndMore": "{count} améliorations et plus",
-      "fixesAndMore": "{count} corrections et plus",
+      "whatsNew": "Nouveautés v{version} !",
+      "featuresAndMore": "{count} nouvelles fonctionnalités",
+      "improvementsAndMore": "{count} améliorations",
+      "fixesAndMore": "{count} corrections",
       "updatesAndMore": "{count} mises à jour",
-      "viewChangelog": "Voir le journal",
+      "viewChangelog": "Voir le changelog",
       "close": "Fermer"
     },
     "types": {
@@ -396,7 +396,7 @@
       "patch": "Correctif",
       "feature": "Nouvelle fonctionnalité",
       "improvement": "Amélioration",
-      "fix": "Correction de bug",
+      "fix": "Correction",
       "breaking": "Changement majeur"
     },
     "categories": {
@@ -410,13 +410,13 @@
       "deprecated": "Déprécié"
     },
     "descriptions": {
-      "major": "Versions importantes avec de nouvelles fonctionnalités majeures, des changements architecturaux ou des étapes importantes",
-      "minor": "Nouvelles fonctionnalités et améliorations qui étendent les fonctionnalités sans casser les fonctionnalités existantes",
-      "patch": "Corrections de bugs, mises à jour de sécurité et petites améliorations qui n'ajoutent pas de nouvelles fonctionnalités",
-      "feature": "Nouvelles fonctionalités et ajouts",
+      "major": "Nouvelles fonctionnalités majeures, changements architecturaux ou étapes importantes",
+      "minor": "Nouvelles fonctionnalités qui n'affectent pas les fonctionnalités existantes",
+      "patch": "Corrections de bugs et petites améliorations",
+      "feature": "Nouvelles fonctionalités",
       "improvement": "Améliorations et optimisations",
       "fix": "Corrections de bugs",
-      "removal": "Fonctionnalités dépréciées ou supprimées"
+      "removal": "Fonctionnalités supprimées"
     },
     "version": "Version",
     "released": "Publié",
@@ -424,10 +424,10 @@
     "clickForDetails": "Cliquez pour plus de détails",
     "previous": "Précédent",
     "next": "Suivant",
-    "showing": "Affichage de {start}-{end} sur {total} versions",
-    "reportBugs": "Pour signaler des bugs ou des problèmes,",
-    "visitIssuesPage": "visitez notre page de problèmes",
-    "suggestFeature": "Vous souhaitez suggérer une fonctionnalité ou signaler un problème ?",
+    "showing": "{start}-{end} sur {total} versions",
+    "reportBugs": "Pour signaler des bugs,",
+    "visitIssuesPage": "visitez notre page GitHub",
+    "suggestFeature": "Une idée ou un problème ?",
     "contactUs": "Contactez-nous"
   },
   "contributors": {
@@ -438,8 +438,74 @@
     "viewOnGithub": "Voir sur GitHub"
   },
   "roadmap": {
-    "title": "Feuille de route",
+    "title": "Roadmap",
     "subtitle": "Nos plans pour l'avenir de FeedCentral",
+    "phases": {
+      "current": {
+        "title": "Current State",
+        "rss": "RSS feed aggregation",
+        "bookmarks": "Article bookmarking",
+        "auth": "User accounts & auth",
+        "search": "Search functionality",
+        "mobile": "Mobile-friendly design",
+        "translation": "French translation"
+      },
+      "soon": {
+        "title": "Maybe Soon™",
+        "pwa": "Better mobile experience & PWA",
+        "filtering": "Article filtering by keywords",
+        "themes": "Improve dark/light themes"
+      },
+      "maybe": {
+        "title": "If I Feel Like It",
+        "stats": "Reading statistics dashboard",
+        "fulltext": "Full-text search improvements",
+        "notifications": "Custom notification settings"
+      },
+      "ambitious": {
+        "title": "Ambitious Ideas",
+        "customFeeds": "Let users add their own RSS feeds",
+        "ai": "AI-powered article summaries (maybe?)",
+        "social": "Social features (or not, idk)"
+      },
+      "dreams": {
+        "title": "Pipe Dreams",
+        "apps": "Mobile apps (iOS/Android)",
+        "extensions": "Browser extensions",
+        "domination": "World domination"
+      }
+    },
+    "notice": {
+      "title": "This is a Hobby Project",
+      "description": "FeedCentral was built for fun because I wanted a single place to read my news without the bullshit from social media or TV fake news. I work on this when I have time and feel like it.",
+      "important": "Important:",
+      "disclaimer": "The features listed below are just ideas I've had. They may or may not be implemented. There's no timeline, no commitments, and no guarantees. I'll add stuff when (and if) I want to.",
+      "opensource": "If you want something specific, fork the project and build it yourself! It's open source for a reason."
+    },
+    "timeline": {
+      "title": "The \"Timeline\" (Not Really)"
+    },
+    "idea": {
+      "title": "Got an idea?",
+      "description": "Feel free to open an issue on",
+      "disclaimer": "but remember: this is a hobby project. I might love your idea, or I might not have time to work on it. If you really want it, submit a PR!"
+    },
+    "support": {
+      "title": "Want to Support This Project?",
+      "description": "The best way to support FeedCentral is to:",
+      "use": "Use it and share it with others who hate fake news",
+      "star": "Star the repo on GitHub if you find it useful",
+      "bugs": "Report bugs when you find them",
+      "contribute": "Contribute code if you're a developer",
+      "sources": "Tell me what RSS sources you'd like to see added",
+      "patreon": "If you really want to throw money at this hobby project, I have a",
+      "enough": "But honestly, just using FeedCentral and sharing feedback is more than enough!"
+    },
+    "instance": {
+      "title": "About This Roadmap",
+      "description": "This roadmap applies to the official FeedCentral instance at",
+      "fork": "If you're using a fork, their roadmap might be completely different (or non-existent)."
+    },
     "status": {
       "planned": "Planifié",
       "inProgress": "En cours",
@@ -529,7 +595,7 @@
     }
   },
   "disclaimer": {
-    "title": "Avis sur la langue du contenu",
-    "description": "Le contenu principal de cette page est affiché en anglais uniquement. Seuls les éléments de navigation et l'interface de la page ont été traduits dans votre langue sélectionnée pour des raisons techniques et de précision."
+    "title": "Info sur la langue",
+    "description": "Le contenu principal de cette page est en anglais. Seule l'interface a été traduite en français."
   }
 }

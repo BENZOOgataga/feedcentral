@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRequireAuth } from '@/lib/hooks/useAuth';
 import { LayoutDashboard, BookmarkIcon, Eye, TrendingUp, Clock, Sparkles } from 'lucide-react';
 import { Link } from '@/i18n-navigation';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 interface DashboardStats {
   totalBookmarks: number;
@@ -29,6 +29,7 @@ interface RecentArticle {
 export default function DashboardPage() {
   const { user, isLoading: authLoading } = useRequireAuth();
   const t = useTranslations();
+  const locale = useLocale();
   const [stats, setStats] = useState<DashboardStats>({
     totalBookmarks: 0,
     articlesRead: 0,
@@ -352,7 +353,7 @@ export default function DashboardPage() {
                         <span>•</span>
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
-                          {new Date(article.publishedAt).toLocaleDateString()}
+                          {new Date(article.publishedAt).toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US')}
                         </span>
                       </div>
                     </div>
