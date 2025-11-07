@@ -2,11 +2,13 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { User, LogOut, Settings, Shield } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/i18n-navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from 'next-intl';
 
 export function UserMenu() {
+  const t = useTranslations();
   const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -32,7 +34,7 @@ export function UserMenu() {
     return (
       <Link href="/login">
         <Button variant="ghost" size="sm">
-          Sign In
+          {t('auth.signIn')}
         </Button>
       </Link>
     );
@@ -59,7 +61,7 @@ export function UserMenu() {
             {user.role === 'ADMIN' && (
               <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2 py-0.5 text-xs font-medium text-blue-400">
                 <Shield className="h-3 w-3" />
-                Admin
+                {t('userMenu.adminBadge')}
               </div>
             )}
           </div>
@@ -73,7 +75,7 @@ export function UserMenu() {
                 onClick={() => setIsOpen(false)}
               >
                 <Settings className="h-4 w-4" />
-                Admin Dashboard
+                {t('userMenu.adminDashboard')}
               </Link>
             )}
 
@@ -85,7 +87,7 @@ export function UserMenu() {
               className="w-full flex items-center gap-2 px-4 py-2 text-sm text-neutral-300 hover:bg-white/5 transition-colors"
             >
               <LogOut className="h-4 w-4" />
-              Sign Out
+              {t('userMenu.signOut')}
             </button>
           </div>
         </div>

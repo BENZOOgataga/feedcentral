@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { Calendar, ExternalLink, Bookmark, BookmarkCheck } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/i18n-navigation';
+import { useRouter } from '@/i18n-navigation';
 import { Article } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { decodeHtmlEntities } from '@/lib/decode-html';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { useRouter } from 'next/navigation';
 
 interface ArticleHeaderProps {
   article: Article;

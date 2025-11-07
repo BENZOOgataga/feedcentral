@@ -244,6 +244,12 @@
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
   }
+  
+  /* Prevent sticky/fixed containers from creating transform contexts that break portals */
+  .sticky,
+  [class*="sticky"] {
+    transform: none !important;
+  }
 }
 
 @keyframes fadeIn {

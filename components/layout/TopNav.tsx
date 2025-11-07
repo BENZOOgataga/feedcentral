@@ -1,24 +1,23 @@
 'use client';
 
 import { Search } from 'lucide-react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { Link } from '@/i18n-navigation';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { UserMenu } from '@/components/layout/UserMenu';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useTranslations } from 'next-intl';
 
 interface TopNavProps {
   onSearchClick?: () => void;
 }
 
 export function TopNav({ onSearchClick }: TopNavProps) {
+  const t = useTranslations();
+  
   return (
-    <motion.header
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60"
+    <header
+      className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 animate-in fade-in slide-in-from-top-2 duration-300"
     >
       <div className="content-container flex h-16 items-center justify-between px-4 sm:px-6">
         {/* Logo */}
@@ -38,7 +37,7 @@ export function TopNav({ onSearchClick }: TopNavProps) {
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground will-change-[color] transition-all duration-300 ease-in-out group-hover:text-foreground" />
             <Input
               type="text"
-              placeholder="Search articles..."
+              placeholder={t('search.placeholder')}
               onClick={onSearchClick}
               readOnly
               style={{ willChange: 'transform, opacity, background-color, border-color, box-shadow' }}
@@ -67,6 +66,6 @@ export function TopNav({ onSearchClick }: TopNavProps) {
           <UserMenu />
         </div>
       </div>
-    </motion.header>
+    </header>
   );
 }

@@ -12,24 +12,21 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
-    version: '1.2.1',
-    name: 'Article Reader Image Fix',
-    type: 'patch',
-    date: 'November 7, 2025',
-    changes: [
-      {
-        type: 'fix',
-        description: 'Fixed article images with inline styles breaking layout',
-        details: 'Some RSS feeds include images with hardcoded inline styles (e.g., width:3333px, height:2000px) that were overriding our CSS and causing massive images to overflow the container. Added CSS !important modifiers to force images to constrain to container width (max-width: 100%) and maintain aspect ratio (width: auto, height: auto), regardless of inline style attributes. Images now properly display at readable sizes on all devices.',
-      },
-    ],
-  },
-  {
     version: '1.2.0',
-    name: 'Transparency, Optimization & Polish',
+    name: 'Internationalization & Transparency',
     type: 'minor',
     date: 'November 7, 2025',
     changes: [
+      {
+        type: 'feature',
+        description: 'Full French translation with bilingual support (English/French)',
+        details: 'Complete internationalization using next-intl with 500+ translation keys. All UI elements, navigation, buttons, tooltips, error messages, and static page headers are now available in French. Users can switch languages from Settings page. Date formatting adapts to locale (e.g., "7 novembre 2025" in French). Actual content (articles, roadmap details, legal text, changelog descriptions) remains in English for technical accuracy.',
+      },
+      {
+        type: 'feature',
+        description: 'Added Content Language Disclaimer component for non-English locales',
+        details: 'Reusable disclaimer component that appears on static pages (roadmap, contributors, sources, legal pages) when viewing in French. Informs users that main content is in English while UI/navigation is translated. Uses Lucide Info icon with blue accent styling.',
+      },
       {
         type: 'feature',
         description: 'Added comprehensive legal pages (Privacy Policy, Terms of Service, Cookie Policy)',
@@ -48,12 +45,7 @@ export const changelog: ChangelogEntry[] = [
       {
         type: 'feature',
         description: 'Added changelog page to track FeedCentral updates and improvements',
-        details: 'This dedicated changelog page provides a comprehensive history of all updates, organized by version with color-coded tags for different change types. Includes expandable cards for detailed explanations and a legend to help users understand what each update means.',
-      },
-      {
-        type: 'feature',
-        description: 'Added article retention warning in bookmarks page to inform users about automatic cleanup',
-        details: 'A prominent information banner now appears on the bookmarks page, clearly explaining that unbookmarked articles are removed after 7 days while bookmarked articles are preserved forever. This helps users understand the importance of bookmarking content they want to keep.',
+        details: 'This dedicated changelog page provides a comprehensive history of all updates, organized by version with color-coded tags for different change types. Includes expandable cards for detailed explanations, a comprehensive legend explaining update types and change categories, and full translation support for UI elements.',
       },
       {
         type: 'feature',
@@ -67,28 +59,8 @@ export const changelog: ChangelogEntry[] = [
       },
       {
         type: 'improvement',
-        description: 'Expanded landing page with comprehensive mission statement and feature showcase',
-        details: 'Added new sections including "Take Back Control of Your News Feed" mission statement, expanded core features grid (6 features with icons: Verified Sources, Real-time Updates, Smart Bookmarks, Powerful Search, Beautiful Design, Open Source), and "Your Data Stays Yours" privacy commitment section with No Tracking, No Ads, and GDPR Compliant cards.',
-      },
-      {
-        type: 'improvement',
-        description: 'Implemented smooth gradient transitions for landing page sections',
-        details: 'Added elegant full-width gray blocks with smooth gradient fade transitions (96px zones) for Mission and Privacy sections. Creates a professional, polished look by smoothly blending from dark background to gray sections instead of harsh color cuts.',
-      },
-      {
-        type: 'improvement',
-        description: 'Optimized article retention to 7 days (down from 30 days) to reduce database usage by 64%',
-        details: 'Articles older than 7 days are now automatically soft-deleted unless they are bookmarked. This aggressive cleanup strategy helps keep database size under control on the free tier. Hard-deletion occurs after 14 days for permanently removing unbookmarked articles from the database.',
-      },
-      {
-        type: 'improvement',
-        description: 'Bookmarked articles are now permanently preserved and never deleted',
-        details: 'The cleanup system is smart enough to detect bookmarked articles and exclude them from both soft-delete and hard-delete operations. Bookmarked articles are also archived with their full metadata (title, description, images, source info) to ensure they remain accessible even if the original source is removed.',
-      },
-      {
-        type: 'improvement',
-        description: 'Replaced all UI emojis with Lucide icons for consistency',
-        details: 'Systematic replacement of emojis with professional Lucide React icons across all pages for better accessibility, visual consistency, and design polish.',
+        description: 'Standardized legal page styling with consistent banner layout',
+        details: 'All three legal pages (Privacy, Terms, Cookies) now have identical structure: title, subtitle, version info, last updated date, disclaimer, and "Applicable to" banner. Banner styling is consistent (text-sm, p-4, centered text, semibold links). Fixed multiple styling inconsistencies across pages.',
       },
       {
         type: 'improvement',
@@ -101,19 +73,9 @@ export const changelog: ChangelogEntry[] = [
         details: 'Added "Support Us" links to the landing page (hero CTA and footer), roadmap, contributors page, and sources page. Makes it easy for users who want to support the project financially.',
       },
       {
-        type: 'improvement',
-        description: 'Refined hero CTA buttons with consistent icon positioning',
-        details: 'All three landing page CTA buttons now have consistent styling with left-aligned icons and matching gap spacing, except for the primary "Start Browsing" button which has the arrow icon on the right for a directional feel.',
-      },
-      {
-        type: 'improvement',
-        description: 'Optimized Largest Contentful Paint (LCP) from 3.62s to ~1.9s for 47% faster page loads',
-        details: 'Implemented comprehensive performance optimizations including: removed artificial 1-second loading delay, parallel API fetching with Promise.all(), priority image loading for first 3 articles with fetchPriority hints, DNS preconnect for Unsplash CDN, API response caching (60-120s with stale-while-revalidate), and reduced initial skeleton from 5 to 3 cards. These changes eliminate network waterfalls and ensure above-the-fold content loads immediately.',
-      },
-      {
         type: 'fix',
-        description: 'Fixed gradient banding artifacts on landing page and changelog header for smoother visuals',
-        details: 'Removed CSS gradients that were causing visible color banding (horizontal lines) on certain displays. Replaced with solid backgrounds for a clean, professional appearance without visual artifacts.',
+        description: 'Fixed article images with inline styles breaking layout',
+        details: 'Some RSS feeds include images with hardcoded inline styles (e.g., width:3333px, height:2000px) that were overriding our CSS and causing massive images to overflow the container. Added CSS !important modifiers to force images to constrain to container width (max-width: 100%) and maintain aspect ratio (width: auto, height: auto), regardless of inline style attributes. Images now properly display at readable sizes on all devices.',
       },
     ],
   },

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Sparkles, X } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/i18n-navigation';
 import { getLatestNewChangelog } from '@/lib/changelog-data';
 
 const STORAGE_KEY = 'feedcentral-changelog-seen';

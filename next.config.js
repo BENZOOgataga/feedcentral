@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
+
+const withNextIntl = require('next-intl/plugin')('./i18n.ts');
+
 const nextConfig = {
   serverExternalPackages: ['@prisma/client', 'prisma'],
   outputFileTracingIncludes: {
@@ -24,4 +27,4 @@ const nextConfig = {
   compress: true,
 };
 
-module.exports = nextConfig;
+module.exports = withNextIntl(nextConfig);

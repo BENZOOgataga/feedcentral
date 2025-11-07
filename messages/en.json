@@ -1,0 +1,503 @@
+{
+  "navigation": {
+    "home": "Home",
+    "feed": "Feed",
+    "bookmarks": "Bookmarks",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "admin": "Admin",
+    "login": "Login",
+    "logout": "Logout",
+    "backToFeed": "Back to Feed",
+    "backToHome": "Back to Home"
+  },
+  "landing": {
+    "hero": {
+      "title": "Your News,",
+      "titleHighlight": "Centralized",
+      "subtitle": "FeedCentral aggregates your trusted RSS sources into a clean, modern interface. Stay informed without the noise.",
+      "ctaBrowse": "Start Browsing",
+      "ctaChangelog": "Changelog",
+      "ctaSupport": "Support Us"
+    },
+    "mission": {
+      "badge": "Our Mission",
+      "title": "Take Back Control of Your News Feed",
+      "description1": "In a world of algorithmic feeds and endless scrolling, FeedCentral brings you back to the basics:",
+      "description1Highlight": "curated, chronological content from sources you trust",
+      "description2": "We believe that staying informed shouldn't come at the cost of your privacy, attention, or sanity. FeedCentral is built with transparency, simplicity, and user respect at its core."
+    },
+    "features": {
+      "title": "Everything You Need, Nothing You Don't",
+      "subtitle": "FeedCentral combines powerful features with a clean, distraction-free experience",
+      "verifiedSources": {
+        "title": "Verified Sources",
+        "description": "Only reliable, curated RSS feeds from trusted publishers and established media outlets."
+      },
+      "realtimeUpdates": {
+        "title": "Real-time Updates",
+        "description": "Automatic feed refresh keeps you up to date with breaking news and latest publications."
+      },
+      "smartBookmarks": {
+        "title": "Smart Bookmarks",
+        "description": "Save articles permanently with one click. Bookmarked content never expires."
+      },
+      "powerfulSearch": {
+        "title": "Powerful Search",
+        "description": "Full-text search across all articles with advanced filtering by source and category."
+      },
+      "beautifulDesign": {
+        "title": "Beautiful Design",
+        "description": "Clean, modern interface with dark mode support and responsive design for all devices."
+      },
+      "openSource": {
+        "title": "Open Source",
+        "description": "Fully transparent codebase. Fork it, self-host it, or contribute to make it better."
+      }
+    },
+    "privacy": {
+      "badge": "Privacy First",
+      "title": "Your Data Stays Yours",
+      "subtitle": "We take privacy seriously. Here's our commitment to you.",
+      "noTracking": {
+        "title": "No Tracking",
+        "description": "We don't use analytics, cookies, or any tracking tools. Your browsing habits are yours alone."
+      },
+      "noAds": {
+        "title": "No Ads",
+        "description": "Zero advertising. Our mission is to serve you, not advertisers. Support us directly if you want."
+      },
+      "gdpr": {
+        "title": "GDPR Compliant",
+        "description": "Operated from France with full GDPR compliance. Your data rights are protected by law."
+      }
+    },
+    "sources": {
+      "title": "Trusted Sources",
+      "subtitle": "Aggregating content from leading tech publications, blogs, and news outlets."
+    },
+    "footer": {
+      "project": "Project",
+      "legal": "Legal",
+      "resources": "Resources",
+      "contact": "Contact",
+      "changelog": "Changelog",
+      "roadmap": "Roadmap",
+      "rssSources": "RSS Sources",
+      "contributors": "Contributors",
+      "github": "GitHub",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "cookies": "Cookie Policy",
+      "documentation": "Documentation",
+      "reportIssues": "Report Issues",
+      "discussions": "Discussions",
+      "emailSupport": "Email Support",
+      "officialInstance": "Official Instance",
+      "supportUs": "Support Us",
+      "copyright": "FeedCentral. Open source RSS aggregator built with Next.js.",
+      "tagline": "Operated from France • GDPR Compliant • No tracking, no ads, no BS"
+    }
+  },
+  "feed": {
+    "title": "Latest Articles",
+    "categories": {
+      "all": "All",
+      "technology": "Technology",
+      "science": "Science",
+      "business": "Business",
+      "security": "Security"
+    },
+    "loading": "Loading articles...",
+    "empty": {
+      "title": "No articles yet",
+      "description": "Check back soon for the latest updates from your sources.",
+      "action": "Refresh Feed"
+    },
+    "error": {
+      "title": "Failed to load articles",
+      "description": "Something went wrong. Please try again.",
+      "action": "Try Again"
+    }
+  },
+  "article": {
+    "readOn": "Read on {source}",
+    "by": "by {author}",
+    "bookmark": "Add bookmark",
+    "removeBookmark": "Remove bookmark",
+    "signInToBookmark": "Sign in to bookmark",
+    "notFound": {
+      "title": "Article not found",
+      "description": "The article you're looking for doesn't exist or has been removed.",
+      "action": "Back to Feed"
+    }
+  },
+  "bookmarks": {
+    "title": "Bookmarks",
+    "subtitle": "Your saved articles",
+    "article": "article",
+    "articles": "articles",
+    "empty": {
+      "title": "No bookmarks yet",
+      "description": "Start saving your favorite articles to build your personal reading collection",
+      "browseArticles": "Browse Articles",
+      "benefits": {
+        "title": "Why bookmark?",
+        "retention": "Unbookmarked articles are automatically deleted after 7 days",
+        "preservation": "Bookmarked articles are preserved forever",
+        "organization": "Keep track of important stories",
+        "readingList": "Build your personal reading list"
+      },
+      "signIn": "Sign In",
+      "createAccount": "Create Account",
+      "hint": "Once signed in, you'll see a bookmark button on every article"
+    },
+    "features": {
+      "saveForLater": {
+        "title": "Save for Later",
+        "description": "Click the bookmark icon on any article to save it"
+      },
+      "accessAnywhere": {
+        "title": "Access Anywhere",
+        "description": "Your bookmarks sync across all your devices"
+      },
+      "stayOrganized": {
+        "title": "Stay Organized",
+        "description": "Build your personal library of important articles"
+      },
+      "neverLoseTrack": {
+        "title": "Never Lose Track",
+        "description": "Articles remain saved even if they're removed from feeds"
+      }
+    },
+    "benefits": {
+      "title": "Benefits of bookmarking:",
+      "save": "Save articles to read later",
+      "access": "Access your bookmarks from any device",
+      "track": "Keep track of important stories",
+      "build": "Build your personal reading list",
+      "hint": "Once signed in, you'll see a bookmark button on every article"
+    },
+    "signInRequired": {
+      "title": "Save Your Favorite Articles",
+      "description": "Create an account or sign in to bookmark articles and access them anytime."
+    },
+    "warning": {
+      "title": "Articles are preserved when bookmarked",
+      "description": "Unbookmarked articles are automatically removed after 7 days to optimize storage. Your bookmarked articles are permanently saved and will never be deleted."
+    },
+    "remove": "Remove"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to your FeedCentral account",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign In",
+      "noAccount": "Don't have an account?",
+      "register": "Register here",
+      "error": "Invalid email or password"
+    },
+    "register": {
+      "title": "Create account",
+      "subtitle": "Join FeedCentral",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create Account",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in here",
+      "warning": {
+        "title": "Important: No Password Recovery",
+        "description": "FeedCentral doesn't have email functionality yet, so there's no password reset. If you forget your password, contact an admin to reset it manually.",
+        "contact": "Admin contact: contact@benzoogataga.com"
+      }
+    }
+  },
+  "userMenu": {
+    "adminBadge": "Admin",
+    "adminDashboard": "Admin Dashboard",
+    "signOut": "Sign Out"
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "sources": "Sources",
+    "jobs": "Jobs",
+    "users": "Users",
+    "settings": "Settings",
+    "stats": {
+      "totalArticles": "Total Articles",
+      "todayArticles": "Today's Articles",
+      "activeSources": "Active Sources",
+      "categories": "Categories"
+    }
+  },
+  "search": {
+    "placeholder": "Search articles...",
+    "searching": "Searching...",
+    "noResultsFound": "No results found",
+    "startTyping": "Start typing to search articles",
+    "noResults": "No results found for \"{query}\"",
+    "results": "{count} results for \"{query}\""
+  },
+  "theme": {
+    "light": "Light",
+    "lightDescription": "Clean and bright",
+    "dark": "Dark",
+    "darkDescription": "Easy on the eyes",
+    "system": "System"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your account preferences",
+    "profile": {
+      "title": "Profile",
+      "name": "Name",
+      "email": "Email",
+      "updateProfile": "Update Profile",
+      "updated": "Profile updated successfully",
+      "activeStatus": "Active",
+      "namePlaceholder": "Enter your name",
+      "emailPlaceholder": "Enter your email"
+    },
+    "password": {
+      "title": "Password",
+      "change": "Change Password",
+      "current": "Current Password",
+      "new": "New Password",
+      "confirm": "Confirm New Password",
+      "update": "Update Password",
+      "updated": "Password updated successfully",
+      "mismatch": "Passwords do not match"
+    },
+    "appearance": {
+      "title": "Appearance",
+      "description": "Customize how FeedCentral looks",
+      "theme": "Theme",
+      "language": "Language"
+    },
+    "language": {
+      "title": "Language",
+      "description": "Choose your preferred language",
+      "selectLanguage": "Select Language"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Your reading statistics and activity",
+    "welcome": "Welcome back, {name}! Here's an overview of your reading activity.",
+    "stats": {
+      "totalBookmarks": "Total Bookmarks",
+      "articlesRead": "Articles Read",
+      "recentActivity": "Recent Activity",
+      "articlesSaved": "Articles saved",
+      "totalViewed": "Total viewed",
+      "last7Days": "Last 7 days",
+      "bookmarks": "Bookmarks",
+      "sources": "Sources",
+      "categories": "Categories"
+    },
+    "favoriteCategory": "Favorite Category",
+    "bookmarkedArticles": "{count} bookmarked articles",
+    "quickActions": "Quick Actions",
+    "browseLatest": "Browse Latest Articles",
+    "viewAllBookmarks": "View All Bookmarks",
+    "recentBookmarks": "Recent Bookmarks",
+    "viewAll": "View all",
+    "empty": {
+      "title": "No bookmarks yet",
+      "description": "Start saving articles to see your reading stats and activity here.",
+      "browseArticles": "Browse Articles"
+    },
+    "recentActivity": "Recent Activity",
+    "topSources": "Top Sources",
+    "readingTime": "Reading Time",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month"
+  },
+  "category": {
+    "all": "All",
+    "technology": "Technology",
+    "science": "Science",
+    "business": "Business",
+    "security": "Security",
+    "entertainment": "Entertainment",
+    "sports": "Sports",
+    "health": "Health",
+    "finance": "Finance",
+    "tech": "Technology",
+    "latestArticles": "Latest articles in {category}",
+    "empty": {
+      "title": "No articles found",
+      "description": "No articles in the {category} category yet."
+    }
+  },
+  "appPage": {
+    "title": "All Feeds",
+    "subtitle": "Latest articles from your subscribed sources",
+    "loadMore": "Load More",
+    "refreshFeeds": "Refresh Feeds"
+  },
+  "changelog": {
+    "title": "Changelog",
+    "subtitle": "Track all updates, improvements, and new features added to FeedCentral",
+    "note": "Note",
+    "noteDescription": "This changelog reflects changes made to this specific instance of FeedCentral. Some details may differ from other deployments, such as database content, configuration settings, or custom features.",
+    "backToDashboard": "Back to Dashboard",
+    "legend": "Legend",
+    "updateTypes": "Update Types",
+    "changeTypes": "Change Types",
+    "majorUpdate": "Major Update",
+    "majorDescription": "Significant releases with major new features, architectural changes, or important milestones",
+    "minorUpdate": "Minor Update",
+    "minorDescription": "New features and enhancements that expand functionality without breaking existing features",
+    "patchUpdate": "Patch",
+    "patchDescription": "Bug fixes, security updates, and small improvements that don't add new features",
+    "feature": "Feature",
+    "featureDescription": "New capabilities and additions",
+    "improvement": "Improvement",
+    "improvementDescription": "Enhancements and optimizations",
+    "fix": "Fix",
+    "fixDescription": "Bug fixes and corrections",
+    "removal": "Removal",
+    "removalDescription": "Deprecated or removed features",
+    "types": {
+      "major": "Major Update",
+      "minor": "Minor Update",
+      "patch": "Patch",
+      "feature": "New Feature",
+      "improvement": "Improvement",
+      "fix": "Bug Fix",
+      "breaking": "Breaking Change"
+    },
+    "categories": {
+      "feature": "Feature",
+      "improvement": "Improvement",
+      "fix": "Fix",
+      "removal": "Removal",
+      "new": "New",
+      "improved": "Improved",
+      "fixed": "Fixed",
+      "deprecated": "Deprecated"
+    },
+    "descriptions": {
+      "major": "Significant releases with major new features, architectural changes, or important milestones",
+      "minor": "New features and enhancements that expand functionality without breaking existing features",
+      "patch": "Bug fixes, security updates, and small improvements that don't add new features",
+      "feature": "New capabilities and additions",
+      "improvement": "Enhancements and optimizations",
+      "fix": "Bug fixes and corrections",
+      "removal": "Deprecated or removed features"
+    },
+    "version": "Version",
+    "released": "Released",
+    "date": "Date",
+    "clickForDetails": "Click for details",
+    "previous": "Previous",
+    "next": "Next",
+    "showing": "Showing {start}-{end} of {total} releases",
+    "reportBugs": "To report bugs or issues,",
+    "visitIssuesPage": "visit our issues page",
+    "suggestFeature": "Want to suggest a feature or report an issue?",
+    "contactUs": "Contact us"
+  },
+  "contributors": {
+    "title": "Contributors",
+    "subtitle": "Thank you to everyone who has contributed to FeedCentral",
+    "maintainers": "Maintainers",
+    "contributors": "Contributors",
+    "viewOnGithub": "View on GitHub"
+  },
+  "roadmap": {
+    "title": "Roadmap",
+    "subtitle": "Our plans for the future of FeedCentral",
+    "status": {
+      "planned": "Planned",
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "quarter": "Q{number} {year}"
+  },
+  "sources": {
+    "title": "RSS Sources",
+    "subtitle": "Trusted sources aggregated by FeedCentral",
+    "active": "Active Sources",
+    "category": "Category",
+    "website": "Visit Website",
+    "addSource": "Add Source"
+  },
+  "issues": {
+    "title": "Report Issues",
+    "subtitle": "Found a bug or have a feature request?",
+    "reportBug": "Report a Bug",
+    "featureRequest": "Feature Request",
+    "viewIssues": "View All Issues",
+    "openOnGithub": "Open on GitHub"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "subtitle": "How we collect, use, and protect your personal data",
+    "lastUpdated": "Last updated: {date}",
+    "version": "Version {version} | Document ID: {id}",
+    "applicableTo": "Applicable to:",
+    "applicableDescription": "Official FeedCentral instance at {url} only. Third-party forks must provide their own privacy policies.",
+    "introduction": "Your privacy is important to us"
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "subtitle": "Legal terms and conditions for using FeedCentral",
+    "lastUpdated": "Last updated: {date}",
+    "version": "Version {version} | Document ID: {id}",
+    "applicableTo": "Applicable to:",
+    "applicableDescription": "Official FeedCentral instance at {url} only. Third-party forks must provide their own terms of service.",
+    "introduction": "By using FeedCentral, you agree to these terms"
+  },
+  "cookies": {
+    "title": "Cookie Policy",
+    "subtitle": "How we use cookies and similar technologies",
+    "lastUpdated": "Last updated: {date}",
+    "version": "Version {version} | Document ID: {id}",
+    "applicableTo": "Applicable to:",
+    "applicableDescription": "Official FeedCentral instance at {url} only. Third-party forks must provide their own cookie policies.",
+    "introduction": "We use minimal cookies to provide essential functionality"
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "backHome": "Back to Home"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "tryAgain": "Try Again",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "update": "Update",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "refresh": "Refresh",
+    "yes": "Yes",
+    "no": "No",
+    "submit": "Submit",
+    "reset": "Reset",
+    "apply": "Apply",
+    "clear": "Clear"
+  },
+  "disclaimer": {
+    "title": "Content Language Notice",
+    "description": "The main content of this page is displayed in English only. Only navigation elements and page interface have been translated to your selected language for technical and accuracy reasons."
+  }
+}

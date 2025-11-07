@@ -2,11 +2,12 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { Search, FileText, ArrowRight } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n-navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Article } from '@/types';
 import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 
 interface CommandSearchProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ interface CommandSearchProps {
 }
 
 export function CommandSearch({ isOpen, onClose }: CommandSearchProps) {
+  const t = useTranslations();
   const router = useRouter();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Article[]>([]);
@@ -137,7 +139,7 @@ export function CommandSearch({ isOpen, onClose }: CommandSearchProps) {
               <Search className="h-5 w-5 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="Search articles..."
+                placeholder={t('search.placeholder')}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 autoFocus
@@ -152,14 +154,14 @@ export function CommandSearch({ isOpen, onClose }: CommandSearchProps) {
             <div className="max-h-[60vh] overflow-y-auto">
               {isSearching && (
                 <div className="flex items-center justify-center py-8 text-sm text-muted-foreground">
-                  Searching...
+                  {t('search.searching')}
                 </div>
               )}
 
               {!isSearching && query && results.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-8 text-center">
                   <FileText className="mb-2 h-8 w-8 text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground">No results found</p>
+                  <p className="text-sm text-muted-foreground">{t('search.noResultsFound')}</p>
                 </div>
               )}
 
@@ -193,7 +195,7 @@ export function CommandSearch({ isOpen, onClose }: CommandSearchProps) {
 
               {!query && (
                 <div className="py-8 text-center text-sm text-muted-foreground">
-                  Start typing to search articles
+                  {t('search.startTyping')}
                 </div>
               )}
             </div>
