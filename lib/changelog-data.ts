@@ -12,6 +12,19 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: '1.2.1',
+    name: 'Article Reader Image Fix',
+    type: 'patch',
+    date: 'November 7, 2025',
+    changes: [
+      {
+        type: 'fix',
+        description: 'Fixed article images with inline styles breaking layout',
+        details: 'Some RSS feeds include images with hardcoded inline styles (e.g., width:3333px, height:2000px) that were overriding our CSS and causing massive images to overflow the container. Added CSS !important modifiers to force images to constrain to container width (max-width: 100%) and maintain aspect ratio (width: auto, height: auto), regardless of inline style attributes. Images now properly display at readable sizes on all devices.',
+      },
+    ],
+  },
+  {
     version: '1.2.0',
     name: 'Transparency, Optimization & Polish',
     type: 'minor',
