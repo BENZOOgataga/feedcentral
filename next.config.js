@@ -25,6 +25,12 @@ const nextConfig = {
   },
   // Compression
   compress: true,
+  // Skip static generation errors
+  staticPageGenerationTimeout: 300,
+  // Generate 404 page dynamically
+  generateBuildId: async () => {
+    return 'feedcentral-build-' + Date.now();
+  },
 };
 
 module.exports = withNextIntl(nextConfig);

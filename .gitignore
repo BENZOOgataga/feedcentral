@@ -57,3 +57,6 @@ next-env.d.ts
 next-env.d.ts
 
 /lib/generated/prisma
+.env.vercel
+*.log
+Prerender error with next.js.md

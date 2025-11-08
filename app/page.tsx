@@ -1,5 +1,9 @@
 'use client';
 
+// This needs to be client-side only, no prerendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'edge';
+
 import { 
   ArrowRight, 
   CheckCircle2, 
