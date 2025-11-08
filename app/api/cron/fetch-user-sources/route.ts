@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchAllUserSources } from '@/lib/user-rss-parser';
+import { prisma } from '@/lib/prisma';
+import { fetchAndStoreUserArticles } from '@/lib/rss-parser';
 import { getCronApiKey } from '@/lib/env';
 import { getValidatedConcurrency, getRuntimeConfig } from '@/lib/rss-config';
 
@@ -44,8 +45,49 @@ export async function GET(request: NextRequest) {
       : config.DEFAULT_CONCURRENCY;
     const userId = searchParams.get('userId') || undefined;
 
-    // Fetch user sources with controlled concurrency
-    const results = await fetchAllUserSources({ concurrency, userId });
+    // Fetch enabled user sources
+    const userSources = await prisma.userSource.findMany({
+      where: {
+        isEnabled: true,
+        ...(userId && { userId }),
+      },
+      include: { 
+        user: {
+          select: { email: true },
+        },
+      },
+    });
+
+    console.log(`[USER CRON] Fetching ${userSources.length} user sources with concurrency ${concurrency}`);
+
+    // Process in batches to control concurrency
+    const results: Array<{
+      source: string;
+      userId: string;
+      status: 'fulfilled' | 'rejected';
+      data?: { found: number; added: number; error?: string };
+      error?: any;
+    }> = [];
+
+    for (let i = 0; i < userSources.length; i += concurrency) {
+      const batch = userSources.slice(i, i + concurrency);
+      const batchResults = await Promise.allSettled(
+        batch.map((source) => fetchAndStoreUserArticles(source))
+      );
+
+      results.push(
+        ...batchResults.map((result, index) => ({
+          source: batch[index].customName || batch[index].feedUrl,
+          userId: batch[index].userId,
+          status: result.status,
+          data: result.status === 'fulfilled' ? result.value : undefined,
+          error: result.status === 'rejected' ? result.reason : undefined,
+        }))
+      );
+
+      // Log progress
+      console.log(`[USER CRON] Completed batch ${Math.floor(i / concurrency) + 1}/${Math.ceil(userSources.length / concurrency)}`);
+    }
 
     const duration = Date.now() - startTime;
     const successful = results.filter(r => r.status === 'fulfilled').length;

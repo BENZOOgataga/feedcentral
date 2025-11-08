@@ -10,7 +10,7 @@
 #
 
 # Configuration
-DOMAIN="https://feedcentral.lyradevstudio.com"
+DOMAIN="https://feed.benzoogataga.com"
 CRON_API_KEY="${CRON_API_KEY}"  # Set this in your environment or pass it below
 
 # Timestamp for logging
