@@ -34,6 +34,7 @@ yarn-error.log*
 .env*.local
 .env.development
 .env.production
+.env.pgbouncer
 
 # vercel
 .vercel
@@ -60,3 +61,7 @@ next-env.d.ts
 .env.vercel
 *.log
 Prerender error with next.js.md
+
+# PgBouncer test scripts
+scripts/test-pgbouncer.js
+scripts/generate-pgbouncer-hash.py

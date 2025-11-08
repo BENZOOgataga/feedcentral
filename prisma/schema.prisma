@@ -8,10 +8,10 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // Supports multiple env var names for flexibility
-  // Vercel: POSTGRES_URL or PRISMA_DATABASE_URL
-  // Local: DATABASE_URL
+  // PgBouncer connection (for queries) - serverless-friendly
   url      = env("DATABASE_URL")
+  // Direct PostgreSQL connection (for migrations) - bypasses PgBouncer
+  directUrl = env("DIRECT_URL")
 }
 
 // ============================================
