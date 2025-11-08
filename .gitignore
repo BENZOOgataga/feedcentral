@@ -66,3 +66,6 @@ Prerender error with next.js.md
 scripts/test-pgbouncer.js
 scripts/generate-pgbouncer-hash.py
 scripts/check-pgbouncer-connection.js
+
+# Reviews
+docs/REVIEWS

@@ -908,10 +908,10 @@ export default function SettingsPage() {
             </div>
 
             {/* Two-Factor Authentication Section */}
-            <div className="p-6 rounded-xl border border-border bg-card shadow-sm">
+            <div className="p-6 rounded-xl border border-border bg-card shadow-sm opacity-60">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-lg bg-green-500/10">
-                  <ShieldCheck className="w-5 h-5 text-green-600 dark:text-green-500" />
+                <div className="p-2 rounded-lg bg-yellow-500/10">
+                  <ShieldCheck className="w-5 h-5 text-yellow-600 dark:text-yellow-500" />
                 </div>
                 <div className="flex-1">
                   <h2 className="text-lg font-semibold text-foreground">
@@ -921,153 +921,22 @@ export default function SettingsPage() {
                     {t('settings.twoFactor.description')}
                   </p>
                 </div>
-                {user?.role === 'ADMIN' && (
-                  <div className="px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20">
-                    <span className="text-xs font-medium text-yellow-600 dark:text-yellow-500">
-                      {t('settings.twoFactor.recommended')}
-                    </span>
-                  </div>
-                )}
+                <div className="px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20">
+                  <span className="text-xs font-medium text-yellow-600 dark:text-yellow-500">
+                    Coming Soon
+                  </span>
+                </div>
               </div>
 
-              <div className="space-y-4">
-                {/* 2FA Status */}
-                <div className="space-y-2">
-                  <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                    {t('settings.twoFactor.status')}
-                  </label>
-                  <div className="p-4 rounded-lg border border-border bg-muted/30">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        {twoFactorEnabled ? (
-                          <>
-                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 text-green-600 dark:text-green-500">
-                              <ShieldCheck className="w-4 h-4" />
-                              <span className="text-sm font-semibold">{t('settings.twoFactor.enabled')}</span>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted text-muted-foreground">
-                              <Shield className="w-4 h-4" />
-                              <span className="text-sm font-semibold">{t('settings.twoFactor.disabled')}</span>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+              {/* Temporarily Disabled Notice */}
+              <div className="flex items-start gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-500 shrink-0 mt-0.5" />
+                <div className="text-sm text-yellow-600 dark:text-yellow-400">
+                  <p className="font-medium mb-1">Feature Temporarily Disabled</p>
+                  <p className="text-xs opacity-90">
+                    Two-Factor Authentication is currently disabled due to technical issues. We're working on fixing this feature and it will be available in an upcoming update. Your account security is still protected with strong password encryption.
+                  </p>
                 </div>
-
-                {/* Enable 2FA */}
-                {!twoFactorEnabled && !twoFactorQR && (
-                  <div className="space-y-3">
-                    <Button
-                      onClick={handleEnableTwoFactor}
-                      disabled={enablingTwoFactor}
-                      className="w-full gap-2"
-                    >
-                      {enablingTwoFactor ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          {t('settings.twoFactor.enabling')}
-                        </>
-                      ) : (
-                        <>
-                          <ShieldCheck className="w-4 h-4" />
-                          {t('settings.twoFactor.enableButton')}
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                )}
-
-                {/* QR Code Setup */}
-                {twoFactorQR && (
-                  <div className="space-y-4 p-4 rounded-lg border border-border bg-muted/30">
-                    <div className="text-center space-y-3">
-                      <p className="text-sm font-medium">{t('settings.twoFactor.scanQR')}</p>
-                      <div className="flex justify-center">
-                        <img src={twoFactorQR} alt="2FA QR Code" className="w-48 h-48 bg-white p-2 rounded-lg" />
-                      </div>
-                      <div className="space-y-2">
-                        <p className="text-xs text-muted-foreground">{t('settings.twoFactor.manualEntry')}</p>
-                        <div className="font-mono text-xs bg-background p-2 rounded border border-border break-all">
-                          {twoFactorSecret}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">{t('settings.twoFactor.enterCode')}</label>
-                      <Input
-                        type="text"
-                        value={twoFactorCode}
-                        onChange={(e) => setTwoFactorCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                        placeholder="000000"
-                        className="font-mono text-center text-lg tracking-widest"
-                        maxLength={6}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') handleVerifyTwoFactor();
-                        }}
-                      />
-                      <Button
-                        onClick={handleVerifyTwoFactor}
-                        disabled={verifyingTwoFactor || twoFactorCode.length !== 6}
-                        className="w-full gap-2"
-                      >
-                        {verifyingTwoFactor ? (
-                          <>
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                            {t('settings.twoFactor.verifying')}
-                          </>
-                        ) : (
-                          <>
-                            <Check className="w-4 h-4" />
-                            {t('settings.twoFactor.verifyButton')}
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                )}
-
-                {/* Disable 2FA */}
-                {twoFactorEnabled && (
-                  <div className="space-y-3 p-4 rounded-lg border border-red-500/20 bg-red-500/5">
-                    <p className="text-sm font-medium text-red-600 dark:text-red-500">
-                      {t('settings.twoFactor.disableWarning')}
-                    </p>
-                    <Input
-                      type="password"
-                      value={disablePassword}
-                      onChange={(e) => setDisablePassword(e.target.value)}
-                      placeholder={t('settings.twoFactor.enterPassword')}
-                      className="bg-background"
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') handleDisableTwoFactor();
-                      }}
-                    />
-                    <Button
-                      onClick={handleDisableTwoFactor}
-                      disabled={disablingTwoFactor || !disablePassword}
-                      variant="destructive"
-                      className="w-full gap-2"
-                    >
-                      {disablingTwoFactor ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          {t('settings.twoFactor.disabling')}
-                        </>
-                      ) : (
-                        <>
-                          <Shield className="w-4 h-4" />
-                          {t('settings.twoFactor.disableButton')}
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                )}
               </div>
             </div>
           </div>
