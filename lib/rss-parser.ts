@@ -1,6 +1,7 @@
 import Parser from 'rss-parser';
 import { prisma } from '@/lib/prisma';
 import type { Source, JobStatus } from '@prisma/client';
+import { RSS_CONFIG } from '@/lib/rss-config';
 
 interface ParsedArticle {
   title: string;
@@ -21,9 +22,9 @@ export class RSSFeedParser {
 
   constructor() {
     this.parser = new Parser({
-      timeout: 10000,
+      timeout: RSS_CONFIG.FEED_TIMEOUT,
       headers: {
-        'User-Agent': 'FeedCentral/1.0',
+        'User-Agent': RSS_CONFIG.USER_AGENT,
       },
       customFields: {
         item: [
@@ -42,7 +43,10 @@ export class RSSFeedParser {
     try {
       const feed = await this.parser.parseURL(feedUrl);
       
-      return feed.items.map((item) => {
+      // Limit articles per feed to prevent memory issues
+      const items = feed.items.slice(0, RSS_CONFIG.MAX_ARTICLES_PER_FEED);
+      
+      return items.map((item) => {
         // Extract image from various possible locations
         const imageUrl = this.extractImage(item);
         
@@ -186,6 +190,7 @@ export class RSSFeedParser {
 
 /**
  * Fetch articles from a source and store in database
+ * Optimized with batch inserts and reduced database round-trips
  */
 export async function fetchAndStoreArticles(source: Source): Promise<{
   found: number;
@@ -207,12 +212,47 @@ export async function fetchAndStoreArticles(source: Source): Promise<{
     // Fetch articles from RSS feed
     const articles = await parser.fetchFeed(source.feedUrl);
 
-    // Store articles (skip duplicates based on URL)
-    let addedCount = 0;
-    for (const article of articles) {
-      try {
-        await prisma.article.create({
+    if (articles.length === 0) {
+      // No articles found - still mark as successful
+      await Promise.all([
+        prisma.source.update({
+          where: { id: source.id },
+          data: { lastFetchedAt: new Date() },
+        }),
+        prisma.feedJob.update({
+          where: { id: job.id },
           data: {
+            status: 'COMPLETED',
+            completedAt: new Date(),
+            articlesFound: 0,
+            articlesAdded: 0,
+          },
+        }),
+      ]);
+
+      return { found: 0, added: 0 };
+    }
+
+    // Get existing article URLs to avoid duplicates (single query)
+    const existingUrls = new Set(
+      (await prisma.article.findMany({
+        where: {
+          sourceId: source.id,
+          url: { in: articles.map(a => a.url) },
+        },
+        select: { url: true },
+      })).map(a => a.url)
+    );
+
+    // Filter out duplicates
+    const newArticles = articles.filter(article => !existingUrls.has(article.url));
+
+    // Batch insert all new articles (single query)
+    let addedCount = 0;
+    if (newArticles.length > 0) {
+      try {
+        await prisma.article.createMany({
+          data: newArticles.map(article => ({
             title: article.title,
             description: article.description,
             content: article.content,
@@ -222,34 +262,33 @@ export async function fetchAndStoreArticles(source: Source): Promise<{
             publishedAt: article.publishedAt,
             sourceId: source.id,
             categoryId: source.categoryId,
-          },
+          })),
+          skipDuplicates: true,
         });
-        addedCount++;
+        addedCount = newArticles.length;
       } catch (error: any) {
-        // Skip duplicate URLs (unique constraint violation)
-        if (error.code === 'P2002') {
-          continue;
-        }
-        throw error;
+        // Log but don't fail - some articles might have been added
+        console.warn(`Partial insert failure for ${source.name}:`, error.message);
+        addedCount = 0;
       }
     }
 
-    // Update source last fetched time
-    await prisma.source.update({
-      where: { id: source.id },
-      data: { lastFetchedAt: new Date() },
-    });
-
-    // Update job as completed
-    await prisma.feedJob.update({
-      where: { id: job.id },
-      data: {
-        status: 'COMPLETED',
-        completedAt: new Date(),
-        articlesFound: articles.length,
-        articlesAdded: addedCount,
-      },
-    });
+    // Update source and job in parallel (2 queries instead of sequential)
+    await Promise.all([
+      prisma.source.update({
+        where: { id: source.id },
+        data: { lastFetchedAt: new Date() },
+      }),
+      prisma.feedJob.update({
+        where: { id: job.id },
+        data: {
+          status: 'COMPLETED',
+          completedAt: new Date(),
+          articlesFound: articles.length,
+          articlesAdded: addedCount,
+        },
+      }),
+    ]);
 
     return {
       found: articles.length,
@@ -277,24 +316,75 @@ export async function fetchAndStoreArticles(source: Source): Promise<{
 }
 
 /**
- * Fetch all active sources
+ * Fetch all active sources with controlled concurrency
+ * Processes feeds in batches to avoid overwhelming the database connection pool
  */
-export async function fetchAllActiveSources() {
+export async function fetchAllActiveSources(options?: {
+  concurrency?: number;
+  sourceIds?: string[];
+}) {
+  const { concurrency = 5, sourceIds } = options || {};
+
+  // Fetch active sources
   const sources = await prisma.source.findMany({
-    where: { isActive: true },
+    where: {
+      isActive: true,
+      ...(sourceIds && { id: { in: sourceIds } }),
+    },
     include: { category: true },
   });
 
-  const results = await Promise.allSettled(
-    sources.map((source) => fetchAndStoreArticles(source))
-  );
+  console.log(`[RSS] Fetching ${sources.length} sources with concurrency ${concurrency}`);
 
-  return results.map((result, index) => ({
-    source: sources[index].name,
-    status: result.status,
-    data: result.status === 'fulfilled' ? result.value : undefined,
-    error: result.status === 'rejected' ? result.reason : undefined,
-  }));
+  // Process in batches to control concurrency
+  const results: Array<{
+    source: string;
+    status: 'fulfilled' | 'rejected';
+    data?: { found: number; added: number; error?: string };
+    error?: any;
+  }> = [];
+
+  for (let i = 0; i < sources.length; i += concurrency) {
+    const batch = sources.slice(i, i + concurrency);
+    const batchResults = await Promise.allSettled(
+      batch.map((source) => fetchAndStoreArticles(source))
+    );
+
+    results.push(
+      ...batchResults.map((result, index) => ({
+        source: batch[index].name,
+        status: result.status,
+        data: result.status === 'fulfilled' ? result.value : undefined,
+        error: result.status === 'rejected' ? result.reason : undefined,
+      }))
+    );
+
+    // Log progress
+    console.log(`[RSS] Completed batch ${Math.floor(i / concurrency) + 1}/${Math.ceil(sources.length / concurrency)}`);
+  }
+
+  return results;
+}
+
+/**
+ * Fetch a single source by ID
+ * Useful for manual refresh or testing
+ */
+export async function fetchSingleSource(sourceId: string) {
+  const source = await prisma.source.findUnique({
+    where: { id: sourceId },
+    include: { category: true },
+  });
+
+  if (!source) {
+    throw new Error(`Source ${sourceId} not found`);
+  }
+
+  if (!source.isActive) {
+    throw new Error(`Source ${source.name} is not active`);
+  }
+
+  return await fetchAndStoreArticles(source);
 }
 
 /**

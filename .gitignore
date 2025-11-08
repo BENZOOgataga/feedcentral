@@ -65,3 +65,4 @@ Prerender error with next.js.md
 # PgBouncer test scripts
 scripts/test-pgbouncer.js
 scripts/generate-pgbouncer-hash.py
+scripts/check-pgbouncer-connection.js
