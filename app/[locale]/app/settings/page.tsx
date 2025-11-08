@@ -805,6 +805,30 @@ export default function SettingsPage() {
                     </Button>
                   </div>
                 </div>
+
+                {/* Two-Factor Authentication */}
+                <div className="space-y-2 opacity-60">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                      {t('settings.twoFactor.title')}
+                    </label>
+                    <div className="px-2 py-0.5 rounded-full bg-yellow-500/10 border border-yellow-500/20">
+                      <span className="text-xs font-medium text-yellow-600 dark:text-yellow-500">
+                        Coming Soon
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                    <AlertTriangle className="w-4 h-4 text-yellow-600 dark:text-yellow-500 shrink-0 mt-0.5" />
+                    <div className="text-xs text-yellow-600 dark:text-yellow-400">
+                      <p className="font-medium">Feature Temporarily Disabled</p>
+                      <p className="opacity-90 mt-0.5">
+                        Two-Factor Authentication is currently disabled due to technical issues. We're working on fixing this feature for an upcoming release.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -903,39 +927,6 @@ export default function SettingsPage() {
                       {t('settings.license.securityMessage')}
                     </p>
                   </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Two-Factor Authentication Section */}
-            <div className="p-6 rounded-xl border border-border bg-card shadow-sm opacity-60">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-lg bg-yellow-500/10">
-                  <ShieldCheck className="w-5 h-5 text-yellow-600 dark:text-yellow-500" />
-                </div>
-                <div className="flex-1">
-                  <h2 className="text-lg font-semibold text-foreground">
-                    {t('settings.twoFactor.title')}
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.twoFactor.description')}
-                  </p>
-                </div>
-                <div className="px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20">
-                  <span className="text-xs font-medium text-yellow-600 dark:text-yellow-500">
-                    Coming Soon
-                  </span>
-                </div>
-              </div>
-
-              {/* Temporarily Disabled Notice */}
-              <div className="flex items-start gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
-                <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-500 shrink-0 mt-0.5" />
-                <div className="text-sm text-yellow-600 dark:text-yellow-400">
-                  <p className="font-medium mb-1">Feature Temporarily Disabled</p>
-                  <p className="text-xs opacity-90">
-                    Two-Factor Authentication is currently disabled due to technical issues. We're working on fixing this feature and it will be available in an upcoming update. Your account security is still protected with strong password encryption.
-                  </p>
                 </div>
               </div>
             </div>
