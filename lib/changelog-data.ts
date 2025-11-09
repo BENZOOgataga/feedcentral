@@ -33,6 +33,11 @@ export const changelog: ChangelogEntry[] = [
         details: 'Created shell scripts for automated RSS fetching on VM: cron-runner.sh (executor with colored output, error handling, jq JSON parsing) and setup-cron.sh (automated setup with secure API key generation via openssl). Updated production domain to feed.benzoogataga.com. Comprehensive documentation in docs/CRON_SETUP.md and CRON_QUICK_REFERENCE.md with schedule examples, performance tuning, and troubleshooting commands.',
       },
       {
+        type: 'feature',
+        description: 'About page with project origin, mission, and core values',
+        details: 'Created comprehensive /about page explaining FeedCentral\'s origin story, mission, and philosophy. Six main sections: Origin Story (born from frustration with algorithmic feeds), Mission (taking back control with transparency, privacy, simplicity, chronological feeds), Hobby Project (built by one developer as passion project), Open Source (MIT licensed, free to fork), Future (user-driven features), and Support (ways to help). Fully translated UI in both English and French. Includes links to GitHub, roadmap, and Patreon. Added to footer navigation in Project section.',
+      },
+      {
         type: 'improvement',
         description: 'Massive RSS feed performance optimization - 75% faster fetching',
         details: 'Reduced feed fetch time from 4 minutes to <1 minute through comprehensive optimizations: (1) Batch inserts using Prisma createMany with skipDuplicates instead of sequential operations, (2) Controlled concurrency with 5 feeds processing in parallel, (3) Optimized duplicate detection via single query instead of per-article checks, (4) Reduced database round-trips from ~100+ to 3-5 per feed. Created lib/rss-config.ts with centralized configuration (DEFAULT_CONCURRENCY=5, MAX_CONCURRENCY=10, FEED_TIMEOUT=10000ms, MAX_ARTICLES_PER_FEED=50). Enhanced cron endpoints with query parameters for concurrency tuning and single-source refresh.',
