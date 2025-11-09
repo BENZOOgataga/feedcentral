@@ -12,6 +12,59 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: '1.4.0',
+    name: 'Database Infrastructure & Performance Optimization',
+    type: 'minor',
+    date: 'November 9, 2025',
+    changes: [
+      {
+        type: 'feature',
+        description: 'Self-hosted PostgreSQL migration with PgBouncer connection pooling',
+        details: 'Migrated from Vercel Neon PostgreSQL to self-hosted PostgreSQL (PostgreSQL 16 on Debian 12). Implemented PgBouncer 1.24.1 on port 6432 for connection pooling to handle Vercel\'s rotating AWS IP addresses. Dual URL configuration in Prisma: queries via PgBouncer (connection_limit=5), migrations via direct connection. PgBouncer configured with session mode, max_client_conn=200, default_pool_size=20, auth_type=md5. Firewall rules: port 5432 restricted to whitelisted IPs, port 6432 open for Vercel serverless functions.',
+      },
+      {
+        type: 'feature',
+        description: 'User-added custom RSS feeds cron endpoint',
+        details: 'Created /api/cron/fetch-user-sources endpoint for processing user-added custom RSS feeds separately from global feeds. Uses existing fetchAndStoreUserArticles function from lib/rss-parser.ts. Supports batch processing with controlled concurrency (default 5 feeds parallel) and optional userId filtering for per-user fetching. VM cron infrastructure with cron-runner.sh script calling both global and user sources endpoints every 30 minutes. Includes CRON_API_KEY authentication for security.',
+      },
+      {
+        type: 'feature',
+        description: 'VM cron automation scripts for production deployment',
+        details: 'Created shell scripts for automated RSS fetching on VM: cron-runner.sh (executor with colored output, error handling, jq JSON parsing) and setup-cron.sh (automated setup with secure API key generation via openssl). Updated production domain to feed.benzoogataga.com. Comprehensive documentation in docs/CRON_SETUP.md and CRON_QUICK_REFERENCE.md with schedule examples, performance tuning, and troubleshooting commands.',
+      },
+      {
+        type: 'improvement',
+        description: 'Massive RSS feed performance optimization - 75% faster fetching',
+        details: 'Reduced feed fetch time from 4 minutes to <1 minute through comprehensive optimizations: (1) Batch inserts using Prisma createMany with skipDuplicates instead of sequential operations, (2) Controlled concurrency with 5 feeds processing in parallel, (3) Optimized duplicate detection via single query instead of per-article checks, (4) Reduced database round-trips from ~100+ to 3-5 per feed. Created lib/rss-config.ts with centralized configuration (DEFAULT_CONCURRENCY=5, MAX_CONCURRENCY=10, FEED_TIMEOUT=10000ms, MAX_ARTICLES_PER_FEED=50). Enhanced cron endpoints with query parameters for concurrency tuning and single-source refresh.',
+      },
+      {
+        type: 'improvement',
+        description: 'Settings page UX reorganization - grouped security settings',
+        details: 'Moved Two-Factor Authentication section from standalone placement after Premium License area to Account Information section, right after the Password field. All security-related settings (Name, Email, Password, 2FA) are now logically grouped together, separate from billing/premium features. Improved information architecture and user experience.',
+      },
+      {
+        type: 'improvement',
+        description: 'Historical RSS article backfill',
+        details: 'Created scripts/backfill-feeds.js for one-time historical article population. Execution results: 340 articles found, 104 new articles added, 236 duplicates skipped in 16.57 seconds. Top sources: Bloomberg (29), Forbes (25), Phys.org (16). Note: RSS feeds only serve recent content (7-30 days), not full archives, so this represents maximum available historical data.',
+      },
+      {
+        type: 'removal',
+        description: 'Temporarily disabled Two-Factor Authentication feature',
+        details: 'Disabled buggy 2FA feature on frontend with professional user-friendly notice. Added "Coming Soon" badge to 2FA section with opacity-60 styling. Created warning banner explaining feature is temporarily disabled due to technical issues. Removed all interactive elements (enable/disable buttons, QR code setup, verification inputs) while preserving UI structure. Created scripts/disable-2fa.sql with database commands to disable 2FA for existing users (UPDATE users SET twoFactorEnabled=false, twoFactorSecret=NULL).',
+      },
+      {
+        type: 'fix',
+        description: 'Fixed user sources cron endpoint imports',
+        details: 'Corrected import path in /api/cron/fetch-user-sources from non-existent lib/user-rss-parser to existing lib/rss-parser.ts. Reused fetchAndStoreUserArticles and fetchUserSources functions that were already implemented in the codebase, avoiding code duplication.',
+      },
+      {
+        type: 'fix',
+        description: 'Database schema validation and connection string encoding',
+        details: 'Validated database schema with scripts/check-db-schema.js: confirmed 11 tables, 3 migrations applied, lowercase naming convention (PostgreSQL standard). Fixed password special character handling by properly URL-encoding connection strings (@ encoded as %40, $ as %24, ^ as %5E, & as %26). Updated all Vercel environment variables (DATABASE_URL, POSTGRES_URL, PRISMA_DATABASE_URL, DIRECT_URL) with correct encoding and connection limits.',
+      },
+    ],
+  },
+  {
     version: '1.3.0',
     name: 'Testing Infrastructure & Premium Licensing',
     type: 'minor',
