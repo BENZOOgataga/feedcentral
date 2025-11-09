@@ -562,6 +562,7 @@
   "about": {
     "title": "À propos de FeedCentral",
     "subtitle": "L'histoire du projet et nos valeurs",
+    "backToHome": "Retour à l'accueil",
     "origin": {
       "badge": "Origine",
       "title": "Né de la frustration face aux médias modernes",

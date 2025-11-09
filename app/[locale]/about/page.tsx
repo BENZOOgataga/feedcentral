@@ -14,7 +14,8 @@ import {
   Clock,
   Newspaper,
   Github,
-  ExternalLink
+  ExternalLink,
+  ArrowLeft
 } from 'lucide-react';
 
 export default function AboutPage() {
@@ -39,6 +40,13 @@ export default function AboutPage() {
             <p className="mb-8 text-lg text-muted-foreground">
               {t('subtitle')}
             </p>
+
+            <Button asChild variant="outline" size="lg" className="gap-2">
+              <Link href="/">
+                <ArrowLeft className="h-4 w-4" />
+                {t('backToHome')}
+              </Link>
+            </Button>
           </div>
         </div>
       </div>
@@ -325,7 +333,7 @@ export default function AboutPage() {
             <div className="flex flex-col sm:flex-row gap-4 items-center">
               <Button asChild className="gap-2">
                 <a 
-                  href="https://www.patreon.com/c/user?u=139415458" 
+                  href="https://www.patreon.com/BENZOOgataga" 
                   target="_blank" 
                   rel="noopener noreferrer"
                 >
@@ -339,6 +347,16 @@ export default function AboutPage() {
               </p>
             </div>
           </section>
+
+          {/* Return to Home - Bottom */}
+          <div className="flex justify-center pt-8 pb-4">
+            <Button asChild variant="outline" size="lg" className="gap-2">
+              <Link href="/">
+                <ArrowLeft className="h-4 w-4" />
+                {t('backToHome')}
+              </Link>
+            </Button>
+          </div>
 
         </div>
       </div>

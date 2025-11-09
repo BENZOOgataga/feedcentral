@@ -562,6 +562,7 @@
   "about": {
     "title": "About FeedCentral",
     "subtitle": "The story behind the project and what we stand for",
+    "backToHome": "Back to Home",
     "origin": {
       "badge": "Origin Story",
       "title": "Born from Frustration with Modern News",
