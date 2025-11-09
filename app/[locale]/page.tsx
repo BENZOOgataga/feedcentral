@@ -99,7 +99,7 @@ export default async function LandingPage({
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <ChangelogToast />
       
       {/* Hero Section */}
@@ -147,7 +147,7 @@ export default async function LandingPage({
       </section>
 
       {/* Mission Section */}
-      <section className="relative w-full">
+      <section className="relative w-full overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-background to-transparent pointer-events-none z-10" />
         
         <div className="bg-muted/30 py-16">
