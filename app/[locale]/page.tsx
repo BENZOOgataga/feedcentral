@@ -124,24 +124,29 @@ export default async function LandingPage({
             {t('hero.subtitle')}
           </p>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Button asChild size="lg" className="gap-2 text-base">
+          <div className="flex flex-col items-center gap-4">
+            {/* Primary CTA - Start Browsing */}
+            <Button asChild size="lg" className="gap-2 text-lg font-semibold px-12 py-6 shadow-lg hover:shadow-xl transition-shadow w-full sm:w-auto sm:min-w-[342px]">
               <Link href="/app">
                 {t('hero.ctaBrowse')}
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-5 w-5" />
               </Link>
             </Button>
-            <ChangelogButton label={t('hero.ctaChangelog')} />
-            <Button asChild variant="outline" size="lg" className="gap-2 text-base">
-              <a 
-                href="https://www.patreon.com/BENZOOgataga" 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                <Heart className="h-4 w-4" />
-                {t('hero.ctaSupport')}
-              </a>
-            </Button>
+            
+            {/* Secondary CTAs */}
+            <div className="flex flex-col gap-3 sm:flex-row sm:w-auto w-full">
+              <ChangelogButton label={t('hero.ctaChangelog')} />
+              <Button asChild variant="outline" size="lg" className="gap-2 text-base min-w-[165px]">
+                <a 
+                  href="https://www.patreon.com/BENZOOgataga" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  <Heart className="h-4 w-4" />
+                  {t('hero.ctaSupport')}
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
       </section>

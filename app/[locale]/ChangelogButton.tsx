@@ -17,7 +17,7 @@ export function ChangelogButton({ label }: ChangelogButtonProps) {
       asChild 
       variant={hasNewChangelog ? "default" : "outline"}
       size="lg" 
-      className={`gap-2 text-base relative ${hasNewChangelog ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white border-0 shadow-lg shadow-yellow-500/50' : ''}`}
+      className={`gap-2 text-base relative min-w-[165px] ${hasNewChangelog ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white border-0 shadow-lg shadow-yellow-500/50' : ''}`}
     >
       <Link href="/changelog">
         <FileText className="h-4 w-4" />

@@ -21,7 +21,7 @@
       "title": "Vos Actualités,",
       "titleHighlight": "En Mieux",
       "subtitle": "FeedCentral regroupe vos sources préférées dans une interface moderne et simple. Restez informé sans fake news.",
-      "ctaBrowse": "Actualités",
+      "ctaBrowse": "Parcourir les actualités",
       "ctaChangelog": "Changelog",
       "ctaSupport": "Nous soutenir"
     },
@@ -566,8 +566,8 @@
     "origin": {
       "badge": "Origine",
       "title": "Né de la frustration face aux médias modernes",
-      "paragraph1": "FeedCentral est né de la frustration face à l'état actuel de la consommation d'informations. Les algorithmes des réseaux sociaux décident de ce que vous voyez, les sites d'actualités traquent chacun de vos mouvements, et le défilement infini a remplacé la lecture intentionnelle.",
-      "paragraph2": "Je voulais quelque chose de différent : une interface propre et simple qui respecte votre temps et votre vie privée. Pas d'algorithmes décidant de ce qui est important, pas de cookies de suivi vous suivant partout, pas de défilement sans fin conçu pour piéger votre attention.",
+      "paragraph1": "FeedCentral est né de la frustration face à l'état actuel de la consommation d'informations. Les algorithmes des réseaux sociaux décident de ce que vous voyez, les sites d'actualités traquent chacun de vos mouvements, et le scrolling infini a remplacé la lecture intentionnelle.",
+      "paragraph2": "Je voulais quelque chose de différent : une interface propre et simple qui respecte votre temps et votre vie privée. Pas d'algorithmes décidant de ce qui est important, pas de cookies de suivi vous suivant partout, pas de scrolling sans fin conçu pour piéger votre attention.",
       "paragraph3": "Juste des nouvelles de sources en qui vous avez confiance, présentées chronologiquement, sans manipulation."
     },
     "mission": {
@@ -604,7 +604,7 @@
     },
     "openSource": {
       "badge": "Open Source",
-      "title": "Libre d'utilisation, de fork et de modification",
+      "title": "Libre d'utilisation, de duplication et de modification",
       "paragraph1": "FeedCentral est open source sous licence MIT. Vous êtes libre de l'utiliser, de l'étudier, de le modifier et même d'exécuter votre propre instance si vous préférez.",
       "paragraph2": "L'instance officielle sur feed.benzoogataga.com est maintenue en tant que service public, mais vous n'êtes pas enfermé. Si vous voulez un contrôle total, vous pouvez déployer votre propre version.",
       "linkText": "Voir sur GitHub"
