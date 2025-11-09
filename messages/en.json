@@ -86,6 +86,7 @@
       "legal": "Legal",
       "resources": "Resources",
       "contact": "Contact",
+      "about": "About",
       "changelog": "Changelog",
       "roadmap": "Roadmap",
       "rssSources": "RSS Sources",
@@ -557,6 +558,90 @@
       "cancelled": "Cancelled"
     },
     "quarter": "Q{number} {year}"
+  },
+  "about": {
+    "title": "About FeedCentral",
+    "subtitle": "The story behind the project and what we stand for",
+    "origin": {
+      "badge": "Origin Story",
+      "title": "Born from Frustration with Modern News",
+      "paragraph1": "FeedCentral was born out of frustration with the current state of news consumption. Social media algorithms decide what you see, news websites track your every move, and endless scrolling has replaced intentional reading.",
+      "paragraph2": "I wanted something different: a clean, simple interface that respects your time and privacy. No algorithms deciding what's important, no tracking cookies following you around, no endless scroll designed to trap your attention.",
+      "paragraph3": "Just news from sources you trust, presented chronologically, without manipulation."
+    },
+    "mission": {
+      "badge": "Our Mission",
+      "title": "Taking Back Control of Your News Feed",
+      "paragraph1": "FeedCentral's mission is simple: give people control over their news consumption. We believe you should decide which sources to trust, not an algorithm optimized for engagement.",
+      "paragraph2": "We're committed to transparency, simplicity, and respect for our users. No dark patterns, no hidden tracking, no selling your data. Just a clean interface for reading news from sources you choose.",
+      "principles": {
+        "title": "Core Principles",
+        "transparency": {
+          "title": "Transparency",
+          "description": "Open source code, clear privacy policy, and full visibility into how the platform works."
+        },
+        "privacy": {
+          "title": "Privacy First",
+          "description": "No tracking cookies, no analytics beyond basic usage stats, no selling your data. Ever."
+        },
+        "simplicity": {
+          "title": "Simplicity",
+          "description": "A clean, distraction-free interface that respects your time and attention."
+        },
+        "chronological": {
+          "title": "Chronological Feeds",
+          "description": "Articles appear in the order they're published, not sorted by engagement algorithms."
+        }
+      }
+    },
+    "hobbyProject": {
+      "badge": "Hobby Project",
+      "title": "Built by One Developer, For the Love of It",
+      "paragraph1": "FeedCentral is a hobby project built and maintained by a single developer in their spare time. This isn't a venture-backed startup chasing growth metrics or a commercial product optimized for profit.",
+      "paragraph2": "It's a passion project born from the belief that news aggregation can be done better, with respect for users rather than exploitation of them.",
+      "paragraph3": "There are no promises of features, no guaranteed response times, no SLAs. Just an ongoing effort to build something useful and share it with others who feel the same way about news consumption."
+    },
+    "openSource": {
+      "badge": "Open Source",
+      "title": "Free to Use, Fork, and Modify",
+      "paragraph1": "FeedCentral is open source under the MIT license. You're free to use it, study it, modify it, and even run your own instance if you prefer.",
+      "paragraph2": "The official instance at feed.benzoogataga.com is maintained as a public service, but you're not locked in. If you want complete control, you can deploy your own version.",
+      "linkText": "View on GitHub"
+    },
+    "future": {
+      "badge": "The Future",
+      "title": "Building Features That Matter",
+      "paragraph1": "FeedCentral will continue to evolve based on user feedback and the developer's own needs. The focus will always be on features that improve the reading experience and respect user agency.",
+      "paragraph2": "Features like custom RSS sources, advanced search, bookmarking, and content filtering are already implemented or planned. But feature requests are always welcome.",
+      "roadmapLink": "Check out the roadmap to see what's planned, or",
+      "githubLink": "open an issue on GitHub",
+      "roadmapLinkEnd": "to suggest new ideas."
+    },
+    "support": {
+      "badge": "Support",
+      "title": "Want to Help?",
+      "paragraph1": "FeedCentral is free to use and always will be. But if you'd like to support the project, there are several ways to help:",
+      "ways": {
+        "feedback": {
+          "title": "Share Feedback",
+          "description": "Report bugs, suggest features, or just let me know what you think."
+        },
+        "contribute": {
+          "title": "Contribute Code",
+          "description": "FeedCentral is open source. Pull requests are welcome!"
+        },
+        "spread": {
+          "title": "Spread the Word",
+          "description": "Tell others who might appreciate an ad-free, privacy-respecting news aggregator."
+        },
+        "patreon": {
+          "title": "Support on Patreon",
+          "description": "If you really want to throw money at this hobby project, you can."
+        }
+      },
+      "patreonButton": "Support on Patreon",
+      "thankYou": "Thank you for using FeedCentral!"
+    }
   },
   "sources": {
     "title": "RSS Sources",

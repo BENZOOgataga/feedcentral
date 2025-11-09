@@ -86,6 +86,7 @@
       "legal": "Légal",
       "resources": "Ressources",
       "contact": "Contact",
+      "about": "À propos",
       "changelog": "Changelog",
       "roadmap": "Roadmap",
       "rssSources": "Sources RSS",
@@ -557,6 +558,90 @@
       "cancelled": "Annulé"
     },
     "quarter": "T{number} {year}"
+  },
+  "about": {
+    "title": "À propos de FeedCentral",
+    "subtitle": "L'histoire du projet et nos valeurs",
+    "origin": {
+      "badge": "Origine",
+      "title": "Né de la frustration face aux médias modernes",
+      "paragraph1": "FeedCentral est né de la frustration face à l'état actuel de la consommation d'informations. Les algorithmes des réseaux sociaux décident de ce que vous voyez, les sites d'actualités traquent chacun de vos mouvements, et le défilement infini a remplacé la lecture intentionnelle.",
+      "paragraph2": "Je voulais quelque chose de différent : une interface propre et simple qui respecte votre temps et votre vie privée. Pas d'algorithmes décidant de ce qui est important, pas de cookies de suivi vous suivant partout, pas de défilement sans fin conçu pour piéger votre attention.",
+      "paragraph3": "Juste des nouvelles de sources en qui vous avez confiance, présentées chronologiquement, sans manipulation."
+    },
+    "mission": {
+      "badge": "Notre Mission",
+      "title": "Reprendre le contrôle de votre fil d'actualité",
+      "paragraph1": "La mission de FeedCentral est simple : donner aux gens le contrôle de leur consommation d'informations. Nous pensons que c'est à vous de décider quelles sources sont fiables, pas à un algorithme optimisé pour l'engagement.",
+      "paragraph2": "Nous nous engageons à la transparence, à la simplicité et au respect de nos utilisateurs. Pas de dark patterns, pas de suivi caché, pas de vente de vos données. Juste une interface propre pour lire les actualités des sources que vous choisissez.",
+      "principles": {
+        "title": "Principes fondamentaux",
+        "transparency": {
+          "title": "Transparence",
+          "description": "Code open source, politique de confidentialité claire et visibilité totale sur le fonctionnement de la plateforme."
+        },
+        "privacy": {
+          "title": "Vie privée d'abord",
+          "description": "Pas de cookies de suivi, pas d'analytics au-delà des stats d'utilisation basiques, pas de vente de vos données. Jamais."
+        },
+        "simplicity": {
+          "title": "Simplicité",
+          "description": "Une interface propre et sans distraction qui respecte votre temps et votre attention."
+        },
+        "chronological": {
+          "title": "Flux chronologiques",
+          "description": "Les articles apparaissent dans l'ordre de publication, pas triés par des algorithmes d'engagement."
+        }
+      }
+    },
+    "hobbyProject": {
+      "badge": "Projet Personnel",
+      "title": "Construit par un développeur, par passion",
+      "paragraph1": "FeedCentral est un projet personnel construit et maintenu par un seul développeur sur son temps libre. Ce n'est pas une startup financée par du capital-risque à la recherche de métriques de croissance, ni un produit commercial optimisé pour le profit.",
+      "paragraph2": "C'est un projet de passion né de la conviction que l'agrégation d'actualités peut être mieux faite, avec du respect pour les utilisateurs plutôt que leur exploitation.",
+      "paragraph3": "Il n'y a pas de promesses de fonctionnalités, pas de temps de réponse garantis, pas de SLA. Juste un effort continu pour construire quelque chose d'utile et le partager avec d'autres qui pensent de la même façon."
+    },
+    "openSource": {
+      "badge": "Open Source",
+      "title": "Libre d'utilisation, de fork et de modification",
+      "paragraph1": "FeedCentral est open source sous licence MIT. Vous êtes libre de l'utiliser, de l'étudier, de le modifier et même d'exécuter votre propre instance si vous préférez.",
+      "paragraph2": "L'instance officielle sur feed.benzoogataga.com est maintenue en tant que service public, mais vous n'êtes pas enfermé. Si vous voulez un contrôle total, vous pouvez déployer votre propre version.",
+      "linkText": "Voir sur GitHub"
+    },
+    "future": {
+      "badge": "L'Avenir",
+      "title": "Construire des fonctionnalités qui comptent",
+      "paragraph1": "FeedCentral continuera d'évoluer en fonction des retours des utilisateurs et des besoins du développeur. L'accent sera toujours mis sur les fonctionnalités qui améliorent l'expérience de lecture et respectent l'autonomie de l'utilisateur.",
+      "paragraph2": "Des fonctionnalités comme les sources RSS personnalisées, la recherche avancée, les marque-pages et le filtrage de contenu sont déjà implémentées ou prévues. Mais les demandes de fonctionnalités sont toujours les bienvenues.",
+      "roadmapLink": "Consultez la roadmap pour voir ce qui est prévu, ou",
+      "githubLink": "ouvrez une issue sur GitHub",
+      "roadmapLinkEnd": "pour suggérer de nouvelles idées."
+    },
+    "support": {
+      "badge": "Soutien",
+      "title": "Vous voulez aider ?",
+      "paragraph1": "FeedCentral est gratuit et le restera toujours. Mais si vous souhaitez soutenir le projet, il existe plusieurs façons d'aider :",
+      "ways": {
+        "feedback": {
+          "title": "Partager vos retours",
+          "description": "Signalez des bugs, suggérez des fonctionnalités ou dites-moi simplement ce que vous en pensez."
+        },
+        "contribute": {
+          "title": "Contribuer au code",
+          "description": "FeedCentral est open source. Les pull requests sont les bienvenues !"
+        },
+        "spread": {
+          "title": "Faire passer le mot",
+          "description": "Parlez-en à d'autres personnes qui pourraient apprécier un agrégateur sans pub qui respecte la vie privée."
+        },
+        "patreon": {
+          "title": "Soutenir sur Patreon",
+          "description": "Si vous voulez vraiment jeter de l'argent sur ce projet personnel, vous pouvez."
+        }
+      },
+      "patreonButton": "Soutenir sur Patreon",
+      "thankYou": "Merci d'utiliser FeedCentral !"
+    }
   },
   "sources": {
     "title": "Sources RSS",

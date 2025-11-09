@@ -273,6 +273,11 @@ export default async function LandingPage({
                 <h3 className="mb-3 text-sm font-semibold text-foreground">{t('footer.project')}</h3>
                 <ul className="space-y-2 text-sm">
                   <li>
+                    <Link href="/about" className="text-muted-foreground transition-colors hover:text-foreground">
+                      {t('footer.about')}
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="/changelog" className="text-muted-foreground transition-colors hover:text-foreground">
                       {t('footer.changelog')}
                     </Link>
