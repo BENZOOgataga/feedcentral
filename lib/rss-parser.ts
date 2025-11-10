@@ -6,6 +6,7 @@ import { RSS_CONFIG } from '@/lib/rss-config';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const sanitizeHtmlLib: any = require('sanitize-html');
 import dns from 'dns/promises';
+import { getAllowedFeedCidrs } from '@/lib/env';
 
 // IP/CIDR utilities (simple, focused on IPv4 CIDRs used by allowed list below)
 import net from 'net';
@@ -38,15 +39,10 @@ async function ensureUrlAllowed(feedUrl: string) {
     // Resolve the hostname to an address (may return IPv4 or IPv6)
     const addrs = await dns.lookup(hostname, { all: true });
 
-    // Allowed CIDRs (examples provided by project owner: Vercel ranges and more)
-    const allowedCidrs = [
-      '76.76.21.0/24',
-      '76.76.22.0/24',
-      '76.223.16.0/20',
-      '76.76.154.0/24',
-      '99.83.64.0/18',
-      '193.38.250.0/24',
-    ];
+    // Allowed CIDRs can be configured via environment variable RSS_ALLOWED_CIDRS
+    // (comma-separated). This value is considered sensitive and should not be
+    // committed to source control. If not set, a default list is used.
+    const allowedCidrs = getAllowedFeedCidrs();
 
     function ipToLong(ip: string) {
       return ip.split('.').reduce((acc, oct) => (acc << 8) + parseInt(oct, 10), 0) >>> 0;

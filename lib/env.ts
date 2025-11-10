@@ -230,3 +230,32 @@ export function getEnvInfo() {
     hasCronKey: !!process.env.CRON_API_KEY,
   };
 }
+
+/**
+ * Get allowed feed CIDRs for SSRF exceptions.
+ * Developers should set RSS_ALLOWED_CIDRS in their environment (comma-separated)
+ * for production. This configuration is considered sensitive and should not be
+ * committed to source control. If not set, a conservative default list is used
+ * and a warning is emitted in production.
+ */
+export function getAllowedFeedCidrs(): string[] {
+  const env = process.env.RSS_ALLOWED_CIDRS || process.env.ALLOWED_FEED_CIDRS;
+  if (env && env.trim().length > 0) {
+    return env.split(',').map((s) => s.trim()).filter(Boolean);
+  }
+
+  const defaultCidrs = [
+    '76.76.21.0/24',
+    '76.76.22.0/24',
+    '76.223.16.0/20',
+    '76.76.154.0/24',
+    '99.83.64.0/18',
+    '193.38.250.0/24',
+  ];
+
+  if (isProduction()) {
+    console.warn('⚠️ RSS_ALLOWED_CIDRS is not set in the environment. Using default CIDR list. Consider setting RSS_ALLOWED_CIDRS in production and keep it out of source control.');
+  }
+
+  return defaultCidrs;
+}
