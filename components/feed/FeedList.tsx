@@ -46,8 +46,11 @@ export function FeedList({ articles }: FeedListProps) {
       const itemHeight = CARD_HEIGHT + GAP;
       const overscan = 5;
 
-      const start = Math.max(0, Math.floor(scrollTop / itemHeight) - overscan);
       const visibleCount = Math.ceil(window.innerHeight / itemHeight) + overscan * 2;
+      // Ensure start is clamped so we always render something and don't go past the list end
+      const approxStart = Math.floor(scrollTop / itemHeight) - overscan;
+      const maxStart = Math.max(0, articles.length - visibleCount);
+      const start = Math.max(0, Math.min(approxStart, maxStart));
       const end = Math.min(articles.length, start + visibleCount);
 
       setVisibleRange({ start, end });
