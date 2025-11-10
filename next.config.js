@@ -13,6 +13,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**',
       },
+      {
+        // Allow http hosts as some RSS feeds / images may provide http URLs.
+        protocol: 'http',
+        hostname: '**',
+      },
     ],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],

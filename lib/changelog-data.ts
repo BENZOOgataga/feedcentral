@@ -12,6 +12,29 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
+    version: '1.4.1',
+    name: 'Reliability & Reader fixes',
+    type: 'patch',
+    date: 'November 10, 2025',
+    changes: [
+      {
+        type: 'fix',
+        description: 'Fixed an issue that could show an "Application error" when opening some articles',
+        details: 'The reader now loads reliably even when article images come from a variety of sources. You should no longer see the client-side error that prevented articles from opening on the /app pages.',
+      },
+      {
+        type: 'fix',
+        description: 'Articles open correctly from the App pages',
+        details: 'Navigating from the app list to an article now consistently shows the article content as expected.',
+      },
+      {
+        type: 'improvement',
+        description: 'Improved handling of article images',
+        details: 'Images from more news sources now load without breaking the page. When possible, images are displayed safely so your reading experience is uninterrupted.',
+      },
+    ],
+  },
+  {
     version: '1.4.0',
     name: 'Database Infrastructure & Performance Optimization',
     type: 'minor',
