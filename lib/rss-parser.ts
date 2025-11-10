@@ -2,6 +2,13 @@ import Parser from 'rss-parser';
 import { prisma } from '@/lib/prisma';
 import type { Source, JobStatus } from '@prisma/client';
 import { RSS_CONFIG } from '@/lib/rss-config';
+// Use require to avoid type-resolution problems in environments missing @types/sanitize-html
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const sanitizeHtmlLib: any = require('sanitize-html');
+import dns from 'dns/promises';
+
+// IP/CIDR utilities (simple, focused on IPv4 CIDRs used by allowed list below)
+import net from 'net';
 
 interface ParsedArticle {
   title: string;
@@ -11,6 +18,82 @@ interface ParsedArticle {
   imageUrl?: string;
   author?: string;
   publishedAt: Date;
+}
+
+/**
+ * Resolve hostname and validate the resolved IP is not private/reserved unless
+ * explicitly allowed. Throws on disallowed addresses.
+ */
+async function ensureUrlAllowed(feedUrl: string) {
+  try {
+    const url = new URL(feedUrl);
+
+    // Only http(s) allowed
+    if (!['http:', 'https:'].includes(url.protocol)) {
+      throw new Error('Only HTTP/HTTPS URLs are allowed');
+    }
+
+    const hostname = url.hostname;
+
+    // Resolve the hostname to an address (may return IPv4 or IPv6)
+    const addrs = await dns.lookup(hostname, { all: true });
+
+    // Allowed CIDRs (examples provided by project owner: Vercel ranges and more)
+    const allowedCidrs = [
+      '76.76.21.0/24',
+      '76.76.22.0/24',
+      '76.223.16.0/20',
+      '76.76.154.0/24',
+      '99.83.64.0/18',
+      '193.38.250.0/24',
+    ];
+
+    function ipToLong(ip: string) {
+      return ip.split('.').reduce((acc, oct) => (acc << 8) + parseInt(oct, 10), 0) >>> 0;
+    }
+
+    function cidrContains(cidr: string, ip: string) {
+      if (!net.isIP(ip) || net.isIP(ip) === 6) return false; // only IPv4 CIDRs here
+      const [range, bits] = cidr.split('/');
+      const mask = ~(2 ** (32 - Number(bits)) - 1) >>> 0;
+      return (ipToLong(range) & mask) === (ipToLong(ip) & mask);
+    }
+
+    function isPrivateIPv4(ip: string) {
+      const parts = ip.split('.').map((s) => parseInt(s, 10));
+      if (parts[0] === 10) return true;
+      if (parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31) return true;
+      if (parts[0] === 192 && parts[1] === 168) return true;
+      if (parts[0] === 127) return true; // loopback
+      if (parts[0] === 169 && parts[1] === 254) return true; // link local
+      return false;
+    }
+
+    for (const a of addrs) {
+      const address = a.address;
+
+      // If IPv6, do a basic check to block ::1 and local ranges
+      if (net.isIP(address) === 6) {
+        const lc = address.toLowerCase();
+        if (lc === '::1' || lc.startsWith('fc') || lc.startsWith('fd') || lc.startsWith('fe80')) {
+          throw new Error('Resolved to a private/reserved IPv6 address');
+        }
+        // otherwise, allow IPv6 addresses (no CIDR checks added here)
+        continue;
+      }
+
+      // IPv4 checks
+      if (isPrivateIPv4(address)) {
+        // allow if it's in the explicit allowed CIDR list
+        const allowed = allowedCidrs.some((c) => cidrContains(c, address));
+        if (!allowed) {
+          throw new Error('Resolved to a private IP address');
+        }
+      }
+    }
+  } catch (err: any) {
+    throw new Error(`Feed URL not allowed: ${err.message || String(err)}`);
+  }
 }
 
 /**
@@ -141,10 +224,63 @@ export class RSSFeedParser {
    * Basic HTML sanitization (remove scripts, styles)
    */
   private sanitizeHtml(html: string): string {
-    return html
-      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-      .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
-      .trim();
+    // Use sanitize-html to allow a safe subset of tags and attributes.
+    // Transform <img> tags whose host is not in the allowlist into a placeholder
+    // explaining the image was removed for security reasons.
+    const allowedImageHosts = new Set([
+      'images.unsplash.com',
+      'assets.bwbx.io',
+      'ichef.bbci.co.uk',
+      'static01.nyt.com',
+      'cdn.cnn.com',
+      'i.imgur.com',
+      'pbs.twimg.com',
+      'media.npr.org',
+      'cdn.vox-cdn.com',
+      'content.jwplatform.com',
+      'images.theconversation.com',
+    ]);
+
+    function isImgHostAllowed(src: string | undefined) {
+      if (!src) return false;
+      try {
+        const u = new URL(src, 'http://example.com');
+        const host = u.hostname;
+        return allowedImageHosts.has(host) || host === 'localhost' || host === '127.0.0.1';
+      } catch (err) {
+        return false;
+      }
+    }
+
+    return sanitizeHtmlLib(html, {
+      allowedTags: sanitizeHtmlLib.defaults.allowedTags.concat(['img']),
+      allowedAttributes: {
+        a: ['href', 'name', 'target', 'rel'],
+        img: ['src', 'alt', 'width', 'height'],
+        '*': ['class', 'id', 'title', 'style'],
+      },
+      transformTags: {
+  img: (tagName: string, attribs: any) => {
+          const src = attribs.src || attribs['data-src'];
+          if (isImgHostAllowed(src)) {
+            // Keep the image but force rel/noopener on parent links via sanitizer rules
+            return {
+              tagName: 'img',
+              attribs: {
+                src: src || '',
+                alt: attribs.alt || '',
+              },
+            };
+          }
+
+          // Replace disallowed images with a placeholder DIV carrying a data attribute
+          return {
+            tagName: 'div',
+            text: '[Image removed by server: judged unsafe]'
+          };
+        }
+      }
+    }).trim();
   }
 
   /**
@@ -209,8 +345,11 @@ export async function fetchAndStoreArticles(source: Source): Promise<{
       },
     });
 
-    // Fetch articles from RSS feed
-    const articles = await parser.fetchFeed(source.feedUrl);
+  // SSRF protection: ensure resolved host is allowed
+  await ensureUrlAllowed(source.feedUrl);
+
+  // Fetch articles from RSS feed
+  const articles = await parser.fetchFeed(source.feedUrl);
 
     if (articles.length === 0) {
       // No articles found - still mark as successful
@@ -411,8 +550,11 @@ export async function validateRSSFeed(feedUrl: string): Promise<{
       };
     }
 
-    // Try to fetch and parse the feed
-    const feed = await parser.parseFeedMetadata(feedUrl);
+  // SSRF protection: ensure resolved host is allowed
+  await ensureUrlAllowed(feedUrl);
+
+  // Try to fetch and parse the feed
+  const feed = await parser.parseFeedMetadata(feedUrl);
 
     // Extract metadata
     return {
@@ -458,8 +600,11 @@ export async function fetchAndStoreUserArticles(userSource: {
   const parser = new RSSFeedParser();
 
   try {
-    // Fetch articles from RSS feed
-    const articles = await parser.fetchFeed(userSource.feedUrl);
+  // SSRF protection: ensure resolved host is allowed
+  await ensureUrlAllowed(userSource.feedUrl);
+
+  // Fetch articles from RSS feed
+  const articles = await parser.fetchFeed(userSource.feedUrl);
 
     // Store articles in UserArticle table
     let addedCount = 0;

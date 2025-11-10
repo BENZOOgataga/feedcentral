@@ -7,6 +7,7 @@ import { Article } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { decodeHtmlEntities } from '@/lib/decode-html';
+import { useState } from 'react';
 
 interface FeedCardProps {
   article: Article;
@@ -14,6 +15,7 @@ interface FeedCardProps {
 }
 
 export function FeedCard({ article, index = 0 }: FeedCardProps) {
+  const [imgError, setImgError] = useState(false);
   const formattedDate = new Date(article.publishedAt).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -36,16 +38,23 @@ export function FeedCard({ article, index = 0 }: FeedCardProps) {
         <div className="flex gap-4">
           {/* Article Image - Always shown with fallback */}
           <div className="relative h-24 w-32 shrink-0 overflow-hidden rounded-lg bg-muted">
-            <Image
-              src={article.imageUrl || `https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=300&fit=crop`}
-              alt={article.title}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-              sizes="(max-width: 768px) 128px, 128px"
-              priority={isPriority}
-              loading={isPriority ? undefined : "lazy"}
-              fetchPriority={isPriority ? "high" : "low"}
-            />
+            {!imgError ? (
+              <Image
+                src={article.imageUrl || `https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=300&fit=crop`}
+                alt={article.title}
+                fill
+                onError={() => setImgError(true)}
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                sizes="(max-width: 768px) 128px, 128px"
+                priority={isPriority}
+                loading={isPriority ? undefined : "lazy"}
+                fetchPriority={isPriority ? "high" : "low"}
+              />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center px-2 text-center text-xs text-muted-foreground">
+                Image removed by server for security reasons
+              </div>
+            )}
           </div>
 
           {/* Content */}
