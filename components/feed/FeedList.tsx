@@ -15,7 +15,6 @@ const GAP = 16; // space-y-4 equivalent (1rem = 16px)
 export function FeedList({ articles }: FeedListProps) {
   const [containerHeight, setContainerHeight] = useState(800);
   const containerRef = useRef<HTMLDivElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [visibleRange, setVisibleRange] = useState({ start: 0, end: 20 });
 
   // Calculate container height based on viewport
@@ -34,31 +33,35 @@ export function FeedList({ articles }: FeedListProps) {
     return () => window.removeEventListener('resize', updateHeight);
   }, []);
 
-  // Handle scroll for virtualization
+  // Handle window scroll for virtualization (allow full-page scrolling)
   useEffect(() => {
-    if (!scrollContainerRef.current || articles.length < 50) return;
+    if (articles.length < 50) return;
 
     const handleScroll = () => {
-      const container = scrollContainerRef.current;
-      if (!container) return;
+      if (!containerRef.current) return;
 
-      const scrollTop = container.scrollTop;
+      const rect = containerRef.current.getBoundingClientRect();
+      // scroll distance inside the container: how much the container has been scrolled past the top of viewport
+      const scrollTop = Math.max(0, -rect.top);
       const itemHeight = CARD_HEIGHT + GAP;
       const overscan = 5;
 
       const start = Math.max(0, Math.floor(scrollTop / itemHeight) - overscan);
-      const visibleCount = Math.ceil(containerHeight / itemHeight) + overscan * 2;
+      const visibleCount = Math.ceil(window.innerHeight / itemHeight) + overscan * 2;
       const end = Math.min(articles.length, start + visibleCount);
 
       setVisibleRange({ start, end });
     };
 
-    const container = scrollContainerRef.current;
-    container.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial calculation
+    handleScroll(); // initial
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
 
-    return () => container.removeEventListener('scroll', handleScroll);
-  }, [articles.length, containerHeight]);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [articles.length]);
 
   if (articles.length === 0) {
     return null;
@@ -82,31 +85,22 @@ export function FeedList({ articles }: FeedListProps) {
 
   return (
     <div ref={containerRef} className="w-full">
-      <div
-        ref={scrollContainerRef}
-        style={{
-          height: `${containerHeight}px`,
-          overflow: 'auto',
-          position: 'relative',
-        }}
-        className="scrollbar-thin"
-      >
-        <div style={{ height: `${totalHeight}px`, position: 'relative' }}>
-          <div
-            style={{
-              transform: `translateY(${offsetY}px)`,
-              willChange: 'transform',
-            }}
-          >
-            <div className="space-y-4">
-              {visibleArticles.map((article, idx) => (
-                <FeedCard
-                  key={article.id}
-                  article={article}
-                  index={visibleRange.start + idx}
-                />
-              ))}
-            </div>
+      {/* Let the page scroll normally — render a spacer with the total height and translate the visible window into place */}
+      <div style={{ height: `${totalHeight}px`, position: 'relative' }}>
+        <div
+          style={{
+            transform: `translateY(${offsetY}px)`,
+            willChange: 'transform',
+          }}
+        >
+          <div className="space-y-4">
+            {visibleArticles.map((article, idx) => (
+              <FeedCard
+                key={article.id}
+                article={article}
+                index={visibleRange.start + idx}
+              />
+            ))}
           </div>
         </div>
       </div>
