@@ -135,6 +135,9 @@
       "description": "Une erreur s'est produite. Veuillez réessayer.",
       "action": "Réessayer"
     }
+    ,
+    "imageRemovedForSecurity": "Image supprimée pour des raisons de sécurité",
+    "openOriginalArticle": "Ouvrir l'article original"
   },
   "article": {
     "readOn": "Lire sur {source}",

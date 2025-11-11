@@ -135,6 +135,9 @@
       "description": "Something went wrong. Please try again.",
       "action": "Try Again"
     }
+    ,
+    "imageRemovedForSecurity": "Image removed for security reasons",
+    "openOriginalArticle": "Open original article"
   },
   "article": {
     "readOn": "Read on {source}",

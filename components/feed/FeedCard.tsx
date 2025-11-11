@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Calendar, ExternalLink } from 'lucide-react';
 import Image from 'next/image';
@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { decodeHtmlEntities } from '@/lib/decode-html';
 import { useMemo, useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface FeedCardProps {
   article: Article;
@@ -15,6 +16,7 @@ interface FeedCardProps {
 }
 
 export function FeedCard({ article, index = 0 }: FeedCardProps) {
+  const t = useTranslations('feed');
   const [imgError, setImgError] = useState(false);
   // currentSrc holds the URL we give to <Image> (proxy first, fallback to remote when allowed)
   const [attemptedFallback, setAttemptedFallback] = useState(false);
@@ -210,16 +212,16 @@ export function FeedCard({ article, index = 0 }: FeedCardProps) {
                 />
               )
             ) : (
-              <div className="flex h-full w-full flex-col items-center justify-center gap-1 px-2 text-center text-xs text-muted-foreground">
-                <div>Image removed for security reasons</div>
-                <button
-                  type="button"
-                  onClick={() => window.open(article.url, '_blank', 'noopener')}
-                  className="mt-1 text-xs text-primary underline"
-                >
-                  Open original article
-                </button>
-              </div>
+                <div className="flex h-full w-full flex-col items-center justify-center gap-1 px-2 text-center text-xs text-muted-foreground">
+                  <div>{t('imageRemovedForSecurity')}</div>
+                  <button
+                    type="button"
+                    onClick={() => window.open(article.url, '_blank', 'noopener')}
+                    className="mt-1 text-xs text-primary underline"
+                  >
+                    {t('openOriginalArticle')}
+                  </button>
+                </div>
             )}
           </div>
 

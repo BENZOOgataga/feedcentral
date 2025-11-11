@@ -39,6 +39,36 @@ export const changelog: ChangelogEntry[] = [
       },
       {
         type: 'fix',
+        description: 'Sanitized feed HTML to block unsafe content',
+        details: 'Feed content is now sanitized server-side to remove scripts, styles and other unsafe tags. This prevents malicious feed items from running hidden code in your browser and makes article pages safer to view.',
+      },
+      {
+        type: 'fix',
+        description: 'SSRF protections for feed and image fetching',
+        details: 'Added host/IP checks that block requests resolving to private or reserved network addresses unless explicitly allowed. SSRF (Server-Side Request Forgery) is when an attacker tricks the server into requesting internal resources; these checks reduce that risk by refusing to fetch from local or private IPs.',
+      },
+      {
+        type: 'fix',
+        description: 'Tighter image allowlist and safer image handling',
+        details: 'Images from unknown or potentially unsafe hosts are now removed from feed content and replaced with a clear placeholder. SVGs are blocked, large images and redirects are rejected, and non-HTTPS images are not allowed. This avoids layout breakage and prevents risky image payloads from being served directly.',
+      },
+      {
+        type: 'fix',
+        description: 'Image proxy behavior for user-provided sources',
+        details: "For user-added (custom) sources the server will not proxy remote images by default — this prevents the server from fetching arbitrary third-party URLs on behalf of anonymous visitors. When proxying is disabled the UI shows a clear placeholder ('Image removed for security reasons') with an 'Open original article' link. These strings are translatable in the UI.",
+      },
+      {
+        type: 'feature',
+        description: 'Image proxy with caching and sanitization',
+        details: 'A new server-side image proxy can fetch, sanitize and cache remote images. The proxy converts images to a safe format when possible, enforces size/type limits, and blocks disallowed hosts and private IPs — improving reliability and privacy when viewing article thumbnails.',
+      },
+      {
+        type: 'improvement',
+        description: 'Configurable allowed feed CIDRs',
+        details: 'Administrators can now configure a list of allowed IP ranges (CIDRs) for feed resolution via the environment (RSS_ALLOWED_CIDRS). This gives operators control over which internal or external networks are considered safe for feed fetching.',
+      },
+      {
+        type: 'fix',
         description: 'Reader and image reliability improvements',
         details: 'Improved handling of article images and reader load logic so articles open reliably even when images come from many different sources. This reduces the chance of client-side errors during reading.',
       },
