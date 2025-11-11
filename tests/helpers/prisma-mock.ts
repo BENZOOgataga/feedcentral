@@ -36,6 +36,7 @@ export const mockPrisma = {
     findMany: jest.fn(),
     findFirst: jest.fn(),
     findUnique: jest.fn(),
+  groupBy: jest.fn().mockResolvedValue([]),
     create: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
@@ -78,8 +79,9 @@ export const mockPrisma = {
 export function resetAllMocks() {
   Object.values(mockPrisma).forEach((model: any) => {
     Object.values(model).forEach((method: any) => {
-      if (typeof method.mockReset === 'function') {
-        method.mockReset();
+      if (typeof method.mockClear === 'function') {
+        // Use mockClear to remove call history but preserve default implementations
+        method.mockClear();
       }
     });
   });
