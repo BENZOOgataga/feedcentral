@@ -27,6 +27,9 @@ export interface Source {
   lastFetchedAt?: Date;
   fetchInterval: number; // in minutes
   articleCount?: number;
+  // When true, this source originates from a user-provided custom source (user_sources).
+  // Default/admin sources will not have this flag set (or will be false).
+  isUserSource?: boolean;
 }
 
 export interface Category {

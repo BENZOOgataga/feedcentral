@@ -185,6 +185,8 @@ export async function GET(request: NextRequest) {
           name: article.userSource.customName || article.userSource.feedTitle || 'Custom Source',
           url: article.userSource.siteUrl || article.url,
           logoUrl: article.userSource.logoUrl,
+          // mark that this source came from a user-provided custom source
+          isUserSource: true,
         },
         category: article.userSource.category,
       }));
