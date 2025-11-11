@@ -368,22 +368,40 @@ export default function MySourcesPage() {
                         <p className="text-sm text-muted-foreground mb-2">
                           {source.feedUrl}
                         </p>
-                        <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                          <span>
-                            {t('sources.mySources.sourceCard.articles', { count: source.articleCount })}
-                          </span>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
+                          <span>{t('sources.mySources.sourceCard.articles', { count: source.articleCount })}</span>
+
+                          {typeof source.dailyImportLimit !== 'undefined' && (
+                            <>
+                              <span className="mx-1">•</span>
+                              {source.dailyImportLimit === -1 ? (
+                                <span>{t('sources.mySources.sourceCard.dailyLimit.unlimited')}</span>
+                              ) : (
+                                <span>
+                                  {t('sources.mySources.sourceCard.dailyLimit.label')} {source.dailyImportCount} / {source.dailyImportLimit}
+                                  {typeof source.dailyImportRemaining === 'number' && source.dailyImportRemaining <= 0 && (
+                                    <span className="ml-2 text-destructive">({t('sources.mySources.sourceCard.dailyLimit.reached')})</span>
+                                  )}
+                                </span>
+                              )}
+                            </>
+                          )}
+
                           {source.category && (
-                            <span>• {source.category.name}</span>
+                            <>
+                              <span className="mx-1">•</span>
+                              <span>{source.category.name}</span>
+                            </>
                           )}
-                          {source.lastFetchedAt ? (
-                            <span>
-                              • {t('sources.mySources.sourceCard.lastFetched', { 
-                                date: new Date(source.lastFetchedAt).toLocaleDateString() 
-                              })}
-                            </span>
-                          ) : (
-                            <span>• {t('sources.mySources.sourceCard.neverFetched')}</span>
-                          )}
+
+                          <span className="mx-1">•</span>
+                          <span>
+                            {source.lastFetchedAt
+                              ? t('sources.mySources.sourceCard.lastFetched', {
+                                  date: new Date(source.lastFetchedAt).toLocaleDateString(),
+                                })
+                              : t('sources.mySources.sourceCard.neverFetched')}
+                          </span>
                         </div>
                       </div>
                       <div className="flex gap-2">

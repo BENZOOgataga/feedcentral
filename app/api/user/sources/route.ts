@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyAuth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { validateRSSFeed } from '@/lib/rss-parser';
+import { getMaxArticlesPerSourcePerDay } from '@/lib/license';
 
 /**
  * GET /api/user/sources
@@ -44,6 +45,37 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: 'desc' },
     });
 
+    // Compute per-source counts for the last 24 hours to show daily usage
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const grouped = await prisma.userArticle.groupBy({
+      by: ['userSourceId'],
+      where: {
+        userId: user.id,
+        publishedAt: { gte: since },
+      },
+      _count: {
+        _all: true,
+      },
+    });
+
+    const countsMap: Record<string, number> = {};
+    grouped.forEach((g) => {
+      countsMap[g.userSourceId] = g._count._all || 0;
+    });
+
+    // Attach daily limits and counts to each source
+    const augmentedSources = sources.map((s) => {
+      const dailyCount = countsMap[s.id] || 0;
+      const limit = getMaxArticlesPerSourcePerDay(user.premiumTier || 'free');
+      const remaining = limit === -1 ? -1 : Math.max(0, limit - dailyCount);
+      return {
+        ...s,
+        dailyImportCount: dailyCount,
+        dailyImportLimit: limit,
+        dailyImportRemaining: remaining,
+      };
+    });
+
     // Calculate total and active counts
     const totalCount = sources.length;
     const activeCount = sources.filter((s) => s.isEnabled).length;
@@ -53,7 +85,7 @@ export async function GET(req: NextRequest) {
     const maxSources = isPremium ? null : 10; // null = unlimited for premium
 
     return NextResponse.json({
-      sources,
+      sources: augmentedSources,
       stats: {
         total: totalCount,
         active: activeCount,

@@ -2,6 +2,7 @@ import Parser from 'rss-parser';
 import { prisma } from '@/lib/prisma';
 import type { Source, JobStatus } from '@prisma/client';
 import { RSS_CONFIG } from '@/lib/rss-config';
+import { getMaxArticlesPerSourcePerDay } from '@/lib/license';
 // Use require to avoid type-resolution problems in environments missing @types/sanitize-html
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const sanitizeHtmlLib: any = require('sanitize-html');
@@ -602,29 +603,83 @@ export async function fetchAndStoreUserArticles(userSource: {
   // Fetch articles from RSS feed
   const articles = await parser.fetchFeed(userSource.feedUrl);
 
-    // Store articles in UserArticle table
+    // Enforce per-user-source daily limits based on user's tier.
+    // Determine user's tier
+    const user = await prisma.user.findUnique({
+      where: { id: userSource.userId },
+      select: { premiumTier: true },
+    });
+    const tier = (user?.premiumTier as string) || 'free';
+    const limit = getMaxArticlesPerSourcePerDay(tier);
+
     let addedCount = 0;
-    for (const article of articles) {
-      try {
-        await prisma.userArticle.create({
-          data: {
-            title: article.title,
-            excerpt: article.description,
-            url: article.url,
-            imageUrl: article.imageUrl,
-            author: article.author,
-            publishedAt: article.publishedAt,
-            userId: userSource.userId,
-            userSourceId: userSource.id,
-          },
-        });
-        addedCount++;
-      } catch (error: any) {
-        // Skip duplicate URLs (unique constraint violation)
-        if (error.code === 'P2002') {
-          continue;
+
+    if (limit === -1) {
+      // Unlimited: behave as before
+      for (const article of articles) {
+        try {
+          await prisma.userArticle.create({
+            data: {
+              title: article.title,
+              excerpt: article.description,
+              url: article.url,
+              imageUrl: article.imageUrl,
+              author: article.author,
+              publishedAt: article.publishedAt,
+              userId: userSource.userId,
+              userSourceId: userSource.id,
+            },
+          });
+          addedCount++;
+        } catch (error: any) {
+          // Skip duplicate URLs (unique constraint violation)
+          if (error.code === 'P2002') {
+            continue;
+          }
+          throw error;
         }
-        throw error;
+      }
+    } else {
+      // Count how many articles were added in the last 24 hours for this user source
+      const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      const existingCount = await prisma.userArticle.count({
+        where: {
+          userSourceId: userSource.id,
+          publishedAt: { gte: since },
+        },
+      });
+
+      const allowedRemaining = Math.max(0, limit - existingCount);
+
+      if (allowedRemaining > 0) {
+        // Only attempt to insert up to the allowedRemaining newest items
+        const toInsert = articles.slice(0, allowedRemaining);
+        for (const article of toInsert) {
+          try {
+            await prisma.userArticle.create({
+              data: {
+                title: article.title,
+                excerpt: article.description,
+                url: article.url,
+                imageUrl: article.imageUrl,
+                author: article.author,
+                publishedAt: article.publishedAt,
+                userId: userSource.userId,
+                userSourceId: userSource.id,
+              },
+            });
+            addedCount++;
+          } catch (error: any) {
+            // Skip duplicate URLs (unique constraint violation)
+            if (error.code === 'P2002') {
+              continue;
+            }
+            throw error;
+          }
+        }
+      } else {
+        // No quota remaining for this user source today
+        addedCount = 0;
       }
     }
 

@@ -700,6 +700,11 @@
           "enabled": "Enabled",
           "disabled": "Disabled"
         },
+        "dailyLimit": {
+          "label": "Today:",
+          "unlimited": "No daily limit",
+          "reached": "quota reached"
+        },
         "actions": {
           "edit": "Edit",
           "refresh": "Refresh",
@@ -806,6 +811,7 @@
   "common": {
     "loading": "Loading...",
     "error": "Error",
+    "success": "Success",
     "tryAgain": "Try Again",
     "close": "Close",
     "save": "Save",

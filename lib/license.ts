@@ -19,11 +19,17 @@ export const LICENSE_TIERS = {
   premium: {
     name: 'Premium',
     maxCustomSources: 50,
+    // Maximum number of articles allowed to be imported from a single user-added
+    // source within a 24 hour window. -1 means unlimited.
+    maxArticlesPerSourcePerDay: 200,
     features: ['Custom RSS sources (50)', 'Priority support', 'Ad-free experience'],
   },
   pro: {
     name: 'Pro',
     maxCustomSources: -1, // Unlimited
+    // Pro users get effectively unlimited per-source imports. Use -1 to denote
+    // unlimited behaviour and avoid enforcing a hard cap here.
+    maxArticlesPerSourcePerDay: -1,
     features: ['Unlimited custom RSS sources', 'Priority support', 'Ad-free experience', 'Early access to features'],
   },
 } as const;
@@ -174,4 +180,14 @@ export function getMaxCustomSources(tier: string): number {
   if (tier === 'pro') return -1; // Unlimited
   if (tier === 'premium') return 50;
   return 10; // Free tier
+}
+
+/**
+ * Get the max number of articles allowed per user-added source per 24h window.
+ * Returns -1 for unlimited.
+ */
+export function getMaxArticlesPerSourcePerDay(tier: string): number {
+  if (tier === 'pro') return -1;
+  if (tier === 'premium') return 200;
+  return 20; // Free tier default
 }

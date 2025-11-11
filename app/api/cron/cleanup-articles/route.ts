@@ -136,6 +136,57 @@ export async function GET(request: NextRequest) {
     });
     const hardDeleted = hardDeleteResult.count;
 
+    // --- ALSO CLEANUP USER-PROVIDED ARTICLES (UserArticle table)
+    // Strategy mirrors the default articles cleanup but UserArticle does not have archivedData
+    // Calculate user article cutoffs (reuse softDeleteCutoff/hardDeleteCutoff)
+    // Step U1: Soft-delete user articles older than 7 days (not bookmarked)
+    const userArticlesToSoftDelete = await prisma.userArticle.findMany({
+      where: {
+        publishedAt: {
+          lt: softDeleteCutoff,
+        },
+        deletedAt: null,
+        bookmarks: {
+          none: {},
+        },
+      },
+      select: { id: true },
+    });
+
+    let userSoftDeleted = 0;
+    if (userArticlesToSoftDelete.length > 0) {
+      const result = await prisma.userArticle.updateMany({
+        where: { id: { in: userArticlesToSoftDelete.map(a => a.id) } },
+        data: { deletedAt: now },
+      });
+      userSoftDeleted = result.count;
+    }
+
+    // Step U2: Mark bookmarked user articles older than soft cutoff as deleted (no archivedData field)
+    const bookmarkedOldUserArticles = await prisma.userArticle.findMany({
+      where: {
+        publishedAt: { lt: softDeleteCutoff },
+        deletedAt: null,
+        bookmarks: { some: {} },
+      },
+      select: { id: true },
+    });
+
+    let userArchivedMarked = 0;
+    for (const ua of bookmarkedOldUserArticles) {
+      await prisma.userArticle.update({ where: { id: ua.id }, data: { deletedAt: now } });
+      userArchivedMarked++;
+    }
+
+    // Step U3: Hard-delete very old user articles (14+ days, not bookmarked)
+    const userHardDeleteResult = await prisma.userArticle.deleteMany({
+      where: {
+        publishedAt: { lt: hardDeleteCutoff },
+        bookmarks: { none: {} },
+      },
+    });
+    const userHardDeleted = userHardDeleteResult.count;
+
     const duration = Date.now() - startTime;
 
     const summary = {
@@ -143,10 +194,15 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString(),
       duration: `${duration}ms`,
       cleanup: {
+        // default articles
         softDeleted,
         archived,
         hardDeleted,
-        total: softDeleted + archived + hardDeleted,
+        // user-provided articles
+        userSoftDeleted,
+        userArchivedMarked,
+        userHardDeleted,
+        total: softDeleted + archived + hardDeleted + userSoftDeleted + userArchivedMarked + userHardDeleted,
       },
       cutoffDates: {
         softDelete: softDeleteCutoff.toISOString(),
