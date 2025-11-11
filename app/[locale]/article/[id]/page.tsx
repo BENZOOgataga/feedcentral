@@ -4,6 +4,7 @@ import { use, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from '@/i18n-navigation';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ArticleHeader } from '@/components/reader/ArticleHeader';
 import { ArticleContent } from '@/components/reader/ArticleContent';
@@ -14,6 +15,27 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const router = useRouter();
+
+  function BackButton({ className }: { className?: string }) {
+    return (
+      <Button
+        variant="ghost"
+        className={className}
+        onClick={() => {
+          // Prefer history.back to preserve pagination and scroll position
+          if (typeof window !== 'undefined' && window.history && window.history.length > 1) {
+            router.back();
+          } else {
+            router.push('/app');
+          }
+        }}
+      >
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Back to Feed
+      </Button>
+    );
+  }
 
   useEffect(() => {
     fetchArticle();
@@ -72,12 +94,7 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
           <p className="mb-6 text-muted-foreground">
             The article you're looking for doesn't exist or has been removed.
           </p>
-          <Button asChild>
-            <Link href="/app">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Feed
-            </Link>
-          </Button>
+          <BackButton />
         </div>
       </div>
     );
@@ -92,12 +109,7 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
     >
       <div className="mx-auto max-w-3xl">
         {/* Back button */}
-        <Button variant="ghost" asChild className="mb-6 -ml-2">
-          <Link href="/app">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Feed
-          </Link>
-        </Button>
+        <BackButton className="mb-6 -ml-2" />
 
         {/* Article */}
         <ArticleHeader article={article} />

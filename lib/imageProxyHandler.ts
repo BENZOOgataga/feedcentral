@@ -4,6 +4,7 @@ import dns from 'dns/promises';
 import net from 'net';
 import { prisma } from '@/lib/prisma';
 import { getImageProxyConfig, isHostAllowed } from '@/lib/imageProxyConfig';
+import { cache } from '@/lib/cache';
 import { fetchWithLimit } from '@/lib/fetchWithLimit';
 
 function isPrivateIp(ip: string) {
@@ -46,12 +47,25 @@ export async function imageProxyHandler(articleId: string, request?: Request | N
       try {
         parsed = new URL(rawUrl);
       } catch (e) {
+        // Invalid URL: return HEAD diagnostics when probing so client doesn't see 4xx
+        if (method === 'HEAD') {
+          const h = new Headers();
+          h.set('x-image-proxy-available', '0');
+          h.set('x-image-proxy-reason', 'invalid_image_url');
+          return new NextResponse(null, { status: 200, headers: h });
+        }
         return NextResponse.json({ error: 'invalid image url' }, { status: 400 });
       }
 
       const cfg = getImageProxyConfig();
 
       if (parsed.protocol !== 'https:') {
+        if (method === 'HEAD') {
+          const h = new Headers();
+          h.set('x-image-proxy-available', '0');
+          h.set('x-image-proxy-reason', 'non_https');
+          return new NextResponse(null, { status: 200, headers: h });
+        }
         return NextResponse.json({ error: 'only https images allowed' }, { status: 400 });
       }
 
@@ -83,6 +97,48 @@ export async function imageProxyHandler(articleId: string, request?: Request | N
         }
         // If DNS resolution fails, treat as bad request
         return NextResponse.json({ error: 'failed to resolve host' }, { status: 400 });
+      }
+
+      // Cache bypass support: allow header `x-bypass-cache: 1` or query `?bypassCache=1`
+      const getBypassRequested = (req?: Request | NextRequest) => {
+        try {
+          if (!req) return false;
+          const hdr = (req as any).headers?.get?.('x-bypass-cache');
+          if (hdr === '1' || hdr === 'true') return true;
+          const urlStr = (req as any).url;
+          if (urlStr) {
+            const q = new URL(urlStr).searchParams.get('bypassCache');
+            if (q === '1' || q === 'true') return true;
+          } else if ((req as any).nextUrl && (req as any).nextUrl.searchParams) {
+            const q = (req as any).nextUrl.searchParams.get('bypassCache');
+            if (q === '1' || q === 'true') return true;
+          }
+        } catch (e) {
+          // ignore
+        }
+        return false;
+      };
+
+      const bypassRequested = getBypassRequested(request);
+      const allowCacheBypass = process.env.API_ALLOW_CACHE_BYPASS ? (process.env.API_ALLOW_CACHE_BYPASS === '1' || process.env.API_ALLOW_CACHE_BYPASS === 'true') : (process.env.NODE_ENV !== 'production');
+      const skipCache = bypassRequested && allowCacheBypass;
+
+      // Check server-side cache for previously fetched/sanitized images
+      const cacheKey = `image:${articleId}`;
+      const useCache = process.env.NODE_ENV !== 'test' && !skipCache;
+      const cached = useCache ? cache.get<{ buffer: ArrayBuffer; contentType: string }>(cacheKey) : undefined;
+      if (cached) {
+        const respHeaders = new Headers();
+        respHeaders.set('Content-Type', cached.contentType);
+        // honor proxy cache control TTL (s-maxage) via config
+        const cfgLocal = getImageProxyConfig();
+        respHeaders.set('Cache-Control', `public, max-age=${cfgLocal.maxAge}, s-maxage=${cfgLocal.sMaxAge}`);
+        if (method === 'HEAD') {
+          respHeaders.set('x-image-proxy-available', '1');
+          respHeaders.set('x-image-proxy-content-type', cached.contentType);
+          return new NextResponse(null, { status: 200, headers: respHeaders });
+        }
+        return new NextResponse(cached.buffer, { headers: respHeaders });
       }
 
       const { ok, status, headers, buffer, error } = await fetchWithLimit(rawUrl, {
@@ -145,6 +201,16 @@ export async function imageProxyHandler(articleId: string, request?: Request | N
       const respHeaders = new Headers();
       respHeaders.set('Content-Type', outContentType);
       respHeaders.set('Cache-Control', `public, max-age=${cfg.maxAge}, s-maxage=${cfg.sMaxAge}`);
+      // Cache successfully fetched & sanitized images for a short TTL to avoid
+      // re-fetching identical images repeatedly. TTL controlled via IMAGE_CACHE_TTL_SEC.
+      try {
+        const imageCacheTtlSec = Number(process.env.IMAGE_CACHE_TTL_SEC || '300');
+        if (outBuffer && outContentType && useCache) {
+          cache.set(cacheKey, { buffer: outBuffer, contentType: outContentType }, imageCacheTtlSec * 1000);
+        }
+      } catch (e) {
+        console.warn('image-proxy: failed to cache image', e);
+      }
       // For HEAD requests we can return 200 with a header indicating availability so client probes do not see 4xx.
       if (method === 'HEAD') {
         respHeaders.set('x-image-proxy-available', '1');
@@ -156,7 +222,21 @@ export async function imageProxyHandler(articleId: string, request?: Request | N
     }
 
     const userArticle = await prisma.userArticle.findUnique({ where: { id: articleId }, select: { id: true } });
-    if (userArticle) return NextResponse.json({ error: 'proxy disabled for user-provided sources' }, { status: 403 });
+    if (userArticle) {
+      if (method === 'HEAD') {
+        const h = new Headers();
+        h.set('x-image-proxy-available', '0');
+        h.set('x-image-proxy-reason', 'proxy_disabled_for_user_source');
+        return new NextResponse(null, { status: 200, headers: h });
+      }
+      return NextResponse.json({ error: 'proxy disabled for user-provided sources' }, { status: 403 });
+    }
+    if (method === 'HEAD') {
+      const h = new Headers();
+      h.set('x-image-proxy-available', '0');
+      h.set('x-image-proxy-reason', 'article_not_found');
+      return new NextResponse(null, { status: 200, headers: h });
+    }
     return NextResponse.json({ error: 'article not found' }, { status: 404 });
   } catch (error: any) {
     console.error('image-proxy handler error', error);

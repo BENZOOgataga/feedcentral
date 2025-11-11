@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { cache } from '@/lib/cache';
 import { verifyAuth } from '@/lib/auth';
 
 /**
@@ -25,6 +26,32 @@ export async function GET(request: NextRequest) {
 
     let articles: any[] = [];
     let total = 0;
+
+    // Build cache key for anonymous queries (do not cache per-user private results)
+    const cacheTtlSec = Number(process.env.API_CACHE_TTL_SEC || '60');
+    const cacheKey = `articles:page=${page}:size=${pageSize}:cat=${category||''}:src=${sourceId||''}`;
+    // Cache bypass: allow clients (admins/tools) to bypass the server cache by
+    // setting header `x-bypass-cache: 1` or query `?bypassCache=1`. This is
+    // controlled by API_ALLOW_CACHE_BYPASS env var (default: enabled outside prod).
+    const searchParams2 = request.nextUrl.searchParams;
+    const bypassParam = searchParams2.get('bypassCache');
+    const bypassHeader = request.headers.get('x-bypass-cache');
+    const bypassRequested = bypassParam === '1' || bypassParam === 'true' || bypassHeader === '1' || bypassHeader === 'true';
+    const allowCacheBypass = process.env.API_ALLOW_CACHE_BYPASS ? (process.env.API_ALLOW_CACHE_BYPASS === '1' || process.env.API_ALLOW_CACHE_BYPASS === 'true') : (process.env.NODE_ENV !== 'production');
+    const skipCache = bypassRequested && allowCacheBypass;
+
+    // Avoid using the server-side cache during tests so test cases that mock DB
+    // failures can assert error paths reliably. In production/dev, use the cache
+    // unless skipCache is requested and allowed.
+    const useCache = process.env.NODE_ENV !== 'test' && !skipCache;
+    if (useCache && !authUser) {
+      const cached = cache.get<any>(cacheKey);
+      if (cached) {
+        const resp = NextResponse.json(cached);
+        resp.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
+        return resp;
+      }
+    }
 
     if (authUser) {
       // === AUTHENTICATED USER ===
@@ -246,7 +273,7 @@ export async function GET(request: NextRequest) {
 
     const totalPages = Math.ceil(total / pageSize);
 
-    const response = NextResponse.json({
+    const responseBody = {
       success: true,
       data: articles,
       pagination: {
@@ -257,10 +284,21 @@ export async function GET(request: NextRequest) {
         hasNext: page < totalPages,
         hasPrev: page > 1,
       },
-    });
+    };
 
+    // Cache anonymous responses server-side to reduce DB load unless bypassed
+    if (!authUser && !skipCache) {
+      try {
+        cache.set(cacheKey, responseBody, cacheTtlSec * 1000);
+      } catch (e) {
+        // non-fatal
+        console.warn('articles: cache set failed', e);
+      }
+    }
+
+    const response = NextResponse.json(responseBody);
     // Cache for 60 seconds, stale-while-revalidate for better performance
-    response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
+    response.headers.set('Cache-Control', `public, s-maxage=${cacheTtlSec}, stale-while-revalidate=300`);
 
     return response;
   } catch (error: any) {
