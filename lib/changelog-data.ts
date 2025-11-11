@@ -12,25 +12,40 @@ export interface ChangelogEntry {
 
 export const changelog: ChangelogEntry[] = [
   {
-    version: '1.4.1',
-    name: 'Reliability & Reader fixes',
-    type: 'patch',
-    date: 'November 10, 2025',
+    version: '1.5.0',
+    name: 'Reliability, Ingestion Limits & Cleanup Consolidation',
+    type: 'minor',
+    date: 'November 11, 2025',
     changes: [
       {
-        type: 'fix',
-        description: 'Fixed an issue that could show an "Application error" when opening some articles',
-        details: 'The reader now loads reliably even when article images come from a variety of sources. You should no longer see the client-side error that prevented articles from opening on the /app pages.',
+        type: 'feature',
+        description: 'Per-source daily ingestion limits (tier-aware)',
+        details: 'To keep feeds useful and prevent overload, FeedCentral now enforces daily article limits per source based on your account tier. Free, Premium and Pro tiers have different limits; the UI shows simple indicators so you can see when a source is near its daily limit.',
       },
       {
-        type: 'fix',
-        description: 'Articles open correctly from the App pages',
-        details: 'Navigating from the app list to an article now consistently shows the article content as expected.',
+        type: 'feature',
+        description: 'Unified article cleanup endpoint',
+        details: 'Background cleanup now runs from a single, consolidated endpoint that handles both system and user-added articles. This simplifies maintenance and ensures old, unbookmarked articles are cleaned up automatically while bookmarked items are preserved for you.',
       },
       {
         type: 'improvement',
-        description: 'Improved handling of article images',
-        details: 'Images from more news sources now load without breaking the page. When possible, images are displayed safely so your reading experience is uninterrupted.',
+        description: 'Cron script compatibility and graceful deprecation',
+        details: 'The scheduled cleanup script has been made tolerant of older, legacy endpoints so existing server cron jobs won\'t fail unexpectedly. The old user-article cleanup route now returns a clear deprecation response to help admins update their cron configuration safely.',
+      },
+      {
+        type: 'improvement',
+        description: 'UI and translation polish',
+        details: 'Various spacing fixes and new i18n keys were added to the Sources and app pages so UI elements display correctly in both English and French. Small layout tweaks improve readability across devices.',
+      },
+      {
+        type: 'fix',
+        description: 'Reader and image reliability improvements',
+        details: 'Improved handling of article images and reader load logic so articles open reliably even when images come from many different sources. This reduces the chance of client-side errors during reading.',
+      },
+      {
+        type: 'improvement',
+        description: 'Operational housekeeping and safer rollouts',
+        details: 'Several internal cleanup and deployment changes were made to reduce the risk of scheduled jobs failing during rollout. These are behind-the-scenes improvements that make the service more robust without changing how you use it.',
       },
     ],
   },
