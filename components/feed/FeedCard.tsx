@@ -157,8 +157,21 @@ export function FeedCard({ article, index = 0 }: FeedCardProps) {
   // If the article's source is a user-provided custom source, enforce the image host allowlist.
   // For default/admin sources (no isUserSource flag), allow images broadly to avoid blocking
   // publisher images that are trusted by feedcentral administrators.
+  // For user-provided sources we prefer the server-side proxy decision: if the proxy
+  // reports availability (proxyOk) we show the proxied image. If the proxy failed and
+  // we've attempted the remote fallback (and the host is allowlisted), allow the remote
+  // fallback to be displayed. This avoids requiring a manual host whitelist for every
+  // user source while still honoring the allowlist for direct remote fallbacks.
   const isUserSource = !!(article.source && (article.source as any).isUserSource);
-  const isImageAllowed = isUserSource ? (!!imageHost && allowedImageHosts.has(imageHost)) : true;
+  const isImageAllowed = (() => {
+    if (!isUserSource) return true;
+    // If the proxy check succeeded, allow the proxied image.
+    if (proxyOk) return true;
+    // If proxy failed but we attempted a remote fallback and the host is allowlisted,
+    // allow the remote image to be displayed.
+    if (!proxyOk && attemptedFallback && imageHost && allowedImageHosts.has(imageHost)) return true;
+    return false;
+  })();
 
   return (
     <article className="group">
