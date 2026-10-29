@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useEffect, useState, FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -34,33 +34,52 @@ export function AddSourceDialog({ open, onOpenChange, onSuccess }: AddSourceDial
   });
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
-  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [loadingCategories, setLoadingCategories] = useStat  // Load categories each time the dialog opens.
+  useEffect(() => {
+    if (!open) return;
 
-  // Fetch categories when dialog opens
-  useState(() => {
-    if (open) {
-      fetchCategories();
-    }
-  });
+    let cancelled = false;
 
-  async function fetchCategories() {
-    setLoadingCategories(true);
-    try {
-      const response = await fetch('/api/stats');
-      const data = await response.json();
-      
-      if (data.success) {
-        setCategories(data.data.categories);
+    async function fetchCategories() {
+      setLoadingCategories(true);
+      try {
+        const response = await fetch('/api/stats');
+
+        if (!response.ok) {
+          throw new Error(`Categories request failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (!data.success || !Array.isArray(data.data?.categories)) {
+          throw new Error('Invalid categories response');
+        }
+
+        if (!cancelled) {
+          setCategories(data.data.categories);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.error('Failed to fetch categories:', error);
+          toast({
+            title: 'Error',
+            description: 'Failed to load categories',
+            variant: 'destructive',
+          });
+        }
+      } finally {
+        if (!cancelled) {
+          setLoadingCategories(false);
+        }
       }
-    } catch (error) {
-      console.error('Failed to fetch categories:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to load categories',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoadingCategories(false);
+    }
+
+    void fetchCategories();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [open]);
+
     }
   }
 
