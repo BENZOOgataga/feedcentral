@@ -34,7 +34,9 @@ export function AddSourceDialog({ open, onOpenChange, onSuccess }: AddSourceDial
   });
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
-  const [loadingCategories, setLoadingCategories] = useStat  // Load categories each time the dialog opens.
+  const [loadingCategories, setLoadingCategories] = useState(false);
+
+  // Load categories each time the dialog opens.
   useEffect(() => {
     if (!open) return;
 
@@ -79,9 +81,6 @@ export function AddSourceDialog({ open, onOpenChange, onSuccess }: AddSourceDial
       cancelled = true;
     };
   }, [open]);
-
-    }
-  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
