@@ -34,6 +34,16 @@ export default function LoginPage() {
     if (result.success) {
       // Redirect based on user role
       const redirectPath = result.user?.role === 'ADMIN' ? '/admin' : '/app';
+      const returnTo = new URLSearchParams(window.location.search).get('returnTo');
+      if (returnTo) {
+        try {
+          const target = new URL(returnTo);
+          if (target.origin === window.location.origin && target.pathname === '/oauth/authorize') {
+            window.location.assign(target.toString());
+            return;
+          }
+        } catch { /* Ignore invalid return URL */ }
+      }
       router.push(redirectPath);
       router.refresh();
     } else {
