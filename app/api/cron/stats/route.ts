@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
         articles: {
           found: totalArticlesFound,
           added: totalArticlesAdded,
-          duplicates: totalArticlesFound - totalArticlesAdded,
+          skippedOrUninserted: Math.max(0, totalArticlesFound - totalArticlesAdded),
         },
         performance: {
           avgDurationMs: Math.round(avgDuration),
