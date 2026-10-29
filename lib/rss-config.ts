@@ -73,8 +73,14 @@ export function getRuntimeConfig() {
   const isProduction = process.env.NODE_ENV === 'production';
   const isVercel = process.env.VERCEL === '1';
 
+  const configuredMax = Number(process.env.RSS_MAX_ARTICLES_PER_FEED);
+  const maxArticlesPerFeed = Number.isInteger(configuredMax) && configuredMax > 0
+    ? Math.min(configuredMax, 500)
+    : RSS_CONFIG.MAX_ARTICLES_PER_FEED;
+
   return {
     ...RSS_CONFIG,
+    MAX_ARTICLES_PER_FEED: maxArticlesPerFeed,
     // Use lower concurrency on Vercel to avoid hitting connection limits
     DEFAULT_CONCURRENCY: isVercel ? 3 : RSS_CONFIG.DEFAULT_CONCURRENCY,
   };

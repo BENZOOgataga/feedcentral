@@ -138,11 +138,16 @@ export default function AdminJobsPage() {
 
                 <div className="text-right shrink-0">
                   <div className="text-sm text-muted-foreground">
-                    Found: <span className="font-medium text-foreground">{job.articlesFound}</span>
+                    Scanned: <span className="font-medium text-foreground">{job.articlesFound}</span>
                   </div>
                   <div className="text-sm text-green-600 dark:text-green-400">
-                    Added: <span className="font-medium">{job.articlesAdded}</span>
+                    Inserted: <span className="font-medium">{job.articlesAdded}</span>
                   </div>
+                  {job.status === 'COMPLETED' && (
+                    <div className="text-sm text-muted-foreground">
+                      Skipped: <span className="font-medium">{Math.max(0, job.articlesFound - job.articlesAdded)}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
