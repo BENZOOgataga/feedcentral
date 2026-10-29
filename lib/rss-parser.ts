@@ -1,7 +1,7 @@
 import Parser from 'rss-parser';
 import { prisma } from '@/lib/prisma';
 import type { Source, JobStatus } from '@prisma/client';
-import { RSS_CONFIG } from '@/lib/rss-config';
+import { RSS_CONFIG, getRuntimeConfig } from '@/lib/rss-config';
 import { getMaxArticlesPerSourcePerDay } from '@/lib/license';
 // Use require to avoid type-resolution problems in environments missing @types/sanitize-html
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -124,7 +124,7 @@ export class RSSFeedParser {
       const feed = await this.parser.parseURL(feedUrl);
       
       // Limit articles per feed to prevent memory issues
-      const items = feed.items.slice(0, RSS_CONFIG.MAX_ARTICLES_PER_FEED);
+      const items = feed.items.slice(0, getRuntimeConfig().MAX_ARTICLES_PER_FEED);
       
       return items.map((item) => {
         // Extract image from various possible locations
