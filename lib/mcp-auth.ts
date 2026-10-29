@@ -4,7 +4,7 @@ import { sign, verify } from 'jsonwebtoken';
 import { prisma } from '@/lib/prisma';
 import { getJwtSecret } from '@/lib/env';
 
-export const origin = process.env.MCP_PUBLIC_ORIGIN || process.env.NEXT_PUBLIC_SITE_URL || 'https://feed.benzoogataga.com';
+export const origin = process.env.MCP_PUBLIC_ORIGIN || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 export const sha = (value: string) => createHash('sha256').update(value).digest('hex');
 export const token = () => randomBytes(32).toString('base64url');
 export const metadata = { resource: origin + '/mcp', authorization_servers: [origin] };
