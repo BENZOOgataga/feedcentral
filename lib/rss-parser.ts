@@ -331,10 +331,11 @@ export async function fetchAndStoreArticles(source: Source): Promise<{
   error?: string;
 }> {
   const parser = new RSSFeedParser();
-  let job;
+  let job: { id: string } | undefined;
+  let foundCount = 0;
+  let addedCount = 0;
 
   try {
-    // Create job record
     job = await prisma.feedJob.create({
       data: {
         sourceId: source.id,
@@ -342,14 +343,11 @@ export async function fetchAndStoreArticles(source: Source): Promise<{
       },
     });
 
-  // SSRF protection: ensure resolved host is allowed
-  await ensureUrlAllowed(source.feedUrl);
+    await ensureUrlAllowed(source.feedUrl);
+    const articles = await parser.fetchFeed(source.feedUrl);
+    foundCount = articles.length;
 
-  // Fetch articles from RSS feed
-  const articles = await parser.fetchFeed(source.feedUrl);
-
-    if (articles.length === 0) {
-      // No articles found - still mark as successful
+    if (foundCount === 0) {
       await Promise.all([
         prisma.source.update({
           where: { id: source.id },
@@ -365,51 +363,37 @@ export async function fetchAndStoreArticles(source: Source): Promise<{
           },
         }),
       ]);
-
       return { found: 0, added: 0 };
     }
 
-    // Get existing article URLs to avoid duplicates (single query)
+    // Article.url is unique across all default sources, not just within this one.
+    // The count returned by createMany also handles collisions during concurrent fetches.
     const existingUrls = new Set(
       (await prisma.article.findMany({
-        where: {
-          sourceId: source.id,
-          url: { in: articles.map(a => a.url) },
-        },
+        where: { url: { in: articles.map(article => article.url) } },
         select: { url: true },
-      })).map(a => a.url)
+      })).map(article => article.url)
     );
-
-    // Filter out duplicates
     const newArticles = articles.filter(article => !existingUrls.has(article.url));
 
-    // Batch insert all new articles (single query)
-    let addedCount = 0;
     if (newArticles.length > 0) {
-      try {
-        await prisma.article.createMany({
-          data: newArticles.map(article => ({
-            title: article.title,
-            description: article.description,
-            content: article.content,
-            url: article.url,
-            imageUrl: article.imageUrl,
-            author: article.author,
-            publishedAt: article.publishedAt,
-            sourceId: source.id,
-            categoryId: source.categoryId,
-          })),
-          skipDuplicates: true,
-        });
-        addedCount = newArticles.length;
-      } catch (error: any) {
-        // Log but don't fail - some articles might have been added
-        console.warn(`Partial insert failure for ${source.name}:`, error.message);
-        addedCount = 0;
-      }
+      const result = await prisma.article.createMany({
+        data: newArticles.map(article => ({
+          title: article.title,
+          description: article.description,
+          content: article.content,
+          url: article.url,
+          imageUrl: article.imageUrl,
+          author: article.author,
+          publishedAt: article.publishedAt,
+          sourceId: source.id,
+          categoryId: source.categoryId,
+        })),
+        skipDuplicates: true,
+      });
+      addedCount = result.count;
     }
 
-    // Update source and job in parallel (2 queries instead of sequential)
     await Promise.all([
       prisma.source.update({
         where: { id: source.id },
@@ -420,34 +404,35 @@ export async function fetchAndStoreArticles(source: Source): Promise<{
         data: {
           status: 'COMPLETED',
           completedAt: new Date(),
-          articlesFound: articles.length,
+          articlesFound: foundCount,
           articlesAdded: addedCount,
         },
       }),
     ]);
 
-    return {
-      found: articles.length,
-      added: addedCount,
-    };
-  } catch (error: any) {
-    // Update job as failed
+    return { found: foundCount, added: addedCount };
+  } catch (caught: unknown) {
+    const error = caught instanceof Error ? caught.message : String(caught);
+    console.error(`Failed to ingest RSS source ${source.name}:`, caught);
+
     if (job) {
-      await prisma.feedJob.update({
-        where: { id: job.id },
-        data: {
-          status: 'FAILED',
-          completedAt: new Date(),
-          error: error.message,
-        },
-      });
+      try {
+        await prisma.feedJob.update({
+          where: { id: job.id },
+          data: {
+            status: 'FAILED',
+            completedAt: new Date(),
+            articlesFound: foundCount,
+            articlesAdded: addedCount,
+            error,
+          },
+        });
+      } catch (jobError) {
+        console.error(`Failed to record RSS job failure for ${source.name}:`, jobError);
+      }
     }
 
-    return {
-      found: 0,
-      added: 0,
-      error: error.message,
-    };
+    return { found: foundCount, added: addedCount, error };
   }
 }
 
@@ -487,12 +472,16 @@ export async function fetchAllActiveSources(options?: {
     );
 
     results.push(
-      ...batchResults.map((result, index) => ({
-        source: batch[index].name,
-        status: result.status,
-        data: result.status === 'fulfilled' ? result.value : undefined,
-        error: result.status === 'rejected' ? result.reason : undefined,
-      }))
+      ...batchResults.map((result, index) => {
+        const data = result.status === 'fulfilled' ? result.value : undefined;
+        const error = result.status === 'rejected' ? result.reason : data?.error;
+        return {
+          source: batch[index].name,
+          status: error ? 'rejected' as const : 'fulfilled' as const,
+          data,
+          error,
+        };
+      })
     );
 
     // Log progress
