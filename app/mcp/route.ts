@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { fetchAllActiveSources, fetchSingleSource, validateRSSFeed } from '@/lib/rss-parser';
-import { audit, enabled, metadata, verifyMcp } from '@/lib/mcp-auth';
+import { audit, enabled, origin, verifyMcp } from '@/lib/mcp-auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
