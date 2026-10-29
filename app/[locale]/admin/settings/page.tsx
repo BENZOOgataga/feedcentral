@@ -9,6 +9,28 @@ import { Input } from '@/components/ui/input';
 export default function SettingsPage() {
   const { user, isLoading: authLoading } = useRequireAdmin();
   const [activeSection, setActiveSection] = useState('general');
+  const [mcp, setMcp] = useState({ enabled: false, allowWrites: false });
+  const [mcpError, setMcpError] = useState('');
+  const [mcpSaving, setMcpSaving] = useState(false);
+  useEffect(() => {
+    fetch('/api/admin/mcp').then(r => { if (!r.ok) throw Error('Could not load MCP settings'); return r.json(); })
+      .then(data => { if (data.success) setMcp(data.data); })
+      .catch(e => setMcpError(e.message));
+  }, []);
+  async function saveMcp(next: { enabled: boolean; allowWrites: boolean }) {
+    setMcpSaving(true);
+    setMcpError('');
+    try {
+      const response = await fetch('/api/admin/mcp', {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(next),
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw Error(data.error || 'Could not save MCP settings');
+      setMcp(data.data);
+    } catch (error: any) { setMcpError(error.message); }
+    finally { setMcpSaving(false); }
+  }
   const [settings, setSettings] = useState({
     siteName: 'FeedCentral',
     siteUrl: 'http://localhost:3000',
@@ -70,6 +92,7 @@ export default function SettingsPage() {
                   { icon: Database, label: 'Feed Configuration', id: 'feed', available: false },
                   { icon: Bell, label: 'Notifications', id: 'notifications', available: false },
                   { icon: Key, label: 'API Keys', id: 'api', available: false },
+                  { icon: Key, label: 'MCP Integration', id: 'mcp', available: true },
                 ].map((item) => {
                   const Icon = item.icon;
                   return (
@@ -166,6 +189,24 @@ export default function SettingsPage() {
                     </span>
                   )}
                 </div>
+              </div>
+            ) : activeSection === 'mcp' ? (
+              <div className="rounded-lg border border-border bg-card p-6 space-y-5">
+                <h2 className="text-lg font-semibold">MCP Integration</h2>
+                <p className="text-sm text-muted-foreground">Allow external AI tools to use the remote MCP endpoint. Disabled by default on every installation. OAuth authorization requires an administrator to approve the connection.</p>
+                <code className="block text-sm break-all">{typeof window !== 'undefined' ? window.location.origin : ''}/mcp</code>
+                <label className="flex items-center gap-3">
+                  <input type="checkbox" checked={mcp.enabled} disabled={mcpSaving}
+                    onChange={e => saveMcp({ ...mcp, enabled: e.target.checked })} />
+                  <span>Enable MCP server</span>
+                </label>
+                <label className="flex items-center gap-3">
+                  <input type="checkbox" checked={mcp.allowWrites} disabled={mcpSaving || !mcp.enabled}
+                    onChange={e => saveMcp({ ...mcp, allowWrites: e.target.checked })} />
+                  <span>Allow AI clients to add and activate/deactivate sources or trigger fetching</span>
+                </label>
+                <p className="text-xs text-muted-foreground">Read-only MCP tools can inspect categories, sources, feed job history and ingestion health. Disabling MCP immediately rejects further tool calls and OAuth token requests. Existing access tokens expire within one hour.</p>
+                {mcpError && <p className="text-sm text-red-500" role="alert">{mcpError}</p>}
               </div>
             ) : (
               /* Coming Soon Placeholder */

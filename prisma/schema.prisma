@@ -299,3 +299,60 @@ enum JobStatus {
   COMPLETED
   FAILED
 }
+
+
+// Remote MCP integration. Disabled by default on every installation.
+model McpSettings {
+  id          String   @id @default("default")
+  enabled     Boolean  @default(false)
+  allowWrites Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+
+  @@map("mcp_settings")
+}
+
+// Public OAuth clients register redirect URIs. No client secret is needed with PKCE.
+model McpOAuthClient {
+  id           String   @id
+  redirectUris String[]
+  clientName   String? 
+  createdAt    DateTime @default(now())
+
+  @@map("mcp_oauth_clients")
+}
+
+model McpAuthCode {
+  codeHash      String   @id
+  clientId      String
+  userId        String
+  redirectUri   String
+  codeChallenge String
+  expiresAt     DateTime
+  createdAt     DateTime @default(now())
+
+  @@index([expiresAt])
+  @@map("mcp_auth_codes")
+}
+
+model McpRefreshToken {
+  tokenHash  String   @id
+  clientId   String
+  userId     String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  @@index([expiresAt])
+  @@index([userId])
+  @@map("mcp_refresh_tokens")
+}
+
+model McpAuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  tool      String
+  target    String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt(sort: Desc)])
+  @@map("mcp_audit_logs")
+}
