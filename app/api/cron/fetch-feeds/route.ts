@@ -80,14 +80,15 @@ export async function GET(request: NextRequest) {
       articles: {
         found: totalFound,
         added: totalAdded,
-        duplicates: totalFound - totalAdded,
+        skipped: Math.max(0, totalFound - totalAdded),
       },
       results: results.map(r => ({
         source: r.source,
         status: r.status,
         articlesFound: r.data?.found || 0,
         articlesAdded: r.data?.added || 0,
-        error: r.error?.message || r.data?.error,
+        articlesSkipped: Math.max(0, (r.data?.found || 0) - (r.data?.added || 0)),
+        error: typeof r.error === 'string' ? r.error : r.error?.message || r.data?.error,
       })),
     };
 
