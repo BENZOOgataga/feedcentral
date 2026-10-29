@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { fetchAllActiveSources, fetchSingleSource, validateRSSFeed } from '@/lib/rss-parser';
-import { audit, enabled, origin, verifyMcp } from '@/lib/mcp-auth';
+import { audit, enabled, origin, sameOrigin, verifyMcp } from '@/lib/mcp-auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -37,17 +37,44 @@ async function execute(name: string, args: Record<string, any>, userId: string) 
         select: { id:true, status:true, startedAt:true, completedAt:true, articlesFound:true, articlesAdded:true, error:true, source: { select: { id:true, name:true, feedUrl:true } } }, orderBy:{ startedAt:'desc' }, take:limit });
     }
     case 'source_health': {
-      const limit = Number.isInteger(args.limit) ? Math.min(100,Math.max(1,args.limit)) : 25;
-      const source = typeof args.sourceId === 'string' ? await prisma.source.findUnique({ where:{ id:args.sourceId }, select:{ id:true,name:true,feedUrl:true,isActive:true,lastFetchedAt:true } }) : null;
-      if (args.sourceId && !source) throw Error('Source not found');
-      const jobs = await prisma.feedJob.findMany({ where: source ? { sourceId:source.id } : {}, orderBy:{ startedAt:'desc' }, take:limit,
-        select: { sourceId:true, status:true, startedAt:true, completedAt:true, articlesFound:true, articlesAdded:true, error:true, source:{ select:{name:true} } } });
-      const summary = Object.values(jobs.reduce<Record<string,{sourceId:string;name:string;total:number;completed:number;failed:number;found:number;added:number;latestStatus:string;latestError:string|null;lastRun:Date}>>((acc,j)=>{
-        const x = acc[j.sourceId] ||= {sourceId:j.sourceId,name:j.source.name,total:0,completed:0,failed:0,found:0,added:0,latestStatus:j.status,latestError:j.error,lastRun:j.startedAt};
-        x.total++; if(j.status==='COMPLETED')x.completed++; if(j.status==='FAILED')x.failed++;
-        x.found+=j.articlesFound; x.added+=j.articlesAdded; return acc;
-      },{}));
-      return { source, inspectedJobs: jobs.length, summary, jobs };
+      const requestedLimit = Number.isInteger(args.limit) ? Math.min(100, Math.max(1, args.limit)) : 25;
+      const perSourceLimit = typeof args.sourceId === 'string' ? requestedLimit : Math.min(10, requestedLimit);
+      const sources = await prisma.source.findMany({
+        where: typeof args.sourceId === 'string' ? { id: args.sourceId } : {},
+        take: 200,
+        orderBy: { name: 'asc' },
+        select: {
+          id: true, name: true, feedUrl: true, isActive: true, lastFetchedAt: true,
+          _count: { select: { articles: true } },
+          feedJobs: {
+            take: perSourceLimit, orderBy: { startedAt: 'desc' },
+            select: { id: true, status: true, startedAt: true, completedAt: true,
+              articlesFound: true, articlesAdded: true, error: true },
+          },
+        },
+      });
+      if (args.sourceId && sources.length === 0) throw Error('Source not found');
+      return {
+        inspectedSources: sources.length,
+        perSourceJobLimit: perSourceLimit,
+        sources: sources.map(source => {
+          const jobs = source.feedJobs;
+          return {
+            sourceId: source.id, name: source.name, feedUrl: source.feedUrl,
+            isActive: source.isActive, lastFetchedAt: source.lastFetchedAt,
+            storedArticles: source._count.articles,
+            latestJob: jobs[0] || null,
+            recentJobs: jobs,
+            recentCompleted: jobs.filter(job => job.status === 'COMPLETED').length,
+            recentFailed: jobs.filter(job => job.status === 'FAILED').length,
+            articlesFound: jobs.reduce((count, job) => count + job.articlesFound, 0),
+            articlesAdded: jobs.reduce((count, job) => count + job.articlesAdded, 0),
+            note: jobs.length === 0 ? 'No recorded fetch jobs'
+              : jobs[0].status === 'COMPLETED' && jobs[0].articlesAdded === 0
+                ? 'No additions in latest run; this may be normal deduplication' : null,
+          };
+        }),
+      };
     }
     case 'validate_feed': {
       if (!isUrl(args.feedUrl)) throw Error('Invalid HTTP(S) feed URL');
@@ -90,6 +117,7 @@ async function execute(name: string, args: Record<string, any>, userId: string) 
   }
 }
 export async function POST(request: NextRequest) {
+  if (!sameOrigin(request)) return NextResponse.json({ error: 'Forbidden origin' }, { status: 403 });
   const setting=await enabled();
   if (!setting.enabled) return NextResponse.json({error:'MCP is disabled'}, {status:404});
   const userId=await verifyMcp(request);
