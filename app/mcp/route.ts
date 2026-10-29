@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
   const setting=await enabled();
   if (!setting.enabled) return NextResponse.json({error:'MCP is disabled'}, {status:404});
   const userId=await verifyMcp(request);
-  if(!userId) return NextResponse.json({error:'Unauthorized'}, {status:401,headers:{'WWW-Authenticate':'Bearer resource_metadata="https://feed.benzoogataga.com/.well-known/oauth-protected-resource/mcp"'}});
+  if(!userId) return NextResponse.json({error:'Unauthorized'}, {status:401,headers:{'WWW-Authenticate':'Bearer resource_metadata="'+origin+'/.well-known/oauth-protected-resource/mcp"'}});
   if(!((request.headers.get('accept')||'').includes('application/json') && (request.headers.get('accept')||'').includes('text/event-stream'))) return NextResponse.json({error:'MCP Accept header required'}, {status:406});
   let body:any; try { body=await request.json(); } catch { return fail(null,-32700,'Parse error'); }
   if(!body || body.jsonrpc!=='2.0' || typeof body.method!=='string') return fail(body?.id ?? null,-32600,'Invalid request');
