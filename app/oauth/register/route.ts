@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { token } from '@/lib/mcp-auth';
+import { enabled, token } from '@/lib/mcp-auth';
 export async function POST(request: NextRequest) {
+  if (!(await enabled()).enabled) return NextResponse.json({ error: 'MCP disabled' }, { status: 404 });
   const body = await request.json().catch(() => null);
   if (!body || !Array.isArray(body.redirect_uris) || body.redirect_uris.length < 1 || body.redirect_uris.length > 5 ||
       !body.redirect_uris.every((x: unknown) => typeof x === 'string' && x.length < 2048 && (() => {
