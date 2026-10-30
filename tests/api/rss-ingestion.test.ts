@@ -28,7 +28,8 @@ const article = (url: string) => ({
 
 describe('RSS ingestion accounting', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
+    // Keep the DNS mock implementation; resetAllMocks() removes its lookup response.
+    jest.clearAllMocks();
     jest.spyOn(RSSFeedParser.prototype, 'fetchFeed').mockResolvedValue([
       article('https://example.com/1'),
       article('https://example.com/2'),
