@@ -52,8 +52,9 @@ export async function GET(request: NextRequest) {
       const result = await fetchSingleSource(sourceId);
       results = [{
         source: sourceId,
-        status: 'fulfilled' as const,
+        status: result.error ? 'rejected' as const : 'fulfilled' as const,
         data: result,
+        error: result.error,
       }];
     } else {
       // Fetch all active sources with controlled concurrency
